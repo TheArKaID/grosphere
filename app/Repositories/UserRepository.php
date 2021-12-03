@@ -24,4 +24,15 @@ class UserRepository implements UserRepositoryContract
     {
         return $this->model->create($validatedData);
     }
+
+    /**
+     * Get User by Email
+     * 
+     * @param string $email
+     * @return User
+     */
+    public function getByEmail($email)
+    {
+        return $this->model->where('email', $email)->first();
+    }
 }

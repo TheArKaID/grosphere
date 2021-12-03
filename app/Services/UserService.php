@@ -23,4 +23,15 @@ class UserService
 	{
 		return $this->userRepository->create($validatedData);
 	}
+	
+	/**
+	 * Get user by email
+	 *
+     * @param string $email
+     * @return App\Models\User
+	 */
+	public function getByEmail($email)
+	{
+		return $this->userRepository->getByEmail($email);
+	}
 }
