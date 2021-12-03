@@ -2,7 +2,9 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -36,6 +38,33 @@ class Handler extends ExceptionHandler
     {
         $this->reportable(function (Throwable $e) {
             //
+        });
+
+        $this->renderable(function (NotFoundHttpException $e, $request) {
+            if ($request->is('api/*')) {
+                return response()->json([
+                    'status' => 404,
+                    'message' => 'Target not found'
+                ], 404);
+            }
+        });
+
+        $this->renderable(function (AuthenticationException $e, $request) {
+            if ($request->is('api/*')) {
+                return response()->json([
+                    'status' => 403,
+                    'message' => 'Not authenticated'
+                ], 403);
+            }
+        });
+        
+        $this->renderable(function (Throwable $e, $request) {
+            if($request->is('api/*')) {
+                return response()->json([
+                    'status' => 500,
+                    'message' => 'Internal server error'
+                ], 500);
+            }
         });
     }
 }
