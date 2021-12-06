@@ -24,7 +24,12 @@ Route::prefix('auth')->group(function () {
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('user', function (Request $request) {
         $user = $request->user();
-        $roles = $user->getRoleNames();
+        $roles = $user->roles->map(function ($role) {
+            return [
+                'name' => $role->name,
+                'readable_name' => $role->readable_name,
+            ];
+        });
         unset($user->roles);
         $user->roles = $roles;
 
