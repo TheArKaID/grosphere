@@ -11,7 +11,35 @@ class UserRepository implements UserRepositoryContract
 
     public function __construct(User $model)
     {
-        $this->model = $model;
+        $this->model = $model->with('profile');
+    }
+
+    /**
+     * Get all users
+     * 
+     * @return Collection
+     */
+    public function getAll()
+    {
+        if (request()->has('search')) {
+            $this->model = $this->model->where('name', 'like', '%' . request()->get('search') . '%')
+                ->orWhere('email', 'like', '%' . request()->get('search') . '%');
+        }
+        return $this->model->all();
+    }
+
+    /**
+     * Get all users with pagination
+     * 
+     * @return Collection
+     */
+    public function getAllWithPagination()
+    {
+        if (request()->has('search')) {
+            $this->model = $this->model->where('name', 'like', '%' . request()->get('search') . '%')
+                ->orWhere('email', 'like', '%' . request()->get('search') . '%');
+        }
+        return $this->model->paginate();
     }
 
     /**
