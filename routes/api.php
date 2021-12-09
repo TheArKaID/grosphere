@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\UserController;
+use App\Http\Resources\UserCollection;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -22,7 +24,11 @@ Route::prefix('auth')->group(function () {
 });
 
 Route::middleware(['auth:sanctum'])->group(function () {
-    Route::get('user', function (Request $request) {
+    Route::middleware(['role:super-admin|admin'])->group(function () {
+        Route::resource('users', UserController::class)->only(['index', 'show', 'store', 'update', 'destroy']);
+    });
+    
+    Route::get('profile', function (Request $request) {
         $user = $request->user();
         $roles = $user->roles->map(function ($role) {
             return [
@@ -36,7 +42,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         return response()->json([
             'status' => 200,
             'message' => 'success',
-            'data' => $user
+            'response' => $user
         ], 200);
     });
 

@@ -11,7 +11,7 @@ class UserRepository implements UserRepositoryContract
 
     public function __construct(User $model)
     {
-        $this->model = $model->with('profile');
+        $this->model = $model;
     }
 
     /**
@@ -25,7 +25,7 @@ class UserRepository implements UserRepositoryContract
             $this->model = $this->model->where('name', 'like', '%' . request()->get('search') . '%')
                 ->orWhere('email', 'like', '%' . request()->get('search') . '%');
         }
-        return $this->model->all();
+        return $this->model->get();
     }
 
     /**
