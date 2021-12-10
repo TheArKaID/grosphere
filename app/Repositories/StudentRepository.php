@@ -15,6 +15,41 @@ class StudentRepository implements StudentRepositoryContract
     }
 
     /**
+     * Get all students.
+     * 
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getAll()
+    {
+        if (request()->has('search')) {
+            $this->model = $this->model->whereHas('user', function ($query) {
+                $query->where('name', 'like', '%' . request()->get('search') . '%')
+                    ->orWhere('email', 'like', '%' . request()->get('search') . '%')
+                    ->orWhere('phone', 'like', '%' . request()->get('search') . '%');
+            });
+        }
+        return $this->model->all();
+    }
+
+    /**
+     * Get all students with pagination
+     * 
+     * @param int $perPage
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    public function getAllWithPagination($perPage = 10)
+    {
+        if (request()->has('search')) {
+            $this->model = $this->model->whereHas('user', function ($query) {
+                $query->where('name', 'like', '%' . request()->get('search') . '%')
+                    ->orWhere('email', 'like', '%' . request()->get('search') . '%')
+                    ->orWhere('phone', 'like', '%' . request()->get('search') . '%');
+            });
+        }
+        return $this->model->paginate($perPage);
+    }
+
+    /**
      * Create Student
      * 
      * @param array $data

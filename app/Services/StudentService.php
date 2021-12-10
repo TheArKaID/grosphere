@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Contracts\StudentRepositoryContract;
 use App\Contracts\UserRepositoryContract;
+use App\Http\Resources\StudentCollection;
 use Illuminate\Support\Facades\DB;
 
 class StudentService
@@ -17,6 +18,19 @@ class StudentService
 	) {
 		$this->studentRepository = $studentRepository;
 		$this->userRepository = $userRepository;
+	}
+
+	/**
+	 * Get all Student
+	 *
+	 * @return mixed
+	 */
+	public function getAll()
+	{
+		if (request()->has('page') && request()->get('page') == 'all') {
+			return new StudentCollection($this->studentRepository->getAll());
+		}
+		return new StudentCollection($this->studentRepository->getAllWithPagination(request('size', 10)));
 	}
 
 	/**
