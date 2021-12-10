@@ -32,7 +32,7 @@ class Parents extends Model
      */
     public function user()
     {
-        return $this->belongsTo('App\Models\User');
+        return $this->belongsTo(User::class);
     }
 
     /**
@@ -40,6 +40,6 @@ class Parents extends Model
      */
     public function students()
     {
-        return $this->hasMany('App\Models\Student');
+        return $this->hasMany(Student::class);
     }
 }
