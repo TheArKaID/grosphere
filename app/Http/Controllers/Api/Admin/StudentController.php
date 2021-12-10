@@ -48,10 +48,7 @@ class StudentController extends Controller
         return response()->json([
             'status' => 200,
             'message' => 'Student ditambahkan',
-            'data' => [
-                'user' => $student,
-                'token' => $student->createToken('ApiToken')->plainTextToken
-            ]
+            'data' => $student
         ], 200);
     }
 
@@ -111,6 +108,11 @@ class StudentController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $this->studentService->deleteStudent($id);
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Data Student dihapus'
+        ], 200);
     }
 }
