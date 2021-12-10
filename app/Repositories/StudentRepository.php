@@ -24,4 +24,17 @@ class StudentRepository implements StudentRepositoryContract
     {
         return $this->model->create($data);
     }
+
+    /**
+     * Get Student by Email
+     * 
+     * @param string $email
+     * @return Student
+     */
+    public function getByEmail($email)
+    {
+        return $this->model->whereHas('user', function ($query) use ($email) {
+            $query->where('email', $email);
+        })->first();
+    }
 }
