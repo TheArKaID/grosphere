@@ -31,7 +31,7 @@ class CreateStudentRequest extends FormRequest
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users',
             'password' => 'required|min:8|confirmed',
-            'phone' => 'nullable|string|max:15|start_with:+628',
+            'phone' => 'nullable|string|min:8|max:15|starts_with:+628',
             'id_number' => 'nullable|string|max:50',
             'birth_date' => 'required|date:Y-m-d',
             'birth_place' => 'required|string|max:100',

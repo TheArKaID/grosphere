@@ -27,7 +27,7 @@ class CreateParentRequest extends FormRequest
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6|confirmed',
-            'phone' => 'nullable|string|max:15|start_with:+628',
+            'phone' => 'nullable|string|min:8|max:15|starts_with:+628',
             'address' => 'required'
         ];
     }
