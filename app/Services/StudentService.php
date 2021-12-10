@@ -2,60 +2,51 @@
 
 namespace App\Services;
 
-use App\Contracts\StudentRepositoryContract;
-use App\Contracts\UserRepositoryContract;
 use App\Http\Resources\StudentCollection;
 use App\Http\Resources\StudentResource;
 use App\Models\Student;
-use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
 class StudentService
 {
-	private $studentRepository;
-	private $userRepository;
+	private $userService;
 
 	public function __construct(
-		StudentRepositoryContract $studentRepository,
-		UserRepositoryContract $userRepository
+		UserService $userService
 	) {
-		$this->studentRepository = $studentRepository;
-		$this->userRepository = $userRepository;
+		$this->userService = $userService;
 	}
 
 	/**
 	 * Get all Student
 	 *
-	 * @return mixed
+	 * @return StudentCollection
 	 */
 	public function getAll()
 	{
+		$student = new Student;
 		if (request()->has('page') && request()->get('page') == 'all') {
-			return new StudentCollection($this->studentRepository->getAll());
+			if (request()->has('search')) {
+				$student = $student->whereHas('user', function ($query) {
+					$query->where('name', 'like', '%' . request()->get('search') . '%')
+						->orWhere('email', 'like', '%' . request()->get('search') . '%')
+						->orWhere('phone', 'like', '%' . request()->get('search') . '%');
+				});
+			}
+			return new StudentCollection($student->get());
 		}
-		return new StudentCollection($this->studentRepository->getAllWithPagination(request('size', 10)));
+		return new StudentCollection($student->paginate(request('size', 10)));
 	}
 
 	/**
 	 * Get Student by id
 	 * 
 	 * @param $id
-	 * @return mixed
+	 * @return StudentResource
 	 */
 	public function getById($id)
 	{
-		return new StudentResource($this->studentRepository->getById($id));
-	}
-
-	/**
-	 * Get Student by email
-	 *
-	 * @param string $email
-	 * @return App\Models\Student
-	 */
-	public function getByEmail($email)
-	{
-		return $this->studentRepository->getByEmail($email);
+		return new StudentResource(Student::findOrFail($id));
 	}
 
 	/**
@@ -69,11 +60,11 @@ class StudentService
 		DB::beginTransaction();
 
 		$data['password'] = bcrypt($data['password']);
-		
-        $user = User::create($data);
+
+		$user = $this->userService->createUser($data);
 		$user->assignRole('student');
 		$data['user_id'] = $user->id;
-		
+
 		$student = Student::create($data);
 
 		DB::commit();
@@ -92,13 +83,21 @@ class StudentService
 	{
 		DB::beginTransaction();
 
-		$student = new StudentResource($this->studentRepository->update($id, $data));
+		$student = Student::findOrFail($id);
+		$student->user_id = $data['user_id'] ?? $student->user_id;
+		$student->parent_id = $data['parent_id'] ?? $student->parent_id;
+		$student->id_number = $data['id_number'] ?? $student->id_number;
+		$student->birth_date = $data['birth_date'] ?? $student->birth_date;
+		$student->birth_place = $data['birth_place'] ?? $student->birth_place;
+		$student->address = $data['address'] ?? $student->address;
+		$student->gender = $data['gender'] ?? $student->gender;
+		$student->save();
 
-		$this->userRepository->update($student->user_id, $data);
+		$this->userService->updateUser($student->user_id, $data);
 
 		DB::commit();
 
-		return $student;
+		return new StudentResource($student);
 	}
 
 	/**
@@ -111,10 +110,10 @@ class StudentService
 	{
 		DB::beginTransaction();
 
-		$student = $this->studentRepository->getById($id);
+		$student = $this->getById($id);
 
-		$this->studentRepository->delete($id);
-		$this->userRepository->delete($student->user_id);
+		$student->delete($id);
+		$this->userService->deleteUser($student->user_id);
 
 		DB::commit();
 

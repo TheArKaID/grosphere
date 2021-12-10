@@ -2,26 +2,18 @@
 
 namespace App\Services;
 
-use App\Contracts\UserRepositoryContract;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
 class UserService
 {
-	private $userRepository;
-
-	public function __construct(UserRepositoryContract $userRepository)
-	{
-		$this->userRepository = $userRepository;
-	}
-
 	/**
 	 * Get all users
 	 *
 	 * @return mixed
 	 */
-	public function getAll($perPage = 10)
+	public function getAll()
 	{
 		$users = new User;
 		if (request()->has('page') && request()->get('page') == 'all') {
@@ -31,41 +23,36 @@ class UserService
 			}
 			return UserResource::collection($users->get());
 		}
-		return UserResource::collection($users->paginate($perPage));
-	}
-
-	/**
-	 * Get user by email
-	 *
-	 * @param string $email
-	 * @return App\Models\User
-	 */
-	public function getByEmail($email)
-	{
-		return $this->userRepository->getByEmail($email);
+		return UserResource::collection($users->paginate(request('size', 10)));
 	}
 
 	/**
 	 * Create user
 	 *
-	 * @param array $validatedData
+	 * @param array $data
 	 * @return App\Models\User
 	 */
-	public function createUser($validatedData)
+	public function createUser($data)
 	{
-		return $this->userRepository->create($validatedData);
+		return User::create($data);
 	}
 
 	/**
 	 * Update user
 	 *
-	 * @param array $validatedData
 	 * @param int $id
+	 * @param array $data
 	 * @return App\Models\User
 	 */
-	public function updateUser($validatedData, $id)
+	public function updateUser($id, $data)
 	{
-		return $this->userRepository->update($validatedData, $id);
+		$user = User::findOrFail($id);
+		$user->name = $data['name'] ?? $user->name;
+		$user->email = $data['email'] ?? $user->email;
+		$user->phone = $data['phone'] ?? $user->phone;
+		$user->status = $data['status'] ?? $user->status;
+		$user->save();
+		return $user;
 	}
 
 	/**
@@ -82,5 +69,17 @@ class UserService
 			return false;
 		}
 		return new UserResource($user);
+	}
+
+	/**
+	 * Delete user
+	 *
+	 * @param int $id
+	 * @return boolean
+	 */
+	public function deleteUser($id)
+	{
+		$user = User::findOrFail($id);
+		return $user->delete();
 	}
 }
