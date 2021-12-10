@@ -43,6 +43,17 @@ class UserRepository implements UserRepositoryContract
     }
 
     /**
+     * Get User by Email
+     * 
+     * @param string $email
+     * @return User
+     */
+    public function getByEmail($email)
+    {
+        return $this->model->where('email', $email)->first();
+    }
+
+    /**
      * Create User
      * 
      * @param array $validatedData
@@ -54,13 +65,20 @@ class UserRepository implements UserRepositoryContract
     }
 
     /**
-     * Get User by Email
+     * Update User
      * 
-     * @param string $email
+     * @param int $id
+     * @param array $validatedData
      * @return User
      */
-    public function getByEmail($email)
+    public function update($id, $validatedData)
     {
-        return $this->model->where('email', $email)->first();
+        $user = $this->model->findOrFail($id);
+        $user->name = $validatedData['name'] ?? $user->name;
+        $user->email = $validatedData['email'] ?? $user->email;
+        $user->phone = $validatedData['phone'] ?? $user->phone;
+        $user->status = $validatedData['status'] ?? $user->status;
+        $user->save();
+        return $user;
     }
 }

@@ -8,7 +8,9 @@ interface UserRepositoryContract
 	
 	public function getAllWithPagination();
 
-	public function create($validatedData);
-
 	public function getByEmail($email);
+
+	public function create($data);
+
+	public function update($id, $data);
 }
