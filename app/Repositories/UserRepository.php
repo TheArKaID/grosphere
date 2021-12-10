@@ -50,7 +50,7 @@ class UserRepository implements UserRepositoryContract
      */
     public function getByEmail($email)
     {
-        return $this->model->where('email', $email)->first();
+        return $this->model->where('email', $email)->firstOrFail();
     }
 
     /**
@@ -80,5 +80,16 @@ class UserRepository implements UserRepositoryContract
         $user->status = $validatedData['status'] ?? $user->status;
         $user->save();
         return $user;
+    }
+
+    /**
+     * Delete User
+     * 
+     * @param int $id
+     * @return bool
+     */
+    public function delete($id)
+    {
+        return $this->model->findOrFail($id)->delete();
     }
 }

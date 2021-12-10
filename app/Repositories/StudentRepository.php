@@ -57,7 +57,7 @@ class StudentRepository implements StudentRepositoryContract
      */
     public function getById($id)
     {
-        return $this->model->find($id);
+        return $this->model->findOrFail($id);
     }
 
     /**
@@ -70,7 +70,7 @@ class StudentRepository implements StudentRepositoryContract
     {
         return $this->model->whereHas('user', function ($query) use ($email) {
             $query->where('email', $email);
-        })->first();
+        })->firstOrFail();
     }
 
     /**
@@ -104,5 +104,16 @@ class StudentRepository implements StudentRepositoryContract
         $student->save();
 
         return $student;
+    }
+
+    /**
+     * Delete Student
+     * 
+     * @param int $id
+     * @return bool
+     */
+    public function delete($id)
+    {
+        return $this->model->findOrFail($id)->delete();
     }
 }

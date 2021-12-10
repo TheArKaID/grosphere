@@ -89,11 +89,31 @@ class StudentService
 		DB::beginTransaction();
 
 		$student = new StudentResource($this->studentRepository->update($id, $data));
-		
+
 		$this->userRepository->update($student->user_id, $data);
 
 		DB::commit();
 
 		return $student;
+	}
+
+	/**
+	 * Delete Student
+	 *
+	 * @param $id
+	 * @return boolean
+	 */
+	public function deleteStudent($id)
+	{
+		DB::beginTransaction();
+
+		$student = $this->studentRepository->getById($id);
+
+		$this->studentRepository->delete($id);
+		$this->userRepository->delete($student->user_id);
+
+		DB::commit();
+
+		return true;
 	}
 }
