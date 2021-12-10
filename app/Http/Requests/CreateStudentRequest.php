@@ -16,7 +16,7 @@ class CreateStudentRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -27,15 +27,15 @@ class CreateStudentRequest extends FormRequest
     public function rules()
     {
         return [
+            'parent_id' => 'numeric|nullable',
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users',
             'password' => 'required|min:8|confirmed',
-            'user_id' => 'required|exists:users,id',
-            'parent_id' => 'number|nullable',
-            'id_number' => 'required|number|max:50',
+            'phone' => 'nullable|string|max:15|start_with:+628',
+            'id_number' => 'nullable|string|max:50',
             'birth_date' => 'required|date:Y-m-d',
             'birth_place' => 'required|string|max:100',
-            'gender' => 'required|number|between:0,1',
+            'gender' => 'required|numeric|between:0,1',
             'address' => 'required'
         ];
     }
