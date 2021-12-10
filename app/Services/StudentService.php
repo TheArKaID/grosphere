@@ -46,6 +46,17 @@ class StudentService
 	}
 
 	/**
+	 * Get Student by email
+	 *
+	 * @param string $email
+	 * @return App\Models\Student
+	 */
+	public function getByEmail($email)
+	{
+		return $this->studentRepository->getByEmail($email);
+	}
+
+	/**
 	 * Create Student
 	 *
 	 * @param array $data
@@ -67,13 +78,22 @@ class StudentService
 	}
 
 	/**
-	 * Get Student by email
+	 * Update Student
 	 *
-	 * @param string $email
+	 * @param $id
+	 * @param array $data
 	 * @return App\Models\Student
 	 */
-	public function getByEmail($email)
+	public function updateStudent($id, $data)
 	{
-		return $this->studentRepository->getByEmail($email);
+		DB::beginTransaction();
+
+		$student = new StudentResource($this->studentRepository->update($id, $data));
+		
+		$this->userRepository->update($student->user_id, $data);
+
+		DB::commit();
+
+		return $student;
 	}
 }

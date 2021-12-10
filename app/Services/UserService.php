@@ -29,6 +29,17 @@ class UserService
 	}
 
 	/**
+	 * Get user by email
+	 *
+	 * @param string $email
+	 * @return App\Models\User
+	 */
+	public function getByEmail($email)
+	{
+		return $this->userRepository->getByEmail($email);
+	}
+
+	/**
 	 * Create user
 	 *
 	 * @param array $validatedData
@@ -40,13 +51,14 @@ class UserService
 	}
 
 	/**
-	 * Get user by email
+	 * Update user
 	 *
-	 * @param string $email
+	 * @param array $validatedData
+	 * @param int $id
 	 * @return App\Models\User
 	 */
-	public function getByEmail($email)
+	public function updateUser($validatedData, $id)
 	{
-		return $this->userRepository->getByEmail($email);
+		return $this->userRepository->update($validatedData, $id);
 	}
 }

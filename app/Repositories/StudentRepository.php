@@ -61,6 +61,19 @@ class StudentRepository implements StudentRepositoryContract
     }
 
     /**
+     * Get Student by Email
+     * 
+     * @param string $email
+     * @return Student
+     */
+    public function getByEmail($email)
+    {
+        return $this->model->whereHas('user', function ($query) use ($email) {
+            $query->where('email', $email);
+        })->first();
+    }
+
+    /**
      * Create Student
      * 
      * @param array $data
@@ -72,15 +85,24 @@ class StudentRepository implements StudentRepositoryContract
     }
 
     /**
-     * Get Student by Email
+     * Update Student
      * 
-     * @param string $email
+     * @param int $id
+     * @param array $data
      * @return Student
      */
-    public function getByEmail($email)
+    public function update($id, $data)
     {
-        return $this->model->whereHas('user', function ($query) use ($email) {
-            $query->where('email', $email);
-        })->first();
+        $student = $this->model->findOrFail($id);
+        $student->user_id = $data['user_id'] ?? $student->user_id;
+        $student->parent_id = $data['parent_id'] ?? $student->parent_id;
+        $student->id_number = $data['id_number'] ?? $student->id_number;
+        $student->birth_date = $data['birth_date'] ?? $student->birth_date;
+        $student->birth_place = $data['birth_place'] ?? $student->birth_place;
+        $student->address = $data['address'] ?? $student->address;
+        $student->gender = $data['gender'] ?? $student->gender;
+        $student->save();
+
+        return $student;
     }
 }

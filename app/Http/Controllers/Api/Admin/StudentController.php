@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateStudentRequest;
+use App\Http\Requests\UpdateStudentRequest;
 use App\Services\StudentService;
 use Illuminate\Http\Request;
 
@@ -89,9 +90,17 @@ class StudentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateStudentRequest $request, $id)
     {
-        //
+        $validated = $request->validated();
+
+        $student = $this->studentService->updateStudent($id, $validated);
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Data Student diperbaharui',
+            'response' => $student
+        ], 200);
     }
 
     /**
