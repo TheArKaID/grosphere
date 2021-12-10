@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Validation\ValidationException;
 use Spatie\Permission\Exceptions\UnauthorizedException;
@@ -44,6 +45,12 @@ class Handler extends ExceptionHandler
 
         $this->renderable(function (NotFoundHttpException $e, $request) {
             if ($request->is('api/*')) {
+                if ($e->getPrevious() instanceof ModelNotFoundException) {
+                    return response()->json([
+                        'status' => 204,
+                        'message' => 'Failed. Data not found'
+                    ], 200);
+                }
                 return response()->json([
                     'status' => 404,
                     'message' => 'Target not found'
@@ -86,9 +93,9 @@ class Handler extends ExceptionHandler
                     'message' => 'Internal server error'
                 ];
                 if (env('APP_DEBUG')) {
-                    $response['error'] = $e->getMessage();
+                    return response($e, 500);
                 }
-                
+
                 return response()->json($response, 500);
             }
         });
