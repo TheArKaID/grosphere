@@ -62,7 +62,24 @@ class StudentController extends Controller
      */
     public function show($id)
     {
-        //
+        $student = $this->studentService->getById($id);
+
+        $response = $student->response()->getData(true);
+        $response = count($response) == 0 ? null : $response;
+
+        if ($response) {
+            return response()->json([
+                'status' => 200,
+                'message' => 'Success',
+                'response' => $response
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => 204,
+                'message' => 'Student not found',
+                'response' => null
+            ], 200);
+        }
     }
 
     /**

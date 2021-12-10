@@ -8,6 +8,8 @@ interface StudentRepositoryContract
 
 	public function getAllWithPagination($perPage = 10);
 
+	public function getById($id);
+
 	public function create($validatedData);
 	
 	public function getByEmail($email);

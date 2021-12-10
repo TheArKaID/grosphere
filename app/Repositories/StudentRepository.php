@@ -50,6 +50,17 @@ class StudentRepository implements StudentRepositoryContract
     }
 
     /**
+     * Get student by id.
+     * 
+     * @param int $id
+     * @return \App\Models\Student
+     */
+    public function getById($id)
+    {
+        return $this->model->find($id);
+    }
+
+    /**
      * Create Student
      * 
      * @param array $data

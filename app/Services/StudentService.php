@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Contracts\StudentRepositoryContract;
 use App\Contracts\UserRepositoryContract;
 use App\Http\Resources\StudentCollection;
+use App\Http\Resources\StudentResource;
 use Illuminate\Support\Facades\DB;
 
 class StudentService
@@ -31,6 +32,17 @@ class StudentService
 			return new StudentCollection($this->studentRepository->getAll());
 		}
 		return new StudentCollection($this->studentRepository->getAllWithPagination(request('size', 10)));
+	}
+
+	/**
+	 * Get Student by id
+	 * 
+	 * @param $id
+	 * @return mixed
+	 */
+	public function getById($id)
+	{
+		return new StudentResource($this->studentRepository->getById($id));
 	}
 
 	/**
