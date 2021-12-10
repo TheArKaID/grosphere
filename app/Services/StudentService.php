@@ -69,7 +69,7 @@ class StudentService
 
 		DB::commit();
 
-		return $student;
+		return new StudentResource($student);
 	}
 
 	/**
