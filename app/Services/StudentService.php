@@ -6,6 +6,8 @@ use App\Contracts\StudentRepositoryContract;
 use App\Contracts\UserRepositoryContract;
 use App\Http\Resources\StudentCollection;
 use App\Http\Resources\StudentResource;
+use App\Models\Student;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
 class StudentService
@@ -67,10 +69,12 @@ class StudentService
 		DB::beginTransaction();
 
 		$data['password'] = bcrypt($data['password']);
-		$user = $this->userRepository->create($data);
+		
+        $user = User::create($data);
 		$user->assignRole('student');
 		$data['user_id'] = $user->id;
-		$student = $this->studentRepository->create($data);
+		
+		$student = Student::create($data);
 
 		DB::commit();
 

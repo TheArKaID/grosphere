@@ -55,15 +55,15 @@ class AuthController extends Controller
     {
         $validated = $request->validated();
 
-        $user = $this->userService->getByEmail($validated['email']);
+        $user = $this->userService->login($validated);
 
-        if (!$user || !Hash::check($validated['password'], $user->password)) {
+        if (!$user) {
             return response()->json([
                 'status' => 401,
                 'message' => 'Email atau Password salah'
             ], 401);
         }
-
+        
         return response()->json([
             'status' => 200,
             'message' => 'Login berhasil',

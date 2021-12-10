@@ -5,6 +5,8 @@ namespace App\Services;
 use App\Contracts\UserRepositoryContract;
 use App\Http\Resources\UserCollection;
 use App\Http\Resources\UserResource;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class UserService
 {
@@ -22,7 +24,7 @@ class UserService
 	 */
 	public function getAll()
 	{
-		if(request()->has('page') && request()->get('page') == 'all') {
+		if (request()->has('page') && request()->get('page') == 'all') {
 			return new UserCollection($this->userRepository->getAll());
 		}
 		return new UserCollection($this->userRepository->getAllWithPagination());
@@ -60,5 +62,21 @@ class UserService
 	public function updateUser($validatedData, $id)
 	{
 		return $this->userRepository->update($validatedData, $id);
+	}
+
+	/**
+	 * Log user in
+	 * 
+	 * @param array $data
+	 * @return User
+	 */
+	public function login($data)
+	{
+		$user = User::where('email', $data['email'])->first();
+
+		if (!$user || !Hash::check($data['password'], $user->password)) {
+			return false;
+		}
+		return new UserResource($user);
 	}
 }
