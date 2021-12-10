@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Contracts\UserRepositoryContract;
-use App\Http\Resources\UserCollection;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
@@ -22,12 +21,17 @@ class UserService
 	 *
 	 * @return mixed
 	 */
-	public function getAll()
+	public function getAll($perPage = 10)
 	{
+		$users = new User;
 		if (request()->has('page') && request()->get('page') == 'all') {
-			return new UserCollection($this->userRepository->getAll());
+			if (request()->has('search')) {
+				$users = $users->where('name', 'like', '%' . request()->get('search') . '%')
+					->orWhere('email', 'like', '%' . request()->get('search') . '%');
+			}
+			return UserResource::collection($users->get());
 		}
-		return new UserCollection($this->userRepository->getAllWithPagination());
+		return UserResource::collection($users->paginate($perPage));
 	}
 
 	/**

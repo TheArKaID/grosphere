@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Admin\StudentController;
-use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\AuthController;
 use App\Models\User;
 use Illuminate\Http\Request;
