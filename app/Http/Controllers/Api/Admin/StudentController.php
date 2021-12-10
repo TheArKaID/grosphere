@@ -23,7 +23,13 @@ class StudentController extends Controller
      */
     public function index()
     {
-        //
+        $students = $this->studentService->getAll();
+        $response = $students->count() == 0 ? [] : $students->response()->getData(true);
+        return response()->json([
+            'status' => 200,
+            'message' => 'Success',
+            'response' => $response
+        ], 200);
     }
 
     /**
