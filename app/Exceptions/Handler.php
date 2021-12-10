@@ -3,7 +3,9 @@
 namespace App\Exceptions;
 
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Validation\ValidationException;
 use Spatie\Permission\Exceptions\UnauthorizedException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
@@ -43,6 +45,12 @@ class Handler extends ExceptionHandler
 
         $this->renderable(function (NotFoundHttpException $e, $request) {
             if ($request->is('api/*')) {
+                if ($e->getPrevious() instanceof ModelNotFoundException) {
+                    return response()->json([
+                        'status' => 204,
+                        'message' => 'Failed. Data not found'
+                    ], 200);
+                }
                 return response()->json([
                     'status' => 404,
                     'message' => 'Target not found'
@@ -67,7 +75,17 @@ class Handler extends ExceptionHandler
                 ], 403);
             }
         });
-        
+
+        $this->renderable(function (ValidationException $e, $request) {
+            if ($request->is('api/*')) {
+                return response()->json([
+                    'status' => 400,
+                    'message' => $e->response->original['message'],
+                    'errors' => $e->response->original['errors']
+                ], 400);
+            }
+        });
+
         $this->renderable(function (Throwable $e, $request) {
             if ($request->is('api/*')) {
                 $response = [
@@ -75,8 +93,9 @@ class Handler extends ExceptionHandler
                     'message' => 'Internal server error'
                 ];
                 if (env('APP_DEBUG')) {
-                    $response['error'] = $e->getMessage();
+                    return response($e, 500);
                 }
+
                 return response()->json($response, 500);
             }
         });

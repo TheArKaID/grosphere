@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Admin;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -20,6 +21,10 @@ class UserTableSeeder extends Seeder
             'password' => bcrypt('12345678')
         ]);
 
-        $admin->assignRole('super-admin');
+        $admin->assignRole('admin');
+
+        Admin::create([
+            'user_id' => $admin->id,
+        ]);
     }
 }
