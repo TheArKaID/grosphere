@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginUserRequest;
-use App\Http\Requests\RegisterUserRequest;
-use App\Models\User;
+use App\Http\Requests\CreateStudentRequest;
+use App\Services\StudentService;
 use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -13,31 +13,34 @@ use Illuminate\Support\Facades\Hash;
 class AuthController extends Controller
 {
     private $userService;
+    private $studentService;
 
     public function __construct(
-        UserService $userService
+        UserService $userService,
+        StudentService $studentService
     ) {
+        $this->studentService = $studentService;
         $this->userService = $userService;
     }
 
     /**
      * Register User
      *
-     * @param RegisterUserRequest $request
+     * @param CreateStudentRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function register(RegisterUserRequest $request)
+    public function register(CreateStudentRequest $request)
     {
         $validated = $request->validated();
 
-        $user = $this->userService->createUser($validated);
+        $student = $this->studentService->createStudent($validated);
 
         return response()->json([
             'status' => 200,
             'message' => 'Register berhasil',
             'data' => [
-                'user' => $user,
-                'token' => $user->createToken('ApiToken')->plainTextToken
+                'student' => $student,
+                'token' => $student->user->createToken('ApiToken')->plainTextToken
             ]
         ], 200);
     }
