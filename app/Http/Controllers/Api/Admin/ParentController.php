@@ -25,7 +25,7 @@ class ParentController extends Controller
     public function index()
     {
         $parents = ParentResource::collection($this->parentService->getAll());
-        
+
         $response = $parents->count() == 0 ? [] : $parents->response()->getData(true);
         return response()->json([
             'status' => 200,
@@ -43,7 +43,7 @@ class ParentController extends Controller
     public function store(CreateParentRequest $request)
     {
         $validated = $request->validated();
-        $parent = new ParentResource($this->parentService->createParent($validated));
+        $parent = new ParentResource($this->parentService->create($validated));
         $response = $parent->count() == 0 ? [] : $parent->response()->getData(true);
         return response()->json([
             'status' => 200,
@@ -60,7 +60,13 @@ class ParentController extends Controller
      */
     public function show($id)
     {
-        //
+        $parent = new ParentResource($this->parentService->getById($id));
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Success',
+            'response' => $parent
+        ], 200);
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Parents;
+use Illuminate\Support\Facades\DB;
 
 class ParentService
 {
@@ -38,19 +39,35 @@ class ParentService
     }
 
     /**
+     * Get Parent By Id
+     * 
+     * @param int $id
+     * @return Parents
+     */
+    public function getById(int $id)
+    {
+        return $this->parents->findOrFail($id);
+    }
+
+    /**
      * Create Parents
      * 
      * @param array $data
      * @return Parents
      */
-    public function createParent(array $data)
+    public function create(array $data)
     {
+        DB::beginTransaction();
+
         $data['password'] = bcrypt($data['password']);
+
         $user = $this->userService->createUser($data);
         $data['user_id'] = $user->id;
         $parent = $this->parents->create($data);
-        
+
         $user->assignRole('parent');
+
+        DB::commit();
 
         return $parent;
     }
