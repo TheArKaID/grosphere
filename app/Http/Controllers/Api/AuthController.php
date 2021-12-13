@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginUserRequest;
 use App\Http\Requests\CreateStudentRequest;
+use App\Http\Resources\StudentResource;
+use App\Http\Resources\UserResource;
 use App\Services\StudentService;
 use App\Services\UserService;
 use Illuminate\Http\Request;
@@ -37,9 +39,9 @@ class AuthController extends Controller
 
         return response()->json([
             'status' => 200,
-            'message' => 'Register berhasil',
+            'message' => 'Register Successfully',
             'data' => [
-                'student' => $student,
+                'student' => new StudentResource($student),
                 'token' => $student->user->createToken('ApiToken')->plainTextToken
             ]
         ], 200);
@@ -60,15 +62,15 @@ class AuthController extends Controller
         if (!$user) {
             return response()->json([
                 'status' => 401,
-                'message' => 'Email atau Password salah'
+                'message' => 'Email or password is wrong'
             ], 401);
         }
-        
+
         return response()->json([
             'status' => 200,
-            'message' => 'Login berhasil',
+            'message' => 'User Logged In',
             'response' => [
-                'user' => $user,
+                'user' => new UserResource($user),
                 'token' => $user->createToken('ApiToken')->plainTextToken
             ]
         ], 200);
@@ -86,7 +88,7 @@ class AuthController extends Controller
 
         return response()->json([
             'status' => 200,
-            'message' => 'Logout berhasil'
+            'message' => 'User Logged Out'
         ], 200);
     }
 }

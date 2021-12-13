@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateStudentRequest;
 use App\Http\Requests\UpdateStudentRequest;
+use App\Http\Resources\StudentResource;
 use App\Services\StudentService;
-use Illuminate\Http\Request;
 
 class StudentController extends Controller
 {
@@ -24,7 +24,7 @@ class StudentController extends Controller
      */
     public function index()
     {
-        $students = $this->studentService->getAll();
+        $students = StudentResource::collection($this->studentService->getAll());
 
         $response = $students->count() == 0 ? [] : $students->response()->getData(true);
         return response()->json([
@@ -44,11 +44,11 @@ class StudentController extends Controller
     {
         $validated = $request->validated();
 
-        $student = $this->studentService->createStudent($validated);
+        $student = new StudentResource($this->studentService->createStudent($validated));
 
         return response()->json([
             'status' => 200,
-            'message' => 'Student ditambahkan',
+            'message' => 'Student created successfully',
             'data' => $student
         ], 200);
     }
@@ -61,7 +61,7 @@ class StudentController extends Controller
      */
     public function show($id)
     {
-        $student = $this->studentService->getById($id);
+        $student = new StudentResource($this->studentService->getById($id));
 
         $response = $student->response()->getData(true);
         $response = count($response) == 0 ? null : $response;
@@ -76,7 +76,7 @@ class StudentController extends Controller
             return response()->json([
                 'status' => 204,
                 'message' => 'Student not found',
-                'response' => null
+                'response' => $response
             ], 200);
         }
     }
@@ -92,11 +92,11 @@ class StudentController extends Controller
     {
         $validated = $request->validated();
 
-        $student = $this->studentService->updateStudent($id, $validated);
+        $student = new StudentResource($this->studentService->updateStudent($id, $validated));
 
         return response()->json([
             'status' => 200,
-            'message' => 'Data Student diperbaharui',
+            'message' => 'Student Data Updated',
             'response' => $student
         ], 200);
     }
@@ -113,7 +113,7 @@ class StudentController extends Controller
 
         return response()->json([
             'status' => 200,
-            'message' => 'Data Student dihapus'
+            'message' => 'Student Deleted'
         ], 200);
     }
 }

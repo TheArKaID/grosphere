@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateParentRequest;
+use App\Http\Resources\ParentResource;
 use App\Services\ParentService;
 use Illuminate\Http\Request;
 
@@ -23,7 +24,7 @@ class ParentController extends Controller
      */
     public function index()
     {
-        $parents = $this->parentService->getAll();
+        $parents = ParentResource::collection($this->parentService->getAll());
         
         $response = $parents->count() == 0 ? [] : $parents->response()->getData(true);
         return response()->json([
@@ -42,7 +43,7 @@ class ParentController extends Controller
     public function store(CreateParentRequest $request)
     {
         $validated = $request->validated();
-        $parent = $this->parentService->create($validated);
+        $parent = new ParentResource($this->parentService->createParent($validated));
         $response = $parent->count() == 0 ? [] : $parent->response()->getData(true);
         return response()->json([
             'status' => 200,

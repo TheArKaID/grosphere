@@ -2,8 +2,6 @@
 
 namespace App\Services;
 
-use App\Http\Resources\ParentCollection;
-use App\Http\Resources\ParentResource;
 use App\Models\Parents;
 
 class ParentService
@@ -22,7 +20,7 @@ class ParentService
     /**
      * Get All Parents
      * 
-     * @return ParentCollection
+     * @return Parents
      */
     public function getAll()
     {
@@ -34,23 +32,26 @@ class ParentService
                         ->orWhere('phone', 'like', '%' . request()->get('search') . '%');
                 });
             }
-            return ParentResource::collection($this->parents->get());
+            return $this->parents->get();
         }
-        return ParentResource::collection($this->parents->paginate(request('size', 10)));
+        return $this->parents->paginate(request('size', 10));
     }
 
     /**
      * Create Parents
      * 
      * @param array $data
-     * @return ParentResource
+     * @return Parents
      */
-    public function create(array $data)
+    public function createParent(array $data)
     {
         $data['password'] = bcrypt($data['password']);
         $user = $this->userService->createUser($data);
         $data['user_id'] = $user->id;
         $parent = $this->parents->create($data);
-        return new ParentResource($parent);
+        
+        $user->assignRole('parent');
+
+        return $parent;
     }
 }

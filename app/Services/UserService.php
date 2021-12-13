@@ -11,7 +11,7 @@ class UserService
 	/**
 	 * Get all users
 	 *
-	 * @return mixed
+	 * @return User
 	 */
 	public function getAll()
 	{
@@ -21,9 +21,9 @@ class UserService
 				$users = $users->where('name', 'like', '%' . request()->get('search') . '%')
 					->orWhere('email', 'like', '%' . request()->get('search') . '%');
 			}
-			return UserResource::collection($users->get());
+			return $users->get();
 		}
-		return UserResource::collection($users->paginate(request('size', 10)));
+		return $users->paginate(request('size', 10));
 	}
 
 	/**
@@ -68,7 +68,7 @@ class UserService
 		if (!$user || !Hash::check($data['password'], $user->password)) {
 			return false;
 		}
-		return new UserResource($user);
+		return $user;
 	}
 
 	/**

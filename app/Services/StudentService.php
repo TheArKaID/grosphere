@@ -2,8 +2,6 @@
 
 namespace App\Services;
 
-use App\Http\Resources\StudentCollection;
-use App\Http\Resources\StudentResource;
 use App\Models\Student;
 use Illuminate\Support\Facades\DB;
 
@@ -20,7 +18,7 @@ class StudentService
 	/**
 	 * Get all Student
 	 *
-	 * @return StudentCollection
+	 * @return Student
 	 */
 	public function getAll()
 	{
@@ -33,27 +31,27 @@ class StudentService
 						->orWhere('phone', 'like', '%' . request()->get('search') . '%');
 				});
 			}
-			return new StudentCollection($student->get());
+			return $student->get();
 		}
-		return new StudentCollection($student->paginate(request('size', 10)));
+		return $student->paginate(request('size', 10));
 	}
 
 	/**
 	 * Get Student by id
 	 * 
 	 * @param $id
-	 * @return StudentResource
+	 * @return Student
 	 */
 	public function getById($id)
 	{
-		return new StudentResource(Student::findOrFail($id));
+		return Student::findOrFail($id);
 	}
 
 	/**
 	 * Create Student
 	 *
 	 * @param array $data
-	 * @return App\Models\Student
+	 * @return Student
 	 */
 	public function createStudent($data)
 	{
@@ -69,7 +67,7 @@ class StudentService
 
 		DB::commit();
 
-		return new StudentResource($student);
+		return $student;
 	}
 
 	/**
@@ -77,7 +75,7 @@ class StudentService
 	 *
 	 * @param $id
 	 * @param array $data
-	 * @return App\Models\Student
+	 * @return Student
 	 */
 	public function updateStudent($id, $data)
 	{
@@ -97,7 +95,7 @@ class StudentService
 
 		DB::commit();
 
-		return new StudentResource($student);
+		return $student;
 	}
 
 	/**
