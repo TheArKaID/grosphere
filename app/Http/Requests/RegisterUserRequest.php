@@ -32,22 +32,4 @@ class RegisterUserRequest extends FormRequest
             'password' => 'required|min:8|confirmed'
         ];
     }
-
-    /**
-     * Handle a failed validation attempt.
-     *
-     * @param  \Illuminate\Contracts\Validation\Validator  $validator
-     * @return void
-     *
-     * @throws \Illuminate\Validation\ValidationException
-     */
-    protected function failedValidation(Validator $validator)
-    {
-        $response = new Response([
-            'status' => 400,
-            'message' => 'Validation failed',
-            'errors' => $validator->errors()
-        ], 400);
-        throw new ValidationException($validator, $response);
-    }
 }
