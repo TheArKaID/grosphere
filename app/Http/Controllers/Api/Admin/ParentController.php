@@ -41,7 +41,14 @@ class ParentController extends Controller
      */
     public function store(CreateParentRequest $request)
     {
-        //
+        $validated = $request->validated();
+        $parent = $this->parentService->create($validated);
+        $response = $parent->count() == 0 ? [] : $parent->response()->getData(true);
+        return response()->json([
+            'status' => 200,
+            'message' => 'Success',
+            'response' => $response
+        ], 200);
     }
 
     /**

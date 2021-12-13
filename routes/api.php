@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\ParentController;
 use App\Http\Controllers\Api\Admin\StudentController;
 use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\AuthController;
@@ -28,6 +29,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::resource('users', UserController::class)->only(['index', 'show', 'store', 'update', 'destroy']);
 
         Route::resource('students', StudentController::class)->only(['index', 'show', 'store', 'update', 'destroy']);
+        Route::resource('parents', ParentController::class)->only(['index', 'show', 'store', 'update', 'destroy']);
     });
     Route::get('/user', function () {
         return User::with(['detail'])->find(auth()->user()->id);
