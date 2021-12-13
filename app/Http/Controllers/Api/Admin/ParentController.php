@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateParentRequest;
+use App\Http\Requests\UpdateParentRequest;
 use App\Http\Resources\ParentResource;
 use App\Services\ParentService;
 use Illuminate\Http\Request;
@@ -44,11 +45,11 @@ class ParentController extends Controller
     {
         $validated = $request->validated();
         $parent = new ParentResource($this->parentService->create($validated));
-        $response = $parent->count() == 0 ? [] : $parent->response()->getData(true);
+        
         return response()->json([
             'status' => 200,
             'message' => 'Success',
-            'response' => $response
+            'response' => $parent
         ], 200);
     }
 
@@ -76,9 +77,16 @@ class ParentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateParentRequest $request, $id)
     {
-        //
+        $validated = $request->validated();
+        $parent = new ParentResource($this->parentService->update($id, data: $validated));
+        
+        return response()->json([
+            'status' => 200,
+            'message' => 'Success',
+            'response' => $parent
+        ], 200);
     }
 
     /**

@@ -71,4 +71,25 @@ class ParentService
 
         return $parent;
     }
+
+    /**
+     * Update Parents
+     * 
+     * @param int $id
+     * @param array $data
+     * @return Parents
+     */
+    public function update(int $id, array $data)
+    {
+        DB::beginTransaction();
+
+        $parent = $this->getById($id);
+
+        $parent->update($data);
+        $parent->user->update($data);
+
+        DB::commit();
+
+        return $parent;
+    }
 }
