@@ -92,4 +92,31 @@ class ParentService
 
         return $parent;
     }
+
+    /**
+     * Delete Parents
+     * 
+     * @param int $id
+     * @return bool
+     */
+    public function delete(int $id)
+    {
+        DB::beginTransaction();
+
+        $parent = $this->getById($id);
+
+        if ($parent->students) {
+            foreach ($parent->students as $key => $student) {
+                $student->parent_id = null;
+                $student->save();
+            }
+        }
+        $user = $parent->user;
+        $parent->delete();
+        $user->delete();
+
+        DB::commit();
+
+        return true;
+    }
 }

@@ -97,6 +97,11 @@ class ParentController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $this->parentService->delete($id);
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Parent deleted successfully',
+        ], 200);
     }
 }
