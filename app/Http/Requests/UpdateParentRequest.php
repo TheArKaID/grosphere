@@ -25,7 +25,7 @@ class UpdateParentRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'phone' => 'nullable|string|min:8|max:15',
+            'phone' => 'nullable|string|min:8|max:50',
             'address' => 'required'
         ];
     }

@@ -28,7 +28,8 @@ class UpdateStudentRequest extends FormRequest
             'birth_date' => 'date',
             'birth_place' => 'string|max:255',
             'gender' => 'numeric|between:0,1',
-            'address' => 'string'
+            'address' => 'string',
+            'phone' => 'nullable|string|min:8|max:50',
         ];
     }
 }

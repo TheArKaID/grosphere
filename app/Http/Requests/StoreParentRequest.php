@@ -27,7 +27,7 @@ class StoreParentRequest extends FormRequest
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6|confirmed',
-            'phone' => 'nullable|string|min:8|max:15',
+            'phone' => 'nullable|string|min:8|max:50',
             'address' => 'required'
         ];
     }
