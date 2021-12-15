@@ -13,7 +13,7 @@ class UpdateTutorRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return $this->user()->hasRole('admin');
     }
 
     /**
