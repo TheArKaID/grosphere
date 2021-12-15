@@ -8,10 +8,13 @@ use Illuminate\Support\Facades\DB;
 class StudentService
 {
 	private $userService;
+	private $student;
 
 	public function __construct(
+		Student $student,
 		UserService $userService
 	) {
+		$this->student = $student;
 		$this->userService = $userService;
 	}
 
@@ -22,18 +25,17 @@ class StudentService
 	 */
 	public function getAll()
 	{
-		$student = new Student;
-		if (request()->has('page') && request()->get('page') == 'all') {
-			if (request()->has('search')) {
-				$student = $student->whereHas('user', function ($query) {
-					$query->where('name', 'like', '%' . request()->get('search') . '%')
-						->orWhere('email', 'like', '%' . request()->get('search') . '%')
-						->orWhere('phone', 'like', '%' . request()->get('search') . '%');
-				});
-			}
-			return $student->get();
+		if (request()->has('search')) {
+			$this->student = $this->student->whereHas('user', function ($query) {
+				$query->where('name', 'like', '%' . request()->get('search') . '%')
+					->orWhere('email', 'like', '%' . request()->get('search') . '%')
+					->orWhere('phone', 'like', '%' . request()->get('search') . '%');
+			});
 		}
-		return $student->paginate(request('size', 10));
+		if (request()->has('page') && request()->get('page') == 'all') {
+			return $this->student->get();
+		}
+		return $this->student->paginate(request('size', 10));
 	}
 
 	/**
@@ -44,7 +46,7 @@ class StudentService
 	 */
 	public function getById($id)
 	{
-		return Student::findOrFail($id);
+		return $this->student->findOrFail($id);
 	}
 
 	/**
@@ -63,7 +65,7 @@ class StudentService
 		$user->assignRole('student');
 		$data['user_id'] = $user->id;
 
-		$student = Student::create($data);
+		$student = $this->student->create($data);
 
 		DB::commit();
 
@@ -81,7 +83,7 @@ class StudentService
 	{
 		DB::beginTransaction();
 
-		$student = Student::findOrFail($id);
+		$student = $this->student->findOrFail($id);
 		$student->user_id = $data['user_id'] ?? $student->user_id;
 		$student->parent_id = $data['parent_id'] ?? $student->parent_id;
 		$student->id_number = $data['id_number'] ?? $student->id_number;

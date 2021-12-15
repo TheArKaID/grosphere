@@ -25,14 +25,14 @@ class ParentService
      */
     public function getAll()
     {
+        if (request()->has('search')) {
+            $this->parents = $this->parents->whereHas('user', function ($query) {
+                $query->where('name', 'like', '%' . request()->get('search') . '%')
+                    ->orWhere('email', 'like', '%' . request()->get('search') . '%')
+                    ->orWhere('phone', 'like', '%' . request()->get('search') . '%');
+            });
+        }
         if (request()->has('page') && request()->get('page') == 'all') {
-            if (request()->has('search')) {
-                $this->parents = $this->parents->whereHas('user', function ($query) {
-                    $query->where('name', 'like', '%' . request()->get('search') . '%')
-                        ->orWhere('email', 'like', '%' . request()->get('search') . '%')
-                        ->orWhere('phone', 'like', '%' . request()->get('search') . '%');
-                });
-            }
             return $this->parents->get();
         }
         return $this->parents->paginate(request('size', 10));
