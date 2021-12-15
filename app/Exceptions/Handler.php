@@ -51,6 +51,13 @@ class Handler extends ExceptionHandler
                         'message' => 'Failed. Data not found'
                     ], 200);
                 }
+                
+                if($e->getPrevious() instanceof ModelGetEmptyException){
+                    return response()->json([
+                        'status' => 204,
+                        'message' => 'Failed. No ' . $e->getPrevious()->getMessage() .' found'
+                    ], 200);
+                }
                 return response()->json([
                     'status' => 404,
                     'message' => 'Target not found'
