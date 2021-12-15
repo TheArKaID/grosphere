@@ -84,7 +84,7 @@ class ParentController extends Controller
     public function update(UpdateParentRequest $request, $id)
     {
         $validated = $request->validated();
-        $parent = new ParentResource($this->parentService->update($id, data: $validated));
+        $parent = new ParentResource($this->parentService->update($id, $validated));
 
         return response()->json([
             'status' => 200,
