@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\CreateParentRequest;
+use App\Http\Requests\StoreParentRequest;
 use App\Http\Requests\UpdateParentRequest;
 use App\Http\Resources\ParentResource;
 use App\Services\ParentService;
@@ -41,7 +41,7 @@ class ParentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CreateParentRequest $request)
+    public function store(StoreParentRequest $request)
     {
         $validated = $request->validated();
         $parent = new ParentResource($this->parentService->create($validated));
