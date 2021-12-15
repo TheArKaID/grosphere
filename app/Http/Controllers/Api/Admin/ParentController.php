@@ -52,7 +52,7 @@ class ParentController extends Controller
 
         return response()->json([
             'status' => 200,
-            'message' => 'Success',
+            'message' => 'Parent Created Successfully',
             'response' => $parent
         ], 200);
     }
@@ -65,12 +65,12 @@ class ParentController extends Controller
      */
     public function show($id)
     {
-        $parent = new ParentResource($this->parentService->getById($id));
+        $parent = $this->parentService->getById($id);
 
         return response()->json([
             'status' => 200,
             'message' => 'Success',
-            'response' => $parent
+            'response' => new ParentResource($parent)
         ], 200);
     }
 
@@ -88,7 +88,7 @@ class ParentController extends Controller
 
         return response()->json([
             'status' => 200,
-            'message' => 'Success',
+            'message' => 'Parent Updated Successfully',
             'response' => $parent
         ], 200);
     }
@@ -105,7 +105,7 @@ class ParentController extends Controller
 
         return response()->json([
             'status' => 200,
-            'message' => 'Parent deleted successfully',
+            'message' => 'Parent Deleted Successfully',
         ], 200);
     }
 }

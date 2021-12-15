@@ -52,7 +52,7 @@ class StudentController extends Controller
 
         return response()->json([
             'status' => 200,
-            'message' => 'Student created successfully',
+            'message' => 'Student Created Successfully',
             'data' => $student
         ], 200);
     }
@@ -65,24 +65,13 @@ class StudentController extends Controller
      */
     public function show($id)
     {
-        $student = new StudentResource($this->studentService->getById($id));
+        $student = $this->studentService->getById($id);
 
-        $response = $student->response()->getData(true);
-        $response = count($response) == 0 ? null : $response;
-
-        if ($response) {
-            return response()->json([
-                'status' => 200,
-                'message' => 'Success',
-                'response' => $response
-            ], 200);
-        } else {
-            return response()->json([
-                'status' => 204,
-                'message' => 'Student not found',
-                'response' => $response
-            ], 200);
-        }
+        return response()->json([
+            'status' => 200,
+            'message' => 'Success',
+            'response' => new StudentResource($student)
+        ], 200);
     }
 
     /**
@@ -100,7 +89,7 @@ class StudentController extends Controller
 
         return response()->json([
             'status' => 200,
-            'message' => 'Student Data Updated',
+            'message' => 'Student Updated Successfully',
             'response' => $student
         ], 200);
     }
@@ -117,7 +106,7 @@ class StudentController extends Controller
 
         return response()->json([
             'status' => 200,
-            'message' => 'Student Deleted'
+            'message' => 'Student Deleted Successfully',
         ], 200);
     }
 }

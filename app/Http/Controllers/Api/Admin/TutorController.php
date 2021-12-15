@@ -52,7 +52,7 @@ class TutorController extends Controller
 
         return response()->json([
             'status' => 200,
-            'message' => 'Success',
+            'message' => 'Tutor Created Successfully',
             'response' => new TutorResource($tutor)
         ], 200);
     }
@@ -88,7 +88,7 @@ class TutorController extends Controller
 
         return response()->json([
             'status' => 200,
-            'message' => 'Success',
+            'message' => 'Tutor Updated Successfully',
             'response' => new TutorResource($tutor)
         ], 200);
     }
@@ -105,7 +105,7 @@ class TutorController extends Controller
 
         return response()->json([
             'status' => 200,
-            'message' => 'Tutor deleted successfully',
+            'message' => 'Tutor Deleted Successfully',
         ], 200);
     }
 }
