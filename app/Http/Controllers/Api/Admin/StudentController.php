@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
+use App\Exceptions\ModelGetEmptyException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreStudentRequest;
 use App\Http\Requests\UpdateStudentRequest;
@@ -26,11 +27,14 @@ class StudentController extends Controller
     {
         $students = StudentResource::collection($this->studentService->getAll());
 
-        $response = $students->count() == 0 ? [] : $students->response()->getData(true);
+        if ($students->count() == 0) {
+            throw new ModelGetEmptyException("Student");
+        }
+
         return response()->json([
             'status' => 200,
             'message' => 'Success',
-            'response' => $response
+            'response' => $students->response()->getData(true)
         ], 200);
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
+use App\Exceptions\ModelGetEmptyException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreParentRequest;
 use App\Http\Requests\UpdateParentRequest;
@@ -27,11 +28,14 @@ class ParentController extends Controller
     {
         $parents = ParentResource::collection($this->parentService->getAll());
 
-        $response = $parents->count() == 0 ? [] : $parents->response()->getData(true);
+        if ($parents->count() == 0) {
+            throw new ModelGetEmptyException("Parent");
+        }
+
         return response()->json([
             'status' => 200,
             'message' => 'Success',
-            'response' => $response
+            'response' => $parents->response()->getData(true)
         ], 200);
     }
 
@@ -45,7 +49,7 @@ class ParentController extends Controller
     {
         $validated = $request->validated();
         $parent = new ParentResource($this->parentService->create($validated));
-        
+
         return response()->json([
             'status' => 200,
             'message' => 'Success',
@@ -81,7 +85,7 @@ class ParentController extends Controller
     {
         $validated = $request->validated();
         $parent = new ParentResource($this->parentService->update($id, data: $validated));
-        
+
         return response()->json([
             'status' => 200,
             'message' => 'Success',

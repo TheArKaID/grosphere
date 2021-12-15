@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
+use App\Exceptions\ModelGetEmptyException;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use App\Services\UserService;
@@ -24,11 +25,15 @@ class UserController extends Controller
     public function index()
     {
         $users = UserResource::collection($this->userService->getAll());
-        $response = $users->count() == 0 ? [] : $users->response()->getData(true);
+
+        if ($users->count() == 0) {
+            throw new ModelGetEmptyException("User");
+        }
+
         return response()->json([
             'status' => 200,
             'message' => 'Success',
-            'response' => $response
+            'response' => $users->response()->getData(true)
         ], 200);
     }
 
