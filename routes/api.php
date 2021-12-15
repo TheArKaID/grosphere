@@ -27,11 +27,11 @@ Route::prefix('auth')->group(function () {
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::middleware(['role:admin'])->prefix('admin')->group(function () {
-        Route::resource('users', UserController::class)->only(['index', 'show', 'store', 'update', 'destroy']);
+        Route::resource('users', UserController::class)->except(['edit', 'create']);
 
-        Route::resource('students', StudentController::class)->only(['index', 'show', 'store', 'update', 'destroy']);
-        Route::resource('parents', ParentController::class)->only(['index', 'show', 'store', 'update', 'destroy']);
-        Route::resource('tutors', TutorController::class)->only(['index', 'show', 'store', 'update', 'destroy']);
+        Route::resource('students', StudentController::class)->except(['edit', 'create']);
+        Route::resource('parents', ParentController::class)->except(['edit', 'create']);
+        Route::resource('tutors', TutorController::class)->except(['edit', 'create']);
     });
     Route::get('/user', function () {
         return User::with(['detail'])->find(auth()->user()->id);
