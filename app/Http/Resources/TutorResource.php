@@ -19,8 +19,7 @@ class TutorResource extends JsonResource
             'user_id' => $this->user_id,
             'name' => $this->user->name,
             'email' => $this->user->email,
-            'phone' => $this->phone,
-            'address' => $this->address,
+            'phone' => $this->user->phone,
             'status' => $this->user->status,
             'created_at' => $this->created_at
         ] : [];

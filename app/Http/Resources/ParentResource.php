@@ -20,7 +20,7 @@ class ParentResource extends JsonResource
             'students' => StudentResource::collection($this->whenLoaded('students')),
             'name' => $this->user->name,
             'email' => $this->user->email,
-            'phone' => $this->phone,
+            'phone' => $this->user->phone,
             'address' => $this->address,
             'status' => $this->user->status,
             'created_at' => $this->created_at
