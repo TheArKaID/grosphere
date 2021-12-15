@@ -16,25 +16,25 @@ class RoleTableSeeder extends Seeder
     {
         Role::create([
             'name' => 'admin',
-            'readable_name' => 'Admin Lembaga',
+            'readable_name' => 'Admin',
             'guard_name' => 'web'
         ]);
         
         Role::create([
-            'name' => 'teacher',
-            'readable_name' => 'Guru',
+            'name' => 'tutor',
+            'readable_name' => 'Tutor',
             'guard_name' => 'web'
         ]);
         
         Role::create([
             'name' => 'student',
-            'readable_name' =>  'Siswa',
+            'readable_name' =>  'Student',
             'guard_name' => 'web'
         ]);
         
         Role::create([
             'name' => 'parent',
-            'readable_name' => 'Orang Tua',
+            'readable_name' => 'Parent',
             'guard_name' => 'web'
         ]);
     }
