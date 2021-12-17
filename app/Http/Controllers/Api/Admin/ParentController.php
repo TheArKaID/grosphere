@@ -108,4 +108,26 @@ class ParentController extends Controller
             'message' => 'Parent Deleted Successfully',
         ], 200);
     }
+
+    /**
+     * Add a child to a parent
+     * 
+     * @param Request $request
+     * @param int $parent_id
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function addChild(Request $request, $parent_id)
+    {
+        $validated = $request->validate([
+            'child_id' => 'required|integer'
+        ]);
+
+        $this->parentService->addChild($parent_id, $validated['child_id']);
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Child Added Successfully'
+        ], 200);
+    }
 }

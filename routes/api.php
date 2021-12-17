@@ -30,7 +30,12 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::resource('users', UserController::class)->except(['edit', 'create']);
 
         Route::resource('students', StudentController::class)->except(['edit', 'create']);
+
         Route::resource('parents', ParentController::class)->except(['edit', 'create']);
+        Route::prefix('parents/{parent_id}')->group(function () {
+            Route::post('child', ParentController::class . '@addChild');
+        });
+        
         Route::resource('tutors', TutorController::class)->except(['edit', 'create']);
     });
     Route::get('/user', function () {

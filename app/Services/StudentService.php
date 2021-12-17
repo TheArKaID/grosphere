@@ -119,4 +119,21 @@ class StudentService
 
 		return true;
 	}
+
+	/**
+	 * Update parent_id
+	 * 
+	 * @param int $id
+	 * @param int $parent_id
+	 * 
+	 * @return Student
+	 */
+	public function updateParentId(int $id, int $parent_id)
+	{
+		$student = $this->getById($id);
+		$student->parent_id = $parent_id;
+		$student->save();
+
+		return $student;
+	}
 }

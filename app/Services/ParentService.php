@@ -7,15 +7,16 @@ use Illuminate\Support\Facades\DB;
 
 class ParentService
 {
-    private $parents;
-    private $userService;
+    private $parents, $userService, $studentService;
 
     public function __construct(
         Parents $parents,
-        UserService $userService
+        UserService $userService,
+        StudentService $studentService
     ) {
         $this->parents = $parents;
         $this->userService = $userService;
+        $this->studentService = $studentService;
     }
 
     /**
@@ -116,6 +117,24 @@ class ParentService
         $user->delete();
 
         DB::commit();
+
+        return true;
+    }
+
+    /**
+     * Add Child
+     * 
+     * @param int $id
+     * @param int $child_id
+     * 
+     * @return bool
+     */
+    public function addChild(int $id, int $child_id)
+    {
+        $student = $this->studentService->getById($child_id);
+        $parent = $this->getById($id);
+
+        $this->studentService->updateParentId($student->id, $parent->id);
 
         return true;
     }
