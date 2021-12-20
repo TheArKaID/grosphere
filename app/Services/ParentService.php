@@ -112,9 +112,9 @@ class ParentService
                 $student->save();
             }
         }
-        $user = $parent->user;
+
         $parent->delete();
-        $user->delete();
+        $this->userService->deleteUser($parent->user_id);
 
         DB::commit();
 

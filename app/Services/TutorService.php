@@ -63,13 +63,13 @@ class TutorService
 
         $user = $this->userService->createUser($data);
         $data['user_id'] = $user->id;
-        $parent = $this->tutor->create($data);
+        $tutor = $this->tutor->create($data);
 
         $user->assignRole('tutor');
 
         DB::commit();
 
-        return $parent;
+        return $tutor;
     }
 
     /**
@@ -83,14 +83,14 @@ class TutorService
     {
         DB::beginTransaction();
 
-        $parent = $this->getById($id);
+        $tutor = $this->getById($id);
 
-        $parent->update($data);
-        $parent->user->update($data);
+        $tutor->update($data);
+        $tutor->user->update($data);
 
         DB::commit();
 
-        return $parent;
+        return $tutor;
     }
 
     /**
@@ -103,17 +103,10 @@ class TutorService
     {
         DB::beginTransaction();
 
-        $parent = $this->getById($id);
+        $tutor = $this->getById($id);
 
-        if ($parent->students) {
-            foreach ($parent->students as $key => $student) {
-                $student->parent_id = null;
-                $student->save();
-            }
-        }
-        $user = $parent->user;
-        $parent->delete();
-        $user->delete();
+        $tutor->delete();
+        $this->userService->deleteUser($tutor->user_id);
 
         DB::commit();
 
@@ -130,9 +123,9 @@ class TutorService
      */
     public function changePassword(int $id, string $password)
     {
-        $parent = $this->getById($id);
+        $tutor = $this->getById($id);
 
-        $this->userService->changePassword($parent->user_id, $password);
+        $this->userService->changePassword($tutor->user_id, $password);
 
         return true;
     }
