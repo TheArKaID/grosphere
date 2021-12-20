@@ -1,0 +1,35 @@
+<?php
+
+namespace App\Http\Requests;
+
+use Illuminate\Foundation\Http\FormRequest;
+
+class StoreLiveClassRequest extends FormRequest
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     *
+     * @return bool
+     */
+    public function authorize()
+    {
+        return $this->user()->hasRole('admin');
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
+    public function rules()
+    {
+        return [
+            'tutor_id' => 'required|exists:tutors,id',
+            'name' => 'required|string|max:255',
+            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'description' => 'required|string',
+            'duration' => 'required|integer',
+            'start_time' => 'required|date_format:Y-m-d H:i:s'
+        ];
+    }
+}
