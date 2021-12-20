@@ -142,13 +142,13 @@ class ParentController extends Controller
      */
     public function changePassword(UpdatePasswordRequest $request, $parent_id)
     {
-        $validated = $request->validate();
+        $validated = $request->validated();
 
         $this->parentService->changePassword($parent_id, $validated['password']);
 
         return response()->json([
             'status' => 200,
-            'message' => 'Password Changed Successfully'
+            'message' => 'Parent Password Changed Successfully'
         ], 200);
     }
 }

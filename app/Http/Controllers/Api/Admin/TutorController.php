@@ -121,7 +121,7 @@ class TutorController extends Controller
      */
     public function changePassword(UpdatePasswordRequest $request, int $id)
     {
-        $validated = $request->validate();
+        $validated = $request->validated();
 
         $this->tutorService->changePassword($id, $validated['password']);
 
