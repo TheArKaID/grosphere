@@ -132,7 +132,7 @@ class StudentControllerTest extends TestCase
             User::find(1),
             ['*']
         );
-        $password = $this->faker->password(20);
+        $password = $this->faker->password(8). "1aA!";
         $student = [
             'password' => $password,
             'password_confirmation' => $password

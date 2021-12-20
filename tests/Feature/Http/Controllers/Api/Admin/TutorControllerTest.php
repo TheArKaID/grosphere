@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Http\Controllers\Api\Admin;
 
+use App\Models\Tutor;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -77,7 +78,8 @@ class TutorControllerTest extends TestCase
             ['*']
         );
 
-        $response = $this->get(route('tutors.show', 1));
+        $tutor = Tutor::first();
+        $response = $this->get(route('tutors.show', $tutor->id));
 
         $response->assertJson([
             'status' => 200,
@@ -98,7 +100,9 @@ class TutorControllerTest extends TestCase
             ['*']
         );
 
-        $response = $this->put(route('tutors.update', 1), [
+        $tutor = Tutor::first();
+
+        $response = $this->put(route('tutors.update', $tutor->id), [
             'name' => $this->faker->name,
             'phone' => $this->faker->phoneNumber()
         ]);
@@ -121,12 +125,13 @@ class TutorControllerTest extends TestCase
             User::find(1),
             ['*']
         );
-        $password = $this->faker->password(20);
+        $password = $this->faker->password(8) . "1aA!";
         $parent = [
             'password' => $password,
             'password_confirmation' => $password
         ];
-        $response = $this->put(route('tutors.change-password', 1), $parent);
+        $tutor = Tutor::first();
+        $response = $this->put(route('tutors.change-password', $tutor->id), $parent);
 
         $response->assertJson([
             'status' => 200,
@@ -146,7 +151,8 @@ class TutorControllerTest extends TestCase
             ['*']
         );
 
-        $response = $this->delete(route('tutors.destroy', 1));
+        $tutor = Tutor::first();
+        $response = $this->delete(route('tutors.destroy', $tutor->id));
 
         $response->assertJson([
             'status' => 200,

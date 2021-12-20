@@ -120,7 +120,7 @@ class ParentControllerTest extends TestCase
             User::find(1),
             ['*']
         );
-        $password = $this->faker->password(20);
+        $password = $this->faker->password(4). "1aA!";
         $parent = [
             'password' => $password,
             'password_confirmation' => $password
