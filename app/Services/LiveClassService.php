@@ -24,10 +24,12 @@ class LiveClassService
     {
         if (request()->has('search')) {
             $search = request()->get('search');
-            $this->liveClass = $this->liveClass->whereHas('tutor', function ($tutor) use ($search) {
-                $tutor->where('name', 'like', '%' . $search . '%');
-            })->where('name', 'like', '%' . $search . '%')
-                ->orWhere('description', 'like', '%' . $search . '%');
+            $this->liveClass = $this->liveClass->whereHas('class', function ($class) use ($search) {
+                $class->where('name', 'like', '%' . $search . '%')
+                    ->orWhere('description', 'like', '%' . $search . '%')->whereHas('tutor', function ($tutor) use ($search) {
+                        $tutor->where('name', 'like', '%' . $search . '%');
+                    });
+            });
         }
         if (request()->has('page') && request()->get('page') == 'all') {
             return $this->liveClass->get();
