@@ -19,7 +19,6 @@ class CreateLiveClassesTable extends Migration
             $table->integer('duration');
             $table->dateTime('start_time');
             $table->string('uniq_code', 50);
-            $table->softDeletes();
             $table->timestamps();
         });
     }

@@ -18,7 +18,6 @@ class CreateCourseClassesTable extends Migration
             $table->foreignId('class_id')->constrained();
             $table->integer('duration');
             $table->dateTime('published_at');
-            $table->softDeletes();
             $table->timestamps();
         });
     }

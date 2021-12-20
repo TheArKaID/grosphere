@@ -18,9 +18,8 @@ class CreateClassesTable extends Migration
             $table->foreignId('tutor_id')->constrained();
             $table->string('name');
             $table->string('description');
-            $table->string('thumbnail');
+            $table->string('thumbnail')->nullable();
             $table->tinyInteger('type');
-            $table->softDeletes();
             $table->timestamps();
         });
     }
