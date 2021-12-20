@@ -5,10 +5,12 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Exceptions\ModelGetEmptyException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreTutorRequest;
+use App\Http\Requests\UpdatePasswordRequest;
 use App\Http\Requests\UpdateTutorRequest;
 use App\Http\Resources\TutorResource;
 use App\Models\Tutor;
 use App\Services\TutorService;
+use Illuminate\Http\Request;
 
 class TutorController extends Controller
 {
@@ -42,7 +44,7 @@ class TutorController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreTutorRequest  $request
+     * @param \App\Http\Requests\StoreTutorRequest $request
      * @return \Illuminate\Http\Response
      */
     public function store(StoreTutorRequest $request)
@@ -60,7 +62,7 @@ class TutorController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $tutor
+     * @param int $tutor
      * @return \Illuminate\Http\Response
      */
     public function show(int $id)
@@ -77,8 +79,8 @@ class TutorController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateTutorRequest  $request
-     * @param  int $id
+     * @param \App\Http\Requests\UpdateTutorRequest $request
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function update(UpdateTutorRequest $request, int $id)
@@ -96,7 +98,7 @@ class TutorController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy(int $id)
@@ -106,6 +108,26 @@ class TutorController extends Controller
         return response()->json([
             'status' => 200,
             'message' => 'Tutor Deleted Successfully',
+        ], 200);
+    }
+
+    /**
+     * Change Password
+     * 
+     * @param App\Http\Requests\UpdatePasswordRequest $request
+     * @param int $id
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function changePassword(UpdatePasswordRequest $request, int $id)
+    {
+        $validated = $request->validate();
+
+        $this->tutorService->changePassword($id, $validated['password']);
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Tutor Password Changed Successfully'
         ], 200);
     }
 }

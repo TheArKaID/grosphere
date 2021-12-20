@@ -119,4 +119,21 @@ class TutorService
 
         return true;
     }
+
+    /**
+     * Change Tutor Password
+     * 
+     * @param int $id
+     * @param string $password
+     * 
+     * @return bool
+     */
+    public function changePassword(int $id, string $password)
+    {
+        $parent = $this->getById($id);
+
+        $this->userService->changePassword($parent->user_id, $password);
+
+        return true;
+    }
 }

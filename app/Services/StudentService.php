@@ -136,4 +136,21 @@ class StudentService
 
 		return $student;
 	}
+
+	/**
+	 * Change Student's password
+	 * 
+	 * @param int $id
+	 * @param string $password
+	 * 
+	 * @return bool
+	 */
+	public function changePassword(int $id, string $password)
+	{
+		$student = $this->getById($id);
+		
+		$this->userService->changePassword($student->user_id, $password);
+
+		return true;
+	}
 }

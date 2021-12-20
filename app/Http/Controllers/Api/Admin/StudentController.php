@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Exceptions\ModelGetEmptyException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreStudentRequest;
+use App\Http\Requests\UpdatePasswordRequest;
 use App\Http\Requests\UpdateStudentRequest;
 use App\Http\Resources\StudentResource;
 use App\Services\StudentService;
+use Illuminate\Http\Request;
 
 class StudentController extends Controller
 {
@@ -41,7 +43,7 @@ class StudentController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(StoreStudentRequest $request)
@@ -60,7 +62,7 @@ class StudentController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -77,8 +79,8 @@ class StudentController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function update(UpdateStudentRequest $request, $id)
@@ -97,7 +99,7 @@ class StudentController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
@@ -107,6 +109,26 @@ class StudentController extends Controller
         return response()->json([
             'status' => 200,
             'message' => 'Student Deleted Successfully',
+        ], 200);
+    }
+
+    /**
+     * Change Password 
+     * 
+     * @param App\Http\Requests\UpdatePasswordRequest $request
+     * @param int $id
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function changePassword(UpdatePasswordRequest $request, $id)
+    {
+        $validated = $request->validated();
+
+        $this->studentService->changePassword($id, $validated['password']);
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Student Password Changed Successfully'
         ], 200);
     }
 }

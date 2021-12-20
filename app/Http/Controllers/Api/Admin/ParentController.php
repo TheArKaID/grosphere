@@ -6,6 +6,7 @@ use App\Exceptions\ModelGetEmptyException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreParentRequest;
 use App\Http\Requests\UpdateParentRequest;
+use App\Http\Requests\UpdatePasswordRequest;
 use App\Http\Resources\ParentResource;
 use App\Services\ParentService;
 use Illuminate\Http\Request;
@@ -128,6 +129,26 @@ class ParentController extends Controller
         return response()->json([
             'status' => 200,
             'message' => 'Child Added Successfully'
+        ], 200);
+    }
+
+    /**
+     * Change Parent Password
+     * 
+     * @param App\Http\Requests\UpdatePasswordRequest $request
+     * @param int $parent_id
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function changePassword(UpdatePasswordRequest $request, $parent_id)
+    {
+        $validated = $request->validate();
+
+        $this->parentService->changePassword($parent_id, $validated['password']);
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Password Changed Successfully'
         ], 200);
     }
 }

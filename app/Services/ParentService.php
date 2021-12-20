@@ -138,4 +138,21 @@ class ParentService
 
         return true;
     }
+
+    /**
+     * Change Parent Password
+     * 
+     * @param int $id
+     * @param string $password
+     * 
+     * @return bool
+     */
+    public function changePassword(int $id, string $password)
+    {
+        $parent = $this->getById($id);
+
+        $this->userService->changePassword($parent->user->id, $password);
+
+        return true;
+    }
 }

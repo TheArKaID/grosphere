@@ -27,6 +27,17 @@ class UserService
 	}
 
 	/**
+	 * Get user by id
+	 *
+	 * @param int $id
+	 * @return User
+	 */
+	public function getById($id)
+	{
+		return User::findOrFail($id);
+	}
+
+	/**
 	 * Create user
 	 *
 	 * @param array $data
@@ -81,5 +92,21 @@ class UserService
 	{
 		$user = User::findOrFail($id);
 		return $user->delete();
+	}
+
+	/**
+	 * Change user password
+	 * 
+	 * @param int $id
+	 * @param string $password
+	 * 
+	 * @return User
+	 */
+	public function changePassword($id, $password)
+	{
+		$user = $this->getById($id);
+		$user->password = Hash::make($password);
+		$user->save();
+		return $user;
 	}
 }
