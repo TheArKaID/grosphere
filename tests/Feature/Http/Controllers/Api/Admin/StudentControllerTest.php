@@ -122,6 +122,30 @@ class StudentControllerTest extends TestCase
     }
 
     /**
+     * Change Student Password Test
+     * 
+     * @return void
+     */
+    public function testChangeStudentPassword()
+    {
+        Sanctum::actingAs(
+            User::find(1),
+            ['*']
+        );
+        $password = $this->faker->password(20);
+        $student = [
+            'password' => $password,
+            'password_confirmation' => $password
+        ];
+        $response = $this->put(route('students.change-password', 1), $student);
+
+        $response->assertJson([
+            'status' => 200,
+            'message' => 'Student Password Changed Successfully'
+        ]);
+    }
+
+    /**
      * Delete Student Test
      * 
      * @return void

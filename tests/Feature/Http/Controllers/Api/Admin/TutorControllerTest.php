@@ -111,6 +111,30 @@ class TutorControllerTest extends TestCase
     }
 
     /**
+     * Change Tutor Password Test
+     * 
+     * @return void
+     */
+    public function testChangeTutorPassword()
+    {
+        Sanctum::actingAs(
+            User::find(1),
+            ['*']
+        );
+        $password = $this->faker->password(20);
+        $parent = [
+            'password' => $password,
+            'password_confirmation' => $password
+        ];
+        $response = $this->put(route('tutors.change-password', 1), $parent);
+
+        $response->assertJson([
+            'status' => 200,
+            'message' => 'Tutor Password Changed Successfully'
+        ]);
+    }
+
+    /**
      * Delete Tutor Test
      * 
      * @return void

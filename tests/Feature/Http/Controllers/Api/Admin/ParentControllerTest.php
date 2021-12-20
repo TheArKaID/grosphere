@@ -75,7 +75,7 @@ class ParentControllerTest extends TestCase
             ['*']
         );
 
-        $response = $this->get('/api/admin/parents/1');
+        $response = $this->get(route('parents.show', 1));
 
         $response->assertJson([
             'status' => 200,
@@ -100,12 +100,36 @@ class ParentControllerTest extends TestCase
             'phone' => $this->faker->phoneNumber(),
             'address' => $this->faker->address
         ];
-        $response = $this->put('/api/admin/parents/1', $parent);
+        $response = $this->put(route('parents.update', 1), $parent);
 
         $response->assertJson([
             'status' => 200,
             'message' => 'Parent Updated Successfully',
             'response' => $parent
+        ]);
+    }
+
+    /**
+     * Change Parent Password Test
+     * 
+     * @return void
+     */
+    public function testChangeParentPassword()
+    {
+        Sanctum::actingAs(
+            User::find(1),
+            ['*']
+        );
+        $password = $this->faker->password(20);
+        $parent = [
+            'password' => $password,
+            'password_confirmation' => $password
+        ];
+        $response = $this->put(route('parents.change-password', 1), $parent);
+
+        $response->assertJson([
+            'status' => 200,
+            'message' => 'Parent Password Changed Successfully'
         ]);
     }
 
