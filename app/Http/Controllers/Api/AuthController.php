@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginUserRequest;
-use App\Http\Requests\CreateStudentRequest;
+use App\Http\Requests\StoreStudentRequest;
 use App\Http\Resources\StudentResource;
 use App\Http\Resources\UserResource;
 use App\Services\StudentService;
@@ -28,21 +28,23 @@ class AuthController extends Controller
     /**
      * Register User
      *
-     * @param CreateStudentRequest $request
+     * @param StoreStudentRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function register(CreateStudentRequest $request)
+    public function register(StoreStudentRequest $request)
     {
         $validated = $request->validated();
 
         $student = $this->studentService->createStudent($validated);
+
+        $token = auth()->login($student->user);
 
         return response()->json([
             'status' => 200,
             'message' => 'Register Successfully',
             'data' => [
                 'student' => new StudentResource($student),
-                'token' => $student->user->createToken('ApiToken')->plainTextToken
+                'token' => $token
             ]
         ], 200);
     }
@@ -57,21 +59,18 @@ class AuthController extends Controller
     {
         $validated = $request->validated();
 
-        $user = $this->userService->login($validated);
-
-        if (!$user) {
+        if (!$token = auth()->attempt($validated)) {
             return response()->json([
                 'status' => 401,
                 'message' => 'Email or password is wrong'
             ], 401);
         }
-
         return response()->json([
             'status' => 200,
             'message' => 'User Logged In',
             'response' => [
-                'user' => new UserResource($user),
-                'token' => $user->createToken('ApiToken')->plainTextToken
+                'user' => new UserResource(auth()->user()),
+                'token' => $token
             ]
         ], 200);
     }
@@ -84,7 +83,7 @@ class AuthController extends Controller
      */
     public function logout(Request $request)
     {
-        $request->user()->currentAccessToken()->delete();
+        auth()->invalidate(true);
 
         return response()->json([
             'status' => 200,
