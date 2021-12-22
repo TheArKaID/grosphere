@@ -5,7 +5,6 @@ namespace Tests\Feature\Http\Controllers\Api\Admin;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
 class UserControllerTest extends TestCase
@@ -17,10 +16,7 @@ class UserControllerTest extends TestCase
      */
     public function testGetProfile()
     {
-        Sanctum::actingAs(
-            User::find(1),
-            ['*']
-        );
+        auth()->login((User::find(1)));
         $response = $this->get('/api/profile');
 
         $response->assertJson([

@@ -8,6 +8,7 @@ use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Validation\ValidationException;
 use Spatie\Permission\Exceptions\UnauthorizedException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Tymon\JWTAuth\Exceptions\JWTException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -90,6 +91,15 @@ class Handler extends ExceptionHandler
                     'message' => "Validation failed",
                     'errors' => $e->validator->getMessageBag()
                 ], 400);
+            }
+        });
+
+        $this->renderable(function (JWTException $e, $request) {
+            if ($request->is('api/*')) {
+                return response()->json([
+                    'status' => 403,
+                    'message' => 'Cannot verify token'
+                ], 403);
             }
         });
 

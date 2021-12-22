@@ -6,7 +6,6 @@ use App\Models\Tutor;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
 class TutorControllerTest extends TestCase
@@ -20,10 +19,7 @@ class TutorControllerTest extends TestCase
      */
     public function testAddTutor()
     {
-        Sanctum::actingAs(
-            User::find(1),
-            ['*']
-        );
+        auth()->login((User::find(1)));
         $password = $this->faker->password(8);
         $tutor = [
             'name' => $this->faker->name,
@@ -52,10 +48,7 @@ class TutorControllerTest extends TestCase
      */
     public function testGetAllTutors()
     {
-        Sanctum::actingAs(
-            User::find(1),
-            ['*']
-        );
+        auth()->login((User::find(1)));
 
         $response = $this->get(route('tutors.index'));
 
@@ -73,10 +66,7 @@ class TutorControllerTest extends TestCase
      */
     public function testGetTutor()
     {
-        Sanctum::actingAs(
-            User::find(1),
-            ['*']
-        );
+        auth()->login((User::find(1)));
 
         $tutor = Tutor::first();
         $response = $this->get(route('tutors.show', $tutor->id));
@@ -95,10 +85,7 @@ class TutorControllerTest extends TestCase
      */
     public function testUpdateTutor()
     {
-        Sanctum::actingAs(
-            User::find(1),
-            ['*']
-        );
+        auth()->login((User::find(1)));
 
         $tutor = Tutor::first();
 
@@ -121,10 +108,7 @@ class TutorControllerTest extends TestCase
      */
     public function testChangeTutorPassword()
     {
-        Sanctum::actingAs(
-            User::find(1),
-            ['*']
-        );
+        auth()->login((User::find(1)));
         $password = $this->faker->password(8) . "1aA!";
         $parent = [
             'password' => $password,
@@ -146,10 +130,7 @@ class TutorControllerTest extends TestCase
      */
     public function testDeleteTutor()
     {
-        Sanctum::actingAs(
-            User::find(1),
-            ['*']
-        );
+        auth()->login((User::find(1)));
 
         $tutor = Tutor::first();
         $response = $this->delete(route('tutors.destroy', $tutor->id));
