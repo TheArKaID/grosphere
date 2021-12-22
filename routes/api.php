@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\LiveClassController;
 use App\Http\Controllers\Api\Admin\ParentController;
 use App\Http\Controllers\Api\Admin\StudentController;
 use App\Http\Controllers\Api\Admin\TutorController;
@@ -36,14 +37,18 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
         Route::resource('parents', ParentController::class)->except(['edit', 'create']);
         Route::prefix('parents/{parent_id}')->group(function () {
-            Route::post('child', [ParentController::class, 'addChild']);
+            Route::post('child', [ParentController::class, 'addChild'])->name('parents.add-child');
             Route::put('password', [ParentController::class, 'changePassword'])->name('parents.change-password');
         });
-        
+
         Route::resource('tutors', TutorController::class)->except(['edit', 'create']);
         Route::prefix('tutors/{tutor_id}')->group(function () {
             Route::put('password', [TutorController::class, 'changePassword'])->name('tutors.change-password');
         });
+
+        // Route::resource('classes', ClassController::class)->except(['edit', 'create']);
+        Route::resource('live-classes', LiveClassController::class)->except(['edit', 'create']);
+        // Route::resource('course-classes', CourseController::class)->except(['edit', 'create']);
     });
 
     Route::get('/user', function () {
