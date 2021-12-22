@@ -90,4 +90,23 @@ class AuthController extends Controller
             'message' => 'User Logged Out'
         ], 200);
     }
+
+    /**
+     * Refresh Token
+     * 
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function refresh(Request $request)
+    {
+        $token = auth()->refresh(true);
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Token Refreshed',
+            'data' => [
+                'token' => $token
+            ]
+        ], 200);
+    }
 }
