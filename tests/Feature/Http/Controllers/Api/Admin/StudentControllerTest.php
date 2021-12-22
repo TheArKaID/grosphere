@@ -4,7 +4,6 @@ namespace Tests\Feature\Http\Controllers\Api\Admin;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\WithFaker;
-use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
 class StudentControllerTest extends TestCase
@@ -18,10 +17,7 @@ class StudentControllerTest extends TestCase
      */
     public function testAddStudent()
     {
-        Sanctum::actingAs(
-            User::find(1),
-            ['*']
-        );
+        auth()->login((User::find(1)));
         $password = $this->faker->password(8);
         $student = [
             'name' => $this->faker->name,
@@ -57,10 +53,7 @@ class StudentControllerTest extends TestCase
      */
     public function testGetAllStudents()
     {
-        Sanctum::actingAs(
-            User::find(1),
-            ['*']
-        );
+        auth()->login((User::find(1)));
         $response = $this->get(route('students.index'));
 
         $response->assertJson([
@@ -77,10 +70,7 @@ class StudentControllerTest extends TestCase
      */
     public function testGetStudent()
     {
-        Sanctum::actingAs(
-            User::find(1),
-            ['*']
-        );
+        auth()->login((User::find(1)));
 
         $response = $this->get(route('students.show', 1));
 
@@ -98,10 +88,7 @@ class StudentControllerTest extends TestCase
      */
     public function testUpdateStudent()
     {
-        Sanctum::actingAs(
-            User::find(1),
-            ['*']
-        );
+        auth()->login((User::find(1)));
         $student = [
             'name' => $this->faker->name,
             'birth_place' => $this->faker->city,
@@ -128,10 +115,7 @@ class StudentControllerTest extends TestCase
      */
     public function testChangeStudentPassword()
     {
-        Sanctum::actingAs(
-            User::find(1),
-            ['*']
-        );
+        auth()->login((User::find(1)));
         $password = $this->faker->password(8). "1aA!";
         $student = [
             'password' => $password,
@@ -152,10 +136,7 @@ class StudentControllerTest extends TestCase
      */
     public function testDeleteStudent()
     {
-        Sanctum::actingAs(
-            User::find(1),
-            ['*']
-        );
+        auth()->login((User::find(1)));
         $response = $this->delete(route('students.destroy', 1));
 
         $response->assertJson([

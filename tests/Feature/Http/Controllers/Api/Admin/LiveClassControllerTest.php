@@ -7,7 +7,6 @@ use App\Models\Tutor;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
 class LiveClassControllerTest extends TestCase
@@ -21,10 +20,7 @@ class LiveClassControllerTest extends TestCase
      */
     public function testAddTutor()
     {
-        Sanctum::actingAs(
-            User::find(1),
-            ['*']
-        );
+        auth()->login((User::find(1)));
 
         $password = $this->faker->password(8);
         $tutor = [
@@ -53,10 +49,7 @@ class LiveClassControllerTest extends TestCase
      */
     public function testAddLiveClass()
     {
-        Sanctum::actingAs(
-            User::find(1),
-            ['*']
-        );
+        auth()->login((User::find(1)));
 
         $tutor = Tutor::first();
 
@@ -86,10 +79,7 @@ class LiveClassControllerTest extends TestCase
      */
     public function testUpdateLiveClass()
     {
-        Sanctum::actingAs(
-            User::find(1),
-            ['*']
-        );
+        auth()->login((User::find(1)));
         $liveClass = LiveClass::first();
         $liveClass->name = $this->faker->name;
         $liveClass->description = $this->faker->text;
@@ -114,10 +104,7 @@ class LiveClassControllerTest extends TestCase
      */
     public function testGetAllLiveClasses()
     {
-        Sanctum::actingAs(
-            User::find(1),
-            ['*']
-        );
+        auth()->login((User::find(1)));
         $response = $this->get(route('live-classes.index'));
 
         $response->assertStatus(200);
@@ -135,10 +122,7 @@ class LiveClassControllerTest extends TestCase
      */
     public function testGetLiveClass()
     {
-        Sanctum::actingAs(
-            User::find(1),
-            ['*']
-        );
+        auth()->login((User::find(1)));
         $liveClass = LiveClass::first();
         $response = $this->get(route('live-classes.show', $liveClass->id));
 
@@ -157,10 +141,7 @@ class LiveClassControllerTest extends TestCase
      */
     public function testDeleteLiveClass()
     {
-        Sanctum::actingAs(
-            User::find(1),
-            ['*']
-        );
+        auth()->login((User::find(1)));
         $liveClass = LiveClass::first();
 
         $response = $this->delete(route('live-classes.destroy', $liveClass->id));
@@ -178,10 +159,7 @@ class LiveClassControllerTest extends TestCase
      */
     public function testDeleteTutor()
     {
-        Sanctum::actingAs(
-            User::find(1),
-            ['*']
-        );
+        auth()->login((User::find(1)));
         $tutor = Tutor::first();
 
         $response = $this->delete(route('tutors.destroy', $tutor->id));

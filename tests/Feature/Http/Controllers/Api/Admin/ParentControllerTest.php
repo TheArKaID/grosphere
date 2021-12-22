@@ -4,7 +4,6 @@ namespace Tests\Feature\Http\Controllers\Api\Admin;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\WithFaker;
-use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
 class ParentControllerTest extends TestCase
@@ -18,10 +17,7 @@ class ParentControllerTest extends TestCase
      */
     public function testAddParent()
     {
-        Sanctum::actingAs(
-            User::find(1),
-            ['*']
-        );
+        auth()->login((User::find(1)));
         $password = $this->faker->password(8);
         $parent = [
             'name' => $this->faker->name,
@@ -50,10 +46,7 @@ class ParentControllerTest extends TestCase
      */
     public function testGetAllParent()
     {
-        Sanctum::actingAs(
-            User::find(1),
-            ['*']
-        );
+        auth()->login((User::find(1)));
         $response = $this->get(route('parents.index'));
 
         $response->assertJson([
@@ -70,10 +63,7 @@ class ParentControllerTest extends TestCase
      */
     public function testGetParent()
     {
-        Sanctum::actingAs(
-            User::find(1),
-            ['*']
-        );
+        auth()->login((User::find(1)));
 
         $response = $this->get(route('parents.show', 1));
 
@@ -91,10 +81,7 @@ class ParentControllerTest extends TestCase
      */
     public function testUpdateParent()
     {
-        Sanctum::actingAs(
-            User::find(1),
-            ['*']
-        );
+        auth()->login((User::find(1)));
         $parent = [
             'name' => $this->faker->name,
             'phone' => $this->faker->phoneNumber(),
@@ -116,10 +103,7 @@ class ParentControllerTest extends TestCase
      */
     public function testChangeParentPassword()
     {
-        Sanctum::actingAs(
-            User::find(1),
-            ['*']
-        );
+        auth()->login((User::find(1)));
         $password = $this->faker->password(4). "1aA!";
         $parent = [
             'password' => $password,
@@ -140,10 +124,7 @@ class ParentControllerTest extends TestCase
      */
     public function testDeleteParent()
     {
-        Sanctum::actingAs(
-            User::find(1),
-            ['*']
-        );
+        auth()->login((User::find(1)));
         $response = $this->delete('/api/admin/parents/1');
 
         $response->assertJson([
