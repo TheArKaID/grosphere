@@ -14,6 +14,7 @@ class LiveClassResource extends JsonResource
      */
     public function toArray($request)
     {
+        parent::wrap('live_classes');
         return $this->resource ? [
             'id' => $this->id,
             'duration' => $this->duration,

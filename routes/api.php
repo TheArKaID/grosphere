@@ -70,7 +70,7 @@ Route::middleware(['auth:api'])->group(function () {
         return response()->json([
             'status' => 200,
             'message' => 'success',
-            'response' => $user
+            'data' => $user
         ], 200);
     });
 

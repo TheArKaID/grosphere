@@ -37,7 +37,7 @@ class TutorController extends Controller
         return response()->json([
             'status' => 200,
             'message' => "Success",
-            'response' => $tutors->response()->getData(true)
+            'data' => $tutors->response()->getData(true)
         ], 200);
     }
 
@@ -55,7 +55,7 @@ class TutorController extends Controller
         return response()->json([
             'status' => 200,
             'message' => 'Tutor Created Successfully',
-            'response' => new TutorResource($tutor)
+            'data' => new TutorResource($tutor)
         ], 200);
     }
 
@@ -72,7 +72,7 @@ class TutorController extends Controller
         return response()->json([
             'status' => 200,
             'message' => 'Success',
-            'response' => new TutorResource($tutor)
+            'data' => new TutorResource($tutor)
         ], 200);
     }
 
@@ -91,7 +91,7 @@ class TutorController extends Controller
         return response()->json([
             'status' => 200,
             'message' => 'Tutor Updated Successfully',
-            'response' => new TutorResource($tutor)
+            'data' => new TutorResource($tutor)
         ], 200);
     }
 
