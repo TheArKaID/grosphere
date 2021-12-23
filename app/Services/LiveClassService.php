@@ -24,12 +24,7 @@ class LiveClassService
     {
         if (request()->has('search')) {
             $search = request()->get('search');
-            $this->liveClass = $this->liveClass->whereHas('class', function ($class) use ($search) {
-                $class->where('name', 'like', '%' . $search . '%')
-                    ->orWhere('description', 'like', '%' . $search . '%')->whereHas('tutor', function ($tutor) use ($search) {
-                        $tutor->where('name', 'like', '%' . $search . '%');
-                    });
-            });
+            $this->liveClass = $this->searchLiveClasses($search);
         }
         if (request()->has('page') && request()->get('page') == 'all') {
             return $this->liveClass->get();
@@ -124,6 +119,22 @@ class LiveClassService
     }
 
     /**
+     * Search in live classes
+     * 
+     * @param string $search
+     * @return LiveClass
+     */
+    public function searchLiveClasses($search)
+    {
+        return $this->liveClass->whereHas('class', function ($class) use ($search) {
+            $class->where('name', 'like', '%' . $search . '%')
+                ->orWhere('description', 'like', '%' . $search . '%')->whereHas('tutor', function ($tutor) use ($search) {
+                    $tutor->where('name', 'like', '%' . $search . '%');
+                });
+        });
+    }
+
+    /**
      * Get All Current Tutor Live Classes
      * 
      * @return Collection
@@ -138,12 +149,7 @@ class LiveClassService
 
         if (request()->has('search')) {
             $search = request()->get('search');
-            $this->liveClass = $this->liveClass->whereHas('class', function ($class) use ($search) {
-                $class->where('name', 'like', '%' . $search . '%')
-                    ->orWhere('description', 'like', '%' . $search . '%')->whereHas('tutor', function ($tutor) use ($search) {
-                        $tutor->where('name', 'like', '%' . $search . '%');
-                    });
-            });
+            $this->liveClass = $this->searchLiveClasses($search);
         }
 
         if (request()->has('page') && request()->get('page') == 'all') {
@@ -151,5 +157,21 @@ class LiveClassService
         }
 
         return $this->liveClass->paginate(request('size', 10));
+    }
+
+    /**
+     * Get Current Tutor Live Class
+     * 
+     * @param int $id
+     * 
+     * @return LiveClass
+     */
+    public function getCurrentTutorLiveClass($id)
+    {
+        $tutorId = auth()->user()->detail->id;
+
+        return $this->liveClass->whereHas('class', function ($class) use ($tutorId) {
+            $class->where('tutor_id', $tutorId);
+        })->find($id);
     }
 }

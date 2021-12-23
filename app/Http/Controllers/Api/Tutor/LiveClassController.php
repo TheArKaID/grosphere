@@ -53,12 +53,18 @@ class LiveClassController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\LiveClass  $liveClass
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(LiveClass $liveClass)
+    public function show(int $id)
     {
-        //
+        $liveClass = new LiveClassResource($this->liveClassService->getCurrentTutorLiveClass($id));
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Success',
+            'data' => $liveClass
+        ], 200);
     }
 
     /**
