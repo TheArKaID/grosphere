@@ -122,4 +122,34 @@ class LiveClassService
     {
         return $id . substr(md5($id . rand(1, 100)), 0, 10 - strlen($id));
     }
+
+    /**
+     * Get All Current Tutor Live Classes
+     * 
+     * @return Collection
+     */
+    public function getAllCurrentTutorLiveClasses()
+    {
+        $tutorId = auth()->user()->detail->id;
+
+        $this->liveClass = $this->liveClass->whereHas('class', function ($class) use ($tutorId) {
+            $class->where('tutor_id', $tutorId);
+        });
+
+        if (request()->has('search')) {
+            $search = request()->get('search');
+            $this->liveClass = $this->liveClass->whereHas('class', function ($class) use ($search) {
+                $class->where('name', 'like', '%' . $search . '%')
+                    ->orWhere('description', 'like', '%' . $search . '%')->whereHas('tutor', function ($tutor) use ($search) {
+                        $tutor->where('name', 'like', '%' . $search . '%');
+                    });
+            });
+        }
+
+        if (request()->has('page') && request()->get('page') == 'all') {
+            return $this->liveClass->get();
+        }
+
+        return $this->liveClass->paginate(request('size', 10));
+    }
 }
