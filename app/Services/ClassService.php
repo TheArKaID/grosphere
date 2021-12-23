@@ -38,10 +38,12 @@ class ClassService
         $data['type'] = Classes::$LIVE;
         $class = $this->class->create($data);
 
-        // if($data['thumbnail']) {
-        //     Storage::cloud()->put('class/' . $class->id . '/thumbnail', $data['thumbnail']);
-        //     $data['thumbnail']->storeAs('classes/' . $class->id, 'thumbnail.jpg', 'public');
-        // }
+        if (isset($data['thumbnail'])) {
+            $fileName = $class->id . '-' . time() . '.png';
+            Storage::cloud()->putFileAs('class/thumbnail', $data['thumbnail'], $fileName);
+            $class->thumbnail = $fileName;
+            $class->save();
+        }
 
         return $class;
     }
@@ -57,7 +59,24 @@ class ClassService
     public function updateClass(int $id, array $data)
     {
         $class = $this->getClassById($id);
-        $class->update($data);
+
+        $class->update([
+            'name' => $data['name'],
+            'description' => $data['description'],
+            'start_time' => $data['start_time'],
+            'duration' => $data['duration']
+        ]);
+
+        if (isset($data['thumbnail'])) {
+            if (Storage::cloud()->exists('class/thumbnail/' . $class->thumbnail)) {
+                Storage::cloud()->delete('class/thumbnail/' . $class->thumbnail);
+            }
+            $fileName = $class->id . '-' . time() . '.png';
+            Storage::cloud()->putFileAs('class/thumbnail', $data['thumbnail'], $fileName);
+            $class->thumbnail = $fileName;
+            $class->save();
+        }
+
         return $class;
     }
 
@@ -71,6 +90,11 @@ class ClassService
     public function deleteClass(int $id)
     {
         $class = $this->getClassById($id);
+
+        if (Storage::cloud()->exists('class/thumbnail/' . $class->thumbnail)) {
+            Storage::cloud()->delete('class/thumbnail/' . $class->thumbnail);
+        }
+
         return $class->delete();
     }
 }
