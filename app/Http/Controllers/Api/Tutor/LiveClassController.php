@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Tutor;
+namespace App\Http\Controllers\Api\Tutor;
 
 use App\Exceptions\ModelGetEmptyException;
 use App\Http\Controllers\Controller;
