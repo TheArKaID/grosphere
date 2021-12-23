@@ -35,7 +35,7 @@ class ParentControllerTest extends TestCase
         $response->assertJson([
             'status' => 200,
             'message' => 'Parent Created Successfully',
-            'response' => $parent
+            'data' => $parent
         ]);
     }
 
@@ -52,7 +52,7 @@ class ParentControllerTest extends TestCase
         $response->assertJson([
             'status' => 200,
             'message' => 'Success',
-            'response' => []
+            'data' => []
         ]);
     }
 
@@ -70,7 +70,7 @@ class ParentControllerTest extends TestCase
         $response->assertJson([
             'status' => 200,
             'message' => 'Success',
-            'response' => []
+            'data' => []
         ]);
     }
 
@@ -92,7 +92,7 @@ class ParentControllerTest extends TestCase
         $response->assertJson([
             'status' => 200,
             'message' => 'Parent Updated Successfully',
-            'response' => $parent
+            'data' => $parent
         ]);
     }
 

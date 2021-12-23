@@ -22,7 +22,7 @@ class UserControllerTest extends TestCase
         $response->assertJson([
             'status' => 200,
             'message' => 'success',
-            'response' => [
+            'data' => [
                 'name' => 'Admin',
                 'email' => 'admin@gmail.com'
             ]

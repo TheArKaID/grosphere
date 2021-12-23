@@ -36,7 +36,7 @@ class ParentController extends Controller
         return response()->json([
             'status' => 200,
             'message' => 'Success',
-            'response' => $parents->response()->getData(true)
+            'data' => $parents->response()->getData(true)
         ], 200);
     }
 
@@ -54,7 +54,7 @@ class ParentController extends Controller
         return response()->json([
             'status' => 200,
             'message' => 'Parent Created Successfully',
-            'response' => $parent
+            'data' => $parent
         ], 200);
     }
 
@@ -71,7 +71,7 @@ class ParentController extends Controller
         return response()->json([
             'status' => 200,
             'message' => 'Success',
-            'response' => new ParentResource($parent)
+            'data' => new ParentResource($parent)
         ], 200);
     }
 
@@ -90,7 +90,7 @@ class ParentController extends Controller
         return response()->json([
             'status' => 200,
             'message' => 'Parent Updated Successfully',
-            'response' => $parent
+            'data' => $parent
         ], 200);
     }
 

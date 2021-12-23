@@ -36,7 +36,7 @@ class StudentController extends Controller
         return response()->json([
             'status' => 200,
             'message' => 'Success',
-            'response' => $students->response()->getData(true)
+            'data' => $students->response()->getData(true)
         ], 200);
     }
 
@@ -55,7 +55,7 @@ class StudentController extends Controller
         return response()->json([
             'status' => 200,
             'message' => 'Student Created Successfully',
-            'response' => $student
+            'data' => $student
         ], 200);
     }
 
@@ -72,7 +72,7 @@ class StudentController extends Controller
         return response()->json([
             'status' => 200,
             'message' => 'Success',
-            'response' => new StudentResource($student)
+            'data' => new StudentResource($student)
         ], 200);
     }
 
@@ -92,7 +92,7 @@ class StudentController extends Controller
         return response()->json([
             'status' => 200,
             'message' => 'Student Updated Successfully',
-            'response' => $student
+            'data' => $student
         ], 200);
     }
 

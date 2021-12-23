@@ -34,7 +34,7 @@ class LiveClassController extends Controller
         return response()->json([
             'status' => 200,
             'message' => 'Success',
-            'response' => $liveClasses->response()->getData(true)
+            'data' => $liveClasses->response()->getData(true)
         ], 200);
     }
 
@@ -53,7 +53,7 @@ class LiveClassController extends Controller
         return response()->json([
             'status' => 200,
             'message' => 'Live Class Created Successfully',
-            'response' => $liveClass
+            'data' => $liveClass
         ], 200);
     }
 
@@ -70,7 +70,7 @@ class LiveClassController extends Controller
         return response()->json([
             'status' => 200,
             'message' => 'Success',
-            'response' => $liveClass
+            'data' => $liveClass
         ], 200);
     }
 
@@ -90,7 +90,7 @@ class LiveClassController extends Controller
         return response()->json([
             'status' => 200,
             'message' => 'Live Class Updated Successfully',
-            'response' => $liveClass
+            'data' => $liveClass
         ], 200);
     }
 

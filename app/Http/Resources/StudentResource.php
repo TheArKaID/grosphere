@@ -14,6 +14,7 @@ class StudentResource extends JsonResource
      */
     public function toArray($request)
     {
+        parent::wrap('students');
         return $this->resource ? [
             'id' => $this->id,
             'user_id' => $this->user_id,

@@ -39,7 +39,7 @@ class LiveClassControllerTest extends TestCase
         $response->assertJson([
             'status' => 200,
             'message' => 'Tutor Created Successfully',
-            'response' => $tutor
+            'data' => $tutor
         ]);
     }
     /**

@@ -68,7 +68,7 @@ class AuthController extends Controller
         return response()->json([
             'status' => 200,
             'message' => 'User Logged In',
-            'response' => [
+            'data' => [
                 'user' => new UserResource(auth()->user()),
                 'token' => $token
             ]

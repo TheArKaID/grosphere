@@ -37,7 +37,7 @@ class TutorControllerTest extends TestCase
         $response->assertJson([
             'status' => 200,
             'message' => 'Tutor Created Successfully',
-            'response' => $tutor
+            'data' => $tutor
         ]);
     }
 
@@ -55,7 +55,7 @@ class TutorControllerTest extends TestCase
         $response->assertJson([
             'status' => 200,
             'message' => 'Success',
-            'response' => []
+            'data' => []
         ]);
     }
 
@@ -74,7 +74,7 @@ class TutorControllerTest extends TestCase
         $response->assertJson([
             'status' => 200,
             'message' => 'Success',
-            'response' => []
+            'data' => []
         ]);
     }
 
@@ -97,7 +97,7 @@ class TutorControllerTest extends TestCase
         $response->assertJson([
             'status' => 200,
             'message' => 'Tutor Updated Successfully',
-            'response' => []
+            'data' => []
         ]);
     }
 

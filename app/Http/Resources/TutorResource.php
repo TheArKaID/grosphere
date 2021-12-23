@@ -14,6 +14,7 @@ class TutorResource extends JsonResource
      */
     public function toArray($request)
     {
+        parent::wrap('tutors');
         return $this->resource ? [
             'id' => $this->id,
             'user_id' => $this->user_id,
