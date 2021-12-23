@@ -30,6 +30,14 @@ class Tutor extends Model
      */
     public function user()
     {
-        return $this->belongsTo('App\Models\User');
+        return $this->belongsTo(User::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function classes()
+    {
+        return $this->hasMany(Classes::class);
     }
 }
