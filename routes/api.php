@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\Admin\StudentController;
 use App\Http\Controllers\Api\Admin\TutorController;
 use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\Tutor\LiveClassController as TutorLiveClassController;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -50,6 +51,10 @@ Route::middleware(['auth:api'])->group(function () {
         // Route::resource('classes', ClassController::class)->except(['edit', 'create']);
         Route::resource('live-classes', LiveClassController::class)->except(['edit', 'create']);
         // Route::resource('course-classes', CourseController::class)->except(['edit', 'create']);
+    });
+
+    Route::middleware(['role:tutor'])->prefix('tutor')->group(function () {
+        Route::resource('live-classes', TutorLiveClassController::class)->except(['edit', 'create']);
     });
 
     Route::get('/user', function () {
