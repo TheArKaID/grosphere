@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\Http\Controllers\Api\Admin;
 
-use App\Models\Tutor;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -11,6 +10,8 @@ use Tests\TestCase;
 class TutorControllerTest extends TestCase
 {
     use WithFaker;
+
+    private static $tutorId;
 
     /**
      * Add Tutor Test
@@ -29,7 +30,9 @@ class TutorControllerTest extends TestCase
             'password_confirmation' => $password
         ];
 
-        $response = $this->post(route('tutors.store'), $tutor);
+        $response = $this->post(route('admin.tutors.store'), $tutor);
+
+        self::$tutorId = $response->original['data']->id;
 
         unset($tutor['password']);
         unset($tutor['password_confirmation']);
@@ -50,7 +53,7 @@ class TutorControllerTest extends TestCase
     {
         auth()->login((User::find(1)));
 
-        $response = $this->get(route('tutors.index'));
+        $response = $this->get(route('admin.tutors.index'));
 
         $response->assertJson([
             'status' => 200,
@@ -68,8 +71,7 @@ class TutorControllerTest extends TestCase
     {
         auth()->login((User::find(1)));
 
-        $tutor = Tutor::first();
-        $response = $this->get(route('tutors.show', $tutor->id));
+        $response = $this->get(route('admin.tutors.show', self::$tutorId));
 
         $response->assertJson([
             'status' => 200,
@@ -87,9 +89,7 @@ class TutorControllerTest extends TestCase
     {
         auth()->login((User::find(1)));
 
-        $tutor = Tutor::first();
-
-        $response = $this->put(route('tutors.update', $tutor->id), [
+        $response = $this->put(route('admin.tutors.update', self::$tutorId), [
             'name' => $this->faker->name,
             'phone' => $this->faker->phoneNumber()
         ]);
@@ -114,8 +114,8 @@ class TutorControllerTest extends TestCase
             'password' => $password,
             'password_confirmation' => $password
         ];
-        $tutor = Tutor::first();
-        $response = $this->put(route('tutors.change-password', $tutor->id), $parent);
+
+        $response = $this->put(route('admin.tutors.change-password', self::$tutorId), $parent);
 
         $response->assertJson([
             'status' => 200,
@@ -132,8 +132,7 @@ class TutorControllerTest extends TestCase
     {
         auth()->login((User::find(1)));
 
-        $tutor = Tutor::first();
-        $response = $this->delete(route('tutors.destroy', $tutor->id));
+        $response = $this->delete(route('admin.tutors.destroy', self::$tutorId));
 
         $response->assertJson([
             'status' => 200,

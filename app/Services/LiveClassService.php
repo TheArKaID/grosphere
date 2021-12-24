@@ -24,12 +24,7 @@ class LiveClassService
     {
         if (request()->has('search')) {
             $search = request()->get('search');
-            $this->liveClass = $this->liveClass->whereHas('class', function ($class) use ($search) {
-                $class->where('name', 'like', '%' . $search . '%')
-                    ->orWhere('description', 'like', '%' . $search . '%')->whereHas('tutor', function ($tutor) use ($search) {
-                        $tutor->where('name', 'like', '%' . $search . '%');
-                    });
-            });
+            $this->liveClass = $this->searchLiveClasses($search);
         }
         if (request()->has('page') && request()->get('page') == 'all') {
             return $this->liveClass->get();
@@ -121,5 +116,102 @@ class LiveClassService
     public function generateUniqCode(int $id)
     {
         return $id . substr(md5($id . rand(1, 100)), 0, 10 - strlen($id));
+    }
+
+    /**
+     * Search in live classes
+     * 
+     * @param string $search
+     * @return LiveClass
+     */
+    public function searchLiveClasses($search)
+    {
+        return $this->liveClass->whereHas('class', function ($class) use ($search) {
+            $class->where('name', 'like', '%' . $search . '%')
+                ->orWhere('description', 'like', '%' . $search . '%')->whereHas('tutor', function ($tutor) use ($search) {
+                    $tutor->where('name', 'like', '%' . $search . '%');
+                });
+        });
+    }
+
+    /**
+     * Get All Current Tutor Live Classes
+     * 
+     * @return Collection
+     */
+    public function getAllCurrentTutorLiveClasses()
+    {
+        $tutorId = auth()->user()->detail->id;
+
+        $this->liveClass = $this->liveClass->whereHas('class', function ($class) use ($tutorId) {
+            $class->where('tutor_id', $tutorId);
+        });
+
+        if (request()->has('search')) {
+            $search = request()->get('search');
+            $this->liveClass = $this->searchLiveClasses($search);
+        }
+
+        if (request()->has('page') && request()->get('page') == 'all') {
+            return $this->liveClass->get();
+        }
+
+        return $this->liveClass->paginate(request('size', 10));
+    }
+
+    /**
+     * Get Current Tutor Live Class
+     * 
+     * @param int $id
+     * 
+     * @return LiveClass
+     */
+    public function getCurrentTutorLiveClass($id)
+    {
+        $tutorId = auth()->user()->detail->id;
+
+        return $this->liveClass->whereHas('class', function ($class) use ($tutorId) {
+            $class->where('tutor_id', $tutorId);
+        })->findOrFail($id);
+    }
+
+    /**
+     * Update Current Tutor Live Class
+     * 
+     * @param int $id
+     * @param array $data
+     * 
+     * @return LiveClass
+     */
+    public function updateCurrentTutorLiveClass($id, array $data)
+    {
+        DB::beginTransaction();
+
+        $liveClass = $this->getCurrentTutorLiveClass($id);
+        $liveClass->update($data);
+
+        $this->classService->updateClass($liveClass->class_id, $data);
+
+        DB::commit();
+        return $liveClass;
+    }
+
+    /**
+     * Delete Current Tutor Live Class
+     * 
+     * @param int $id
+     * 
+     * @return bool
+     */
+    public function deleteCurrentTutorLiveClass($id)
+    {
+        DB::beginTransaction();
+
+        $liveClass = $this->getCurrentTutorLiveClass($id);
+        $liveClass->delete();
+        $this->classService->deleteClass($liveClass->class_id);
+
+        DB::commit();
+        return true;
     }
 }

@@ -10,6 +10,8 @@ class StudentControllerTest extends TestCase
 {
     use withFaker;
 
+    private static $studentId;
+
     /**
      * Add Student Test
      * 
@@ -31,7 +33,9 @@ class StudentControllerTest extends TestCase
             'password' => $password,
             'password_confirmation' => $password
         ];
-        $response = $this->post(route('students.store'), $student);
+        $response = $this->post(route('admin.students.store'), $student);
+
+        self::$studentId = $response->original['data']->id;
 
         unset($student['password']);
         unset($student['password_confirmation']);
@@ -54,7 +58,7 @@ class StudentControllerTest extends TestCase
     public function testGetAllStudents()
     {
         auth()->login((User::find(1)));
-        $response = $this->get(route('students.index'));
+        $response = $this->get(route('admin.students.index'));
 
         $response->assertJson([
             'status' => 200,
@@ -72,7 +76,7 @@ class StudentControllerTest extends TestCase
     {
         auth()->login((User::find(1)));
 
-        $response = $this->get(route('students.show', 1));
+        $response = $this->get(route('admin.students.show', 1));
 
         $response->assertJson([
             'status' => 200,
@@ -96,7 +100,7 @@ class StudentControllerTest extends TestCase
             'address' => $this->faker->address,
             'gender' => rand(0, 1)
         ];
-        $response = $this->put(route('students.update', 1), $student);
+        $response = $this->put(route('admin.students.update', self::$studentId), $student);
 
         unset($student['birth_date']);
         unset($student['birth_place']);
@@ -121,7 +125,7 @@ class StudentControllerTest extends TestCase
             'password' => $password,
             'password_confirmation' => $password
         ];
-        $response = $this->put(route('students.change-password', 1), $student);
+        $response = $this->put(route('admin.students.change-password', self::$studentId), $student);
 
         $response->assertJson([
             'status' => 200,
@@ -137,7 +141,7 @@ class StudentControllerTest extends TestCase
     public function testDeleteStudent()
     {
         auth()->login((User::find(1)));
-        $response = $this->delete(route('students.destroy', 1));
+        $response = $this->delete(route('admin.students.destroy', self::$studentId));
 
         $response->assertJson([
             'status' => 200,

@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreLiveClassRequest extends FormRequest
 {
@@ -13,7 +14,7 @@ class StoreLiveClassRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->user()->hasRole('admin');
+        return $this->user()->hasRole('admin|tutor');
     }
 
     /**
@@ -24,7 +25,7 @@ class StoreLiveClassRequest extends FormRequest
     public function rules()
     {
         return [
-            'tutor_id' => 'required|exists:tutors,id',
+            'tutor_id' => [Rule::requiredIf(auth()->user()->hasRole('admin')), 'exists:tutors,id'],
             'name' => 'required|string|max:255',
             'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'description' => 'required|string',
