@@ -29,7 +29,7 @@ Route::prefix('auth')->group(function () {
 });
 
 Route::middleware(['auth:api'])->group(function () {
-    Route::middleware(['role:admin'])->prefix('admin')->group(function () {
+    Route::name('admin.')->middleware(['role:admin'])->prefix('admin')->group(function () {
         Route::resource('users', UserController::class)->except(['edit', 'create']);
 
         Route::resource('students', StudentController::class)->except(['edit', 'create']);
@@ -53,7 +53,7 @@ Route::middleware(['auth:api'])->group(function () {
         // Route::resource('course-classes', CourseController::class)->except(['edit', 'create']);
     });
 
-    Route::middleware(['role:tutor'])->prefix('tutor')->group(function () {
+    Route::name('tutor.')->middleware(['role:tutor'])->prefix('tutor')->group(function () {
         Route::resource('live-classes', TutorLiveClassController::class)->except(['edit', 'create']);
     });
 
