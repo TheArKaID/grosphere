@@ -99,11 +99,16 @@ class LiveClassController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\LiveClass  $liveClass
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(LiveClass $liveClass)
+    public function destroy(int $id)
     {
-        //
+        $this->liveClassService->deleteCurrentTutorLiveClass($id);
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Live Class Deleted Successfully'
+        ], 200);
     }
 }
