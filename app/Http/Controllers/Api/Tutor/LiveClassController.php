@@ -47,7 +47,16 @@ class LiveClassController extends Controller
      */
     public function store(StoreLiveClassRequest $request)
     {
-        //
+        $validated = $request->validated();
+        $validated['tutor_id'] = auth()->user()->detail->id;
+
+        $liveClass = new LiveClassResource($this->liveClassService->createLiveClass($validated));
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Live Class Created Successfully',
+            'data' => $liveClass
+        ], 200);
     }
 
     /**
