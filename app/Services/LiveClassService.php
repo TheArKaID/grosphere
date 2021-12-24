@@ -172,7 +172,7 @@ class LiveClassService
 
         return $this->liveClass->whereHas('class', function ($class) use ($tutorId) {
             $class->where('tutor_id', $tutorId);
-        })->find($id);
+        })->findOrFail($id);
     }
 
     /**
@@ -194,5 +194,24 @@ class LiveClassService
 
         DB::commit();
         return $liveClass;
+    }
+
+    /**
+     * Delete Current Tutor Live Class
+     * 
+     * @param int $id
+     * 
+     * @return bool
+     */
+    public function deleteCurrentTutorLiveClass($id)
+    {
+        DB::beginTransaction();
+
+        $liveClass = $this->getCurrentTutorLiveClass($id);
+        $liveClass->delete();
+        $this->classService->deleteClass($liveClass->class_id);
+
+        DB::commit();
+        return true;
     }
 }
