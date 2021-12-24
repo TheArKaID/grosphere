@@ -174,4 +174,25 @@ class LiveClassService
             $class->where('tutor_id', $tutorId);
         })->find($id);
     }
+
+    /**
+     * Update Current Tutor Live Class
+     * 
+     * @param int $id
+     * @param array $data
+     * 
+     * @return LiveClass
+     */
+    public function updateCurrentTutorLiveClass($id, array $data)
+    {
+        DB::beginTransaction();
+
+        $liveClass = $this->getCurrentTutorLiveClass($id);
+        $liveClass->update($data);
+
+        $this->classService->updateClass($liveClass->class_id, $data);
+
+        DB::commit();
+        return $liveClass;
+    }
 }
