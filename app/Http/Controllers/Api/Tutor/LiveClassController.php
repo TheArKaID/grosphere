@@ -80,12 +80,20 @@ class LiveClassController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \App\Http\Requests\UpdateLiveClassRequest  $request
-     * @param  \App\Models\LiveClass  $liveClass
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateLiveClassRequest $request, LiveClass $liveClass)
+    public function update(UpdateLiveClassRequest $request, int $id)
     {
-        //
+        $validated = $request->validated();
+
+        $liveClass = new LiveClassResource($this->liveClassService->updateCurrentTutorLiveClass($id, $validated));
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Live Class Updated Successfully',
+            'data' => $liveClass
+        ], 200);
     }
 
     /**
