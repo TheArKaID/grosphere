@@ -29,7 +29,7 @@ class TutorControllerTest extends TestCase
             'password_confirmation' => $password
         ];
 
-        $response = $this->post(route('tutors.store'), $tutor);
+        $response = $this->post(route('admin.tutors.store'), $tutor);
 
         unset($tutor['password']);
         unset($tutor['password_confirmation']);
@@ -50,7 +50,7 @@ class TutorControllerTest extends TestCase
     {
         auth()->login((User::find(1)));
 
-        $response = $this->get(route('tutors.index'));
+        $response = $this->get(route('admin.tutors.index'));
 
         $response->assertJson([
             'status' => 200,
@@ -69,7 +69,7 @@ class TutorControllerTest extends TestCase
         auth()->login((User::find(1)));
 
         $tutor = Tutor::first();
-        $response = $this->get(route('tutors.show', $tutor->id));
+        $response = $this->get(route('admin.tutors.show', $tutor->id));
 
         $response->assertJson([
             'status' => 200,
@@ -89,7 +89,7 @@ class TutorControllerTest extends TestCase
 
         $tutor = Tutor::first();
 
-        $response = $this->put(route('tutors.update', $tutor->id), [
+        $response = $this->put(route('admin.tutors.update', $tutor->id), [
             'name' => $this->faker->name,
             'phone' => $this->faker->phoneNumber()
         ]);
@@ -115,7 +115,7 @@ class TutorControllerTest extends TestCase
             'password_confirmation' => $password
         ];
         $tutor = Tutor::first();
-        $response = $this->put(route('tutors.change-password', $tutor->id), $parent);
+        $response = $this->put(route('admin.tutors.change-password', $tutor->id), $parent);
 
         $response->assertJson([
             'status' => 200,
@@ -133,7 +133,7 @@ class TutorControllerTest extends TestCase
         auth()->login((User::find(1)));
 
         $tutor = Tutor::first();
-        $response = $this->delete(route('tutors.destroy', $tutor->id));
+        $response = $this->delete(route('admin.tutors.destroy', $tutor->id));
 
         $response->assertJson([
             'status' => 200,

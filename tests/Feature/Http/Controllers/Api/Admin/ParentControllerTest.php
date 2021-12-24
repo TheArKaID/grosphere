@@ -27,7 +27,7 @@ class ParentControllerTest extends TestCase
             'password_confirmation' => $password,
             'address' => $this->faker->address
         ];
-        $response = $this->post(route('parents.store'), $parent);
+        $response = $this->post(route('admin.parents.store'), $parent);
 
         unset($parent['password']);
         unset($parent['password_confirmation']);
@@ -47,7 +47,7 @@ class ParentControllerTest extends TestCase
     public function testGetAllParent()
     {
         auth()->login((User::find(1)));
-        $response = $this->get(route('parents.index'));
+        $response = $this->get(route('admin.parents.index'));
 
         $response->assertJson([
             'status' => 200,
@@ -65,7 +65,7 @@ class ParentControllerTest extends TestCase
     {
         auth()->login((User::find(1)));
 
-        $response = $this->get(route('parents.show', 1));
+        $response = $this->get(route('admin.parents.show', 1));
 
         $response->assertJson([
             'status' => 200,
@@ -87,7 +87,7 @@ class ParentControllerTest extends TestCase
             'phone' => $this->faker->phoneNumber(),
             'address' => $this->faker->address
         ];
-        $response = $this->put(route('parents.update', 1), $parent);
+        $response = $this->put(route('admin.parents.update', 1), $parent);
 
         $response->assertJson([
             'status' => 200,
@@ -109,7 +109,7 @@ class ParentControllerTest extends TestCase
             'password' => $password,
             'password_confirmation' => $password
         ];
-        $response = $this->put(route('parents.change-password', 1), $parent);
+        $response = $this->put(route('admin.parents.change-password', 1), $parent);
 
         $response->assertJson([
             'status' => 200,
@@ -125,7 +125,7 @@ class ParentControllerTest extends TestCase
     public function testDeleteParent()
     {
         auth()->login((User::find(1)));
-        $response = $this->delete('/api/admin/parents/1');
+        $response = $this->delete(route('admin.parents.destroy', 1));
 
         $response->assertJson([
             'status' => 200,
