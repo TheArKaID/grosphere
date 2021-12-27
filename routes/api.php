@@ -60,7 +60,7 @@ Route::middleware(['auth:api'])->group(function () {
 
     Route::name('user.')->middleware(['role:admin|tutor|student|parent'])->prefix('user')->group(function () {
         Route::resource('live-classes', UserLiveClassController::class)->only('index', 'show');
-        Route::prefix('live-classes/{id}')->group(function () {
+        Route::prefix('live-classes/{live_class_id}')->group(function () {
             Route::post('join', [UserLiveClassController::class, 'join'])->name('live-classes.join');
             Route::post('leave', [UserLiveClassController::class, 'leave'])->name('live-classes.leave');
         });
