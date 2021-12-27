@@ -19,6 +19,10 @@ use Illuminate\Database\Eloquent\Model;
  */
 class LiveUser extends Model
 {
+    public static $STATUS_IN = 1;
+    public static $STATUS_OUT = 2;
+    public static $STATUS_DENIED = 9;
+    
     /**
      * The "type" of the auto-incrementing ID.
      * 
