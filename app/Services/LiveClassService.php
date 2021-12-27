@@ -3,16 +3,21 @@
 namespace App\Services;
 
 use App\Models\LiveClass;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class LiveClassService
 {
-    private $liveClass, $classService;
+    private $liveClass, $classService, $liveUserService;
 
-    public function __construct(LiveClass $liveClass, ClassService $classService)
-    {
+    public function __construct(
+        LiveClass $liveClass,
+        ClassService $classService,
+        LiveUserService $liveUserService
+    ) {
         $this->liveClass = $liveClass;
         $this->classService = $classService;
+        $this->liveUserService = $liveUserService;
     }
 
     /**
@@ -213,5 +218,63 @@ class LiveClassService
 
         DB::commit();
         return true;
+    }
+
+    /**
+     * Check if Live Class is started
+     * 
+     * @param int $liveClassId
+     * 
+     * @return bool
+     */
+    public function isLiveClassStarted($liveClassId)
+    {
+        $liveClass = $this->getLiveClassById($liveClassId);
+        $liveClassStartTime = Carbon::parse($liveClass->start_time);
+        $liveClassEndTime = Carbon::parse($liveClass->start_time)->addMinutes($liveClass->duration);
+        $currentTime = Carbon::now();
+
+        return $currentTime->between($liveClassStartTime, $liveClassEndTime);
+    }
+
+    /**
+     * User Join Live Class
+     * 
+     * @param int $id
+     * 
+     * @return LiveUser
+     */
+    public function userJoinLiveClass($id)
+    {
+        if (!$this->isLiveClassStarted($id)) {
+            return false;
+        }
+
+        $userId = auth()->user()->id;
+        $data = [
+            'user_id' => $userId,
+            'live_class_id' => $id
+        ];
+
+        return $this->liveUserService->joinOrRejoinLiveUser($data);
+    }
+
+    /**
+     * User leave Live Class
+     * 
+     * @param int $id
+     * 
+     * @return bool
+     */
+    public function userLeaveLiveClass($id)
+    {
+        $liveClass = $this->getLiveClassById($id);
+        $userId = auth()->user()->id;
+        $data = [
+            'user_id' => $userId,
+            'live_class_id' => $liveClass->id
+        ];
+
+        return $this->liveUserService->leaveLiveUser($data);
     }
 }

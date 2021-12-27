@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\Admin\TutorController;
 use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\Tutor\LiveClassController as TutorLiveClassController;
+use App\Http\Controllers\Api\User\LiveClassController as UserLiveClassController;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -55,6 +56,14 @@ Route::middleware(['auth:api'])->group(function () {
 
     Route::name('tutor.')->middleware(['role:tutor'])->prefix('tutor')->group(function () {
         Route::resource('live-classes', TutorLiveClassController::class)->except(['edit', 'create']);
+    });
+
+    Route::name('user.')->middleware(['role:admin|tutor|student|parent'])->prefix('user')->group(function () {
+        Route::resource('live-classes', UserLiveClassController::class)->only('index', 'show');
+        Route::prefix('live-classes/{live_class_id}')->group(function () {
+            Route::post('join', [UserLiveClassController::class, 'join'])->name('live-classes.join');
+            Route::post('leave', [UserLiveClassController::class, 'leave'])->name('live-classes.leave');
+        });
     });
 
     Route::get('/user', function () {
