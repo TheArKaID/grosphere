@@ -7,15 +7,16 @@ use Illuminate\Support\Facades\DB;
 
 class TutorService
 {
-    private $tutor;
-    private $userService;
+    private $tutor, $userService, $liveClassService;
 
     public function __construct(
         Tutor $tutor,
-        UserService $userService
+        UserService $userService,
+        LiveClassService $liveClassService
     ) {
         $this->tutor = $tutor;
         $this->userService = $userService;
+        $this->liveClassService = $liveClassService;
     }
 
     /**
@@ -128,5 +129,37 @@ class TutorService
         $this->userService->changePassword($tutor->user_id, $password);
 
         return true;
+    }
+
+    /**
+     * Tutor Join Live Class
+     * 
+     * @param int $liveClassId
+     * 
+     * @return bool
+     */
+    public function joinLiveClass($liveClassId)
+    {
+        return $this->liveClassService->isTutorLiveClassNotEnded($liveClassId);
+    }
+
+    /**
+     * Tutor leave Live Class
+     * 
+     * @param int $id
+     * 
+     * @return bool
+     */
+    public function leaveLiveClass($id)
+    {
+        // Do What ?
+        // $liveClass = $this->liveClassService->getLiveClassById($id);
+        // $userId = auth()->user()->id;
+        // $data = [
+        //     'user_id' => $userId,
+        //     'live_class_id' => $liveClass->id
+        // ];
+
+        // return $this->liveUserService->leaveLiveTutor($data);
     }
 }
