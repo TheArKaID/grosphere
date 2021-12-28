@@ -238,43 +238,18 @@ class LiveClassService
     }
 
     /**
-     * User Join Live Class
+     * Is Tutor Live Class not ended
      * 
-     * @param int $id
-     * 
-     * @return LiveUser
-     */
-    public function userJoinLiveClass($id)
-    {
-        if (!$this->isLiveClassStarted($id)) {
-            return false;
-        }
-
-        $userId = auth()->user()->id;
-        $data = [
-            'user_id' => $userId,
-            'live_class_id' => $id
-        ];
-
-        return $this->liveUserService->joinOrRejoinLiveUser($data);
-    }
-
-    /**
-     * User leave Live Class
-     * 
-     * @param int $id
+     * @param int $liveClassId
      * 
      * @return bool
      */
-    public function userLeaveLiveClass($id)
+    public function isTutorLiveClassNotEnded($liveClassId)
     {
-        $liveClass = $this->getLiveClassById($id);
-        $userId = auth()->user()->id;
-        $data = [
-            'user_id' => $userId,
-            'live_class_id' => $liveClass->id
-        ];
+        $liveClass = $this->getCurrentTutorLiveClass($liveClassId);
+        $liveClassEndTime = Carbon::parse($liveClass->start_time)->addMinutes($liveClass->duration);
+        $currentTime = Carbon::now();
 
-        return $this->liveUserService->leaveLiveUser($data);
+        return $currentTime->lt($liveClassEndTime);
     }
 }
