@@ -56,6 +56,10 @@ Route::middleware(['auth:api'])->group(function () {
 
     Route::name('tutor.')->middleware(['role:tutor'])->prefix('tutor')->group(function () {
         Route::resource('live-classes', TutorLiveClassController::class)->except(['edit', 'create']);
+        Route::prefix('live-classes/{live_class_id}')->group(function () {
+            Route::post('join', [TutorLiveClassController::class, 'join'])->name('live-classes.join');
+            Route::post('leave', [TutorLiveClassController::class, 'leave'])->name('live-classes.leave');
+        });
     });
 
     Route::name('user.')->middleware(['role:admin|tutor|student|parent'])->prefix('user')->group(function () {
