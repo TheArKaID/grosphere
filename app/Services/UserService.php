@@ -8,12 +8,16 @@ use Illuminate\Support\Facades\Hash;
 
 class UserService
 {
-	private $user, $liveClassService;
+	private $user, $liveClassService, $liveUserService;
 
-	public function __construct(User $user, LiveClassService $liveClassService)
-	{
+	public function __construct(
+		User $user,
+		LiveClassService $liveClassService,
+		LiveUserService $liveUserService
+	) {
 		$this->user = $user;
 		$this->liveClassService = $liveClassService;
+		$this->liveUserService = $liveUserService;
 	}
 
 	/**
