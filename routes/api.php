@@ -55,6 +55,7 @@ Route::middleware(['auth:api'])->group(function () {
     });
 
     Route::name('tutor.')->middleware(['role:tutor'])->prefix('tutor')->group(function () {
+        // Tutor ngga buat live class sendiri ?
         Route::resource('live-classes', TutorLiveClassController::class)->except(['edit', 'create']);
         Route::prefix('live-classes/{live_class_id}')->group(function () {
             Route::post('join', [TutorLiveClassController::class, 'join'])->name('live-classes.join');
