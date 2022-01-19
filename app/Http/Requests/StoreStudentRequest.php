@@ -30,7 +30,7 @@ class StoreStudentRequest extends FormRequest
             'password' => 'required|min:8|confirmed',
             'phone' => 'nullable|string|min:8|max:50',
             'id_number' => 'nullable|unique:students,id_number|string|max:50',
-            'birth_date' => 'required|date:Y-m-d',
+            'birth_date' => 'required|date_format:Y-m-d',
             'birth_place' => 'required|string|max:100',
             'gender' => 'required|numeric|between:0,1',
             'address' => 'required'
