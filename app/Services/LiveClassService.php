@@ -72,6 +72,18 @@ class LiveClassService
     }
 
     /**
+     * Get Live Class by Uniq Code
+     * 
+     * @param string $uniqCode
+     * 
+     * @return LiveClass
+     */
+    public function getLiveClassByUniqCode($uniqCode)
+    {
+        return $this->liveClass->where('uniq_code', $uniqCode)->firstOrFail();
+    }
+
+    /**
      * Update Live Class
      * 
      * @param int $id
@@ -230,6 +242,26 @@ class LiveClassService
     public function isLiveClassStarted($liveClassId)
     {
         $liveClass = $this->getLiveClassById($liveClassId);
+        $liveClassStartTime = Carbon::parse($liveClass->start_time);
+        $liveClassEndTime = Carbon::parse($liveClass->start_time)->addMinutes($liveClass->duration);
+        $currentTime = Carbon::now();
+
+        return $currentTime->between($liveClassStartTime, $liveClassEndTime);
+    }
+
+    /**
+     * Check if Live Class is started by Uniq Code
+     * 
+     * @param int $liveClassId
+     * 
+     * @return bool
+     */
+    public function isLiveClassStartedByUniqCode($liveClassUniqCode)
+    {
+        $liveClass = $this->liveClass->where('uniq_code', $liveClassUniqCode)->first();
+        if (!$liveClass) {
+            return false;
+        }
         $liveClassStartTime = Carbon::parse($liveClass->start_time);
         $liveClassEndTime = Carbon::parse($liveClass->start_time)->addMinutes($liveClass->duration);
         $currentTime = Carbon::now();
