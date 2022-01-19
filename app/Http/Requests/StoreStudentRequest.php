@@ -29,7 +29,7 @@ class StoreStudentRequest extends FormRequest
             'email' => 'required|email|unique:users',
             'password' => 'required|min:8|confirmed',
             'phone' => 'nullable|string|min:8|max:50',
-            'id_number' => 'nullable|string|max:50',
+            'id_number' => 'nullable|unique:students,id_number|string|max:50',
             'birth_date' => 'required|date:Y-m-d',
             'birth_place' => 'required|string|max:100',
             'gender' => 'required|numeric|between:0,1',
