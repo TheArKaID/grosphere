@@ -61,6 +61,7 @@ Route::middleware(['auth:api'])->group(function () {
             Route::post('join', [TutorLiveClassController::class, 'join'])->name('live-classes.join');
             Route::post('leave', [TutorLiveClassController::class, 'leave'])->name('live-classes.leave');
         });
+        Route::post('live-classes/validate', [TutorLiveClassController::class, 'validateLiveClass'])->name('live-classes.validate');
     });
 
     Route::name('user.')->middleware(['role:admin|tutor|student|parent'])->prefix('user')->group(function () {
@@ -69,6 +70,7 @@ Route::middleware(['auth:api'])->group(function () {
             Route::post('join', [UserLiveClassController::class, 'join'])->name('live-classes.join');
             Route::post('leave', [UserLiveClassController::class, 'leave'])->name('live-classes.leave');
         });
+        Route::post('live-classes/validate', [UserLiveClassController::class, 'validateLiveClass'])->name('live-classes.validate');
     });
 
     Route::get('/user', function () {
