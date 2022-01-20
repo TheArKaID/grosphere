@@ -90,7 +90,7 @@ class LiveClassController extends Controller
                     "valid_until" => Carbon::now()->addMinutes(5)->toDateTimeString()
                 ]),
                 'end_time' => Carbon::parse($liveClass->start_time)->addMinutes($liveClass->duration)->toDateTimeString(),
-                'thumbnail' => asset('class/thumbnail/' . $liveClass->class->thumbnail),
+                'thumbnail' => $liveClass->class->thumbnail ? asset('class/thumbnail/' . $liveClass->class->thumbnail) : asset('class/thumbnail/default.png'),
             ]
         ], 200);
     }
