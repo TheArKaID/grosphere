@@ -122,13 +122,6 @@ class LiveClassController extends Controller
         try {
             $decrypted = Crypt::decrypt(request('token'));
 
-            if ($decrypted['user_id'] != auth()->user()->id) {
-                return response()->json([
-                    'status' => 400,
-                    'message' => 'Invalid token'
-                ], 400);
-            }
-
             if (Carbon::parse($decrypted['valid_until'])->lt(Carbon::now())) {
                 return response()->json([
                     'status' => 400,
