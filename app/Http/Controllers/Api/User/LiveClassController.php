@@ -138,13 +138,14 @@ class LiveClassController extends Controller
 
             $liveClass = $this->liveClassService->getLiveClassByUniqCode(request('room'));
 
+            $user = $this->userService->getById($decrypted['user_id']);
             return response()->json([
                 'status' => 200,
                 'message' => 'Success',
                 'data' => [
                     'tutor_name' => $liveClass->class->tutor->user->name,
-                    'user_name' => auth()->user()->name,
-                    'role' => auth()->user()->roles[0]->name
+                    'user_name' => $user->name,
+                    'role' => $user->roles[0]->name
                 ],
             ]);
         } catch (DecryptException $e) {
