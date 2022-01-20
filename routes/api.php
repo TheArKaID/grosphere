@@ -61,8 +61,8 @@ Route::middleware(['auth:api'])->group(function () {
             Route::post('join', [TutorLiveClassController::class, 'join'])->name('live-classes.join');
             Route::post('leave', [TutorLiveClassController::class, 'leave'])->name('live-classes.leave');
         });
-        Route::post('live-classes/validate', [TutorLiveClassController::class, 'validateLiveClass'])->name('live-classes.validate');
     });
+    Route::post('tutor/live-classes/validate', [TutorLiveClassController::class, 'validateLiveClass'])->name('tutor.live-classes.validate');
 
     Route::name('user.')->middleware(['role:admin|tutor|student|parent'])->prefix('user')->group(function () {
         Route::resource('live-classes', UserLiveClassController::class)->only('index', 'show');
@@ -70,8 +70,8 @@ Route::middleware(['auth:api'])->group(function () {
             Route::post('join', [UserLiveClassController::class, 'join'])->name('live-classes.join');
             Route::post('leave', [UserLiveClassController::class, 'leave'])->name('live-classes.leave');
         });
-        Route::post('live-classes/validate', [UserLiveClassController::class, 'validateLiveClass'])->name('live-classes.validate');
     });
+    Route::post('user/live-classes/validate', [UserLiveClassController::class, 'validateLiveClass'])->name('user.live-classes.validate');
 
     Route::get('/user', function () {
         return User::with(['detail'])->find(auth()->user()->id);
