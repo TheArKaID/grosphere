@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $time_out
  * @property int $entries
  * @property boolean $status
+ * @property string $token
  * @property string $created_at
  * @property string $updated_at
  * @property LiveClass $liveClass
@@ -33,7 +34,7 @@ class LiveUser extends Model
     /**
      * @var array
      */
-    protected $fillable = ['user_id', 'live_class_id', 'time_in', 'time_out', 'entries', 'status', 'created_at', 'updated_at'];
+    protected $fillable = ['user_id', 'live_class_id', 'time_in', 'time_out', 'entries', 'status', 'token', 'created_at', 'updated_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
