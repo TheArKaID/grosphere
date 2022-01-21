@@ -12,7 +12,7 @@ class LiveClassControllerTest extends TestCase
 {
     use WithFaker;
 
-    private static $liveClassId;
+    private static $liveClassId, $tokenJoin, $roomJoin;
 
     /**
      * Test create live class as tutor
@@ -29,8 +29,8 @@ class LiveClassControllerTest extends TestCase
             'tutor_id' => $tutor->id,
             'name' => $this->faker->name,
             'description' => $this->faker->text,
-            'start_time' => $this->faker->dateTimeBetween('-1 years', '+1 years')->format('Y-m-d H:i:s'),
-            'duration' => $this->faker->numberBetween(1, 10),
+            'start_time' => $this->faker->dateTimeBetween('-10 minutes')->format('Y-m-d H:i:s'),
+            'duration' => $this->faker->numberBetween(30, 60),
             // 'thumbnail' => $this->faker->image(storage_path('app/public/live_classes'), 400, 400, 'cats', false)
         ];
 
@@ -87,8 +87,8 @@ class LiveClassControllerTest extends TestCase
         $liveClass = [
             "name" => $this->faker->name,
             "description" => $this->faker->text,
-            "start_time" => $this->faker->dateTimeBetween('-1 years', '+1 years')->format('Y-m-d H:i:s'),
-            "duration" => $this->faker->numberBetween(1, 10),
+            "start_time" => $this->faker->dateTimeBetween('-10 minutes')->format('Y-m-d H:i:s'),
+            "duration" => $this->faker->numberBetween(30, 60),
             // "thumbnail" => $this->faker->image(storage_path('app/public/live_classes'), 400, 400, 'cats', false)
         ];
 
@@ -101,7 +101,66 @@ class LiveClassControllerTest extends TestCase
             'message' => 'Live Class Updated Successfully'
         ]);
     }
+    
+    /**
+     * Test Tutor Can Join Live Class
+     * 
+     * @return void
+     */
+    public function testTutorCanJoinLiveClass()
+    {
+        auth()->login(Tutor::first()->user);
+        $response = $this->post(route('tutor.live-classes.join', self::$liveClassId));
 
+        $data = json_decode($response->getContent());
+        
+        self::$tokenJoin = $data->data->token;
+        self::$roomJoin = $data->data->room;
+
+        $response->assertJson([
+            'status' => 200,
+            'message' => 'Tutor joined Live Class',
+            'data' => []
+        ]);
+    }
+
+    // /**
+    //  * Test Tutor Can Leave Live Class
+    //  * 
+    //  * @return void
+    //  */
+    // public function testTutorCanLeaveLiveClass()
+    // {
+    //     auth()->login(Tutor::first()->user);
+    //     $response = $this->post(route('tutor.live-classes.leave', self::$liveClassId));
+
+    //     $response->assertJson([
+    //         'status' => 200,
+    //         'message' => 'Tutor left Live Class'
+    //     ]);
+    // }
+
+    /**
+     * test Tutor validate Join Live Class
+     * 
+     * @return void
+     */
+    public function testValidateJoinLiveClass()
+    {
+        auth()->login(Tutor::first()->user);
+
+        $response = $this->post(route('user.live-classes.validate', self::$liveClassId), [
+            'token' => self::$tokenJoin,
+            'room' => self::$roomJoin
+        ]);
+
+        $response->assertJson([
+            'status' => 200,
+            'message' => 'Success',
+            'data' => []
+        ]);
+    }
+    
     /**
      * Test delete live class as tutor
      * 

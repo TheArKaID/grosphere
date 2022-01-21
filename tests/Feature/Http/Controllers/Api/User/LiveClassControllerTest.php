@@ -12,7 +12,7 @@ class LiveClassControllerTest extends TestCase
 {
     use WithFaker;
 
-    private static $liveClassId, $tutorId, $student, $isSetUpRun = false;
+    private static $liveClassId, $tutorId, $student, $isSetUpRun = false, $tokenJoin, $roomJoin;
 
     /**
      * Set Up
@@ -33,7 +33,7 @@ class LiveClassControllerTest extends TestCase
                 'name' => $this->faker->name,
                 'description' => $this->faker->text,
                 'start_time' => $this->faker->dateTimeBetween('-10 minutes')->format('Y-m-d H:i:s'),
-                'duration' => $this->faker->numberBetween(1, 30)
+                'duration' => $this->faker->numberBetween(30, 60)
             ];
             $response = $this->post(route('tutor.live-classes.store'), $liveClass);
             self::$liveClassId = $response->original['data']->id;
@@ -83,6 +83,10 @@ class LiveClassControllerTest extends TestCase
         auth()->login(self::$student->user);
         $response = $this->post(route('user.live-classes.join', self::$liveClassId));
 
+        $data = json_decode($response->getContent());
+        self::$tokenJoin = $data->data->token;
+        self::$roomJoin = $data->data->room;
+
         $response->assertJson([
             'status' => 200,
             'message' => 'User joined Live Class',
@@ -103,6 +107,27 @@ class LiveClassControllerTest extends TestCase
         $response->assertJson([
             'status' => 200,
             'message' => 'User left Live Class'
+        ]);
+    }
+
+    /**
+     * test User validate Join Live Class
+     * 
+     * @return void
+     */
+    public function testUserValidateJoinLiveClass()
+    {
+        auth()->login(self::$student->user);
+
+        $response = $this->post(route('user.live-classes.validate', self::$liveClassId), [
+            'token' => self::$tokenJoin,
+            'room' => self::$roomJoin
+        ]);
+
+        $response->assertJson([
+            'status' => 200,
+            'message' => 'Success',
+            'data' => []
         ]);
     }
 }
