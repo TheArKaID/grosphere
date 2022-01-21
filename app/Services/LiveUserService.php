@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\LiveUser;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 
 class LiveUserService
 {
@@ -40,6 +41,18 @@ class LiveUserService
     }
 
     /**
+     * Get Live User by token
+     * 
+     * @param string $token
+     * 
+     * @return LiveUser
+     */
+    public function getLiveUserByToken(string $token)
+    {
+        return $this->liveUser->where('token', $token)->firstOrFail();
+    }
+
+    /**
      * Join or Rejoin Live User status
      * 
      * @param array $data
@@ -50,6 +63,7 @@ class LiveUserService
     {
         $data['status'] = LiveUser::$STATUS_IN;
         $data['time_in'] = Carbon::now();
+        $data['token'] = Str::random(10);
         $liveUser = $this->liveUser->updateOrCreate([
             'user_id' => $data['user_id'],
             'live_class_id' => $data['live_class_id']
@@ -75,6 +89,26 @@ class LiveUserService
         return $liveUser->update([
             'time_out' => Carbon::now(),
             'status' => LiveUser::$STATUS_OUT
+        ]);
+    }
+
+    /**
+     * Invalidate Live User Token
+     * 
+     * @param int $id
+     * 
+     * @return bool
+     */
+    public function invalidateLiveUserToken(int $id)
+    {
+        $liveUser = $this->liveUser->find($id);
+
+        if(!$liveUser) {
+            return false;
+        }
+
+        return $liveUser->update([
+            'token' => null
         ]);
     }
 }

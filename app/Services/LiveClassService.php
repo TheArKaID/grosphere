@@ -252,7 +252,7 @@ class LiveClassService
     /**
      * Check if Live Class is started by Uniq Code
      * 
-     * @param int $liveClassId
+     * @param string $liveClassUniqCode
      * 
      * @return bool
      */

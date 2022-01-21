@@ -126,7 +126,7 @@ class LiveClassControllerTest extends TestCase
 
         $response->assertJson([
             'status' => 200,
-            'message' => 'Success',
+            'message' => 'Live Class validated',
             'data' => []
         ]);
     }
