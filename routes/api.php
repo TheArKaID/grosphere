@@ -62,7 +62,6 @@ Route::middleware(['auth:api'])->group(function () {
             Route::post('leave', [TutorLiveClassController::class, 'leave'])->name('live-classes.leave');
         });
     });
-    Route::post('tutor/live-classes/validate', [TutorLiveClassController::class, 'validateLiveClass'])->name('tutor.live-classes.validate');
 
     Route::name('user.')->middleware(['role:admin|tutor|student|parent'])->prefix('user')->group(function () {
         Route::resource('live-classes', UserLiveClassController::class)->only('index', 'show');
@@ -71,7 +70,6 @@ Route::middleware(['auth:api'])->group(function () {
             Route::post('leave', [UserLiveClassController::class, 'leave'])->name('live-classes.leave');
         });
     });
-    Route::post('user/live-classes/validate', [UserLiveClassController::class, 'validateLiveClass'])->name('user.live-classes.validate');
 
     Route::get('/user', function () {
         return User::with(['detail'])->find(auth()->user()->id);
@@ -97,3 +95,6 @@ Route::middleware(['auth:api'])->group(function () {
 
     Route::post('auth/logout', [AuthController::class, 'logout']);
 });
+
+Route::post('tutor/live-classes/validate', [TutorLiveClassController::class, 'validateLiveClass'])->name('tutor.live-classes.validate');
+Route::post('user/live-classes/validate', [UserLiveClassController::class, 'validateLiveClass'])->name('user.live-classes.validate');
