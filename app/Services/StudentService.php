@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Student;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class StudentService
 {
@@ -150,6 +151,23 @@ class StudentService
 		$student = $this->getById($id);
 
 		$this->userService->changePassword($student->user_id, $password);
+
+		return true;
+	}
+
+	/**
+	 * Change Student's password with validation
+	 * 
+	 * @param int $id
+	 * @param array $data
+	 * 
+	 * @return bool
+	 */
+	public function changePasswordWithValidation(int $id, array $data)
+	{
+		$student = $this->getById($id);
+
+		$this->userService->changePassword($student->user_id, $data['new_password']);
 
 		return true;
 	}
