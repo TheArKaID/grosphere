@@ -65,7 +65,7 @@ class ProfileController extends Controller
     {
         $validated = $request->validated();
 
-        $this->studentService->changePasswordWithValidation(auth()->user()->detail->id, $validated);
+        $this->studentService->changePasswordByStudent(auth()->user()->detail->id, $validated);
 
         return response()->json([
             'status' => 200,

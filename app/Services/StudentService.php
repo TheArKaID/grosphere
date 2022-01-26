@@ -156,14 +156,14 @@ class StudentService
 	}
 
 	/**
-	 * Change Student's password with validation
+	 * Change Student's password by Student
 	 * 
 	 * @param int $id
 	 * @param array $data
 	 * 
 	 * @return bool
 	 */
-	public function changePasswordWithValidation(int $id, array $data)
+	public function changePasswordByStudent(int $id, array $data)
 	{
 		$student = $this->getById($id);
 
