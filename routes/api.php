@@ -6,8 +6,10 @@ use App\Http\Controllers\Api\Admin\StudentController;
 use App\Http\Controllers\Api\Admin\TutorController;
 use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\Student\ProfileController as StudentProfileController;
 use App\Http\Controllers\Api\Tutor\LiveClassController as TutorLiveClassController;
 use App\Http\Controllers\Api\User\LiveClassController as UserLiveClassController;
+use App\Http\Controllers\Api\User\ProfileController as UserProfileController;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -63,6 +65,12 @@ Route::middleware(['auth:api'])->group(function () {
         });
     });
 
+    Route::name('student.')->middleware(['role:student'])->prefix('student')->group(function () {
+        Route::get('/', [StudentProfileController::class, 'index'])->name('profile');
+        Route::put('/', [StudentProfileController::class, 'update'])->name('profile.update');
+        Route::put('password', [StudentProfileController::class, 'updatePassword'])->name('profile.update.password');
+    });
+
     Route::name('user.')->middleware(['role:admin|tutor|student|parent'])->prefix('user')->group(function () {
         Route::resource('live-classes', UserLiveClassController::class)->only('index', 'show');
         Route::prefix('live-classes/{live_class_id}')->group(function () {
@@ -73,24 +81,6 @@ Route::middleware(['auth:api'])->group(function () {
 
     Route::get('/user', function () {
         return User::with(['detail'])->find(auth()->user()->id);
-    });
-
-    Route::get('profile', function (Request $request) {
-        $user = $request->user();
-        $roles = $user->roles->map(function ($role) {
-            return [
-                'name' => $role->name,
-                'readable_name' => $role->readable_name,
-            ];
-        });
-        unset($user->roles);
-        $user->roles = $roles;
-
-        return response()->json([
-            'status' => 200,
-            'message' => 'success',
-            'data' => $user
-        ], 200);
     });
 
     Route::post('auth/logout', [AuthController::class, 'logout']);
