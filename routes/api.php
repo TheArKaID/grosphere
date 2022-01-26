@@ -60,7 +60,7 @@ Route::middleware(['auth:api'])->group(function () {
         Route::get('/', [TutorProfileController::class, 'index'])->name('index');
         Route::put('/', [TutorProfileController::class, 'update'])->name('update');
         Route::put('password', [TutorProfileController::class, 'changePassword'])->name('change-password');
-        
+
         Route::resource('live-classes', TutorLiveClassController::class)->except(['edit', 'create']);
         Route::prefix('live-classes/{live_class_id}')->group(function () {
             Route::post('join', [TutorLiveClassController::class, 'join'])->name('live-classes.join');
@@ -80,10 +80,6 @@ Route::middleware(['auth:api'])->group(function () {
             Route::post('join', [UserLiveClassController::class, 'join'])->name('live-classes.join');
             Route::post('leave', [UserLiveClassController::class, 'leave'])->name('live-classes.leave');
         });
-    });
-
-    Route::get('/user', function () {
-        return User::with(['detail'])->find(auth()->user()->id);
     });
 
     Route::post('auth/logout', [AuthController::class, 'logout']);
