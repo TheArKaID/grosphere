@@ -8,8 +8,8 @@ use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\Student\ProfileController as StudentProfileController;
 use App\Http\Controllers\Api\Tutor\LiveClassController as TutorLiveClassController;
+use App\Http\Controllers\Api\Tutor\ProfileController as TutorProfileController;
 use App\Http\Controllers\Api\User\LiveClassController as UserLiveClassController;
-use App\Http\Controllers\Api\User\ProfileController as UserProfileController;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -57,7 +57,10 @@ Route::middleware(['auth:api'])->group(function () {
     });
 
     Route::name('tutor.')->middleware(['role:tutor'])->prefix('tutor')->group(function () {
-        // Tutor ngga buat live class sendiri ?
+        Route::get('/', [TutorProfileController::class, 'index'])->name('index');
+        Route::put('/', [TutorProfileController::class, 'update'])->name('update');
+        Route::put('password', [TutorProfileController::class, 'changePassword'])->name('change-password');
+        
         Route::resource('live-classes', TutorLiveClassController::class)->except(['edit', 'create']);
         Route::prefix('live-classes/{live_class_id}')->group(function () {
             Route::post('join', [TutorLiveClassController::class, 'join'])->name('live-classes.join');
