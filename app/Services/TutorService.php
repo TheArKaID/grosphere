@@ -132,6 +132,23 @@ class TutorService
     }
 
     /**
+     * Change Tutor's password By Tutor
+     * 
+     * @param int $id
+     * @param array $data
+     * 
+	 * @return bool
+     */
+    public function changePasswordByTutor(int $id, array $data)
+    {
+        $tutor = $this->getById($id);
+
+        $this->userService->changePassword($tutor->user_id, $data['new_password']);
+
+        return true;
+    }
+
+    /**
      * Tutor Join Live Class
      * 
      * @param int $liveClassId
