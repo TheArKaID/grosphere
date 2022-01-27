@@ -125,21 +125,16 @@ class LiveClassController extends Controller
      */
     public function join(int $liveClassId)
     {
-        if ($this->tutorService->joinLiveClass($liveClassId)) {
-            $liveClass = $this->liveClassService->getCurrentTutorLiveClass($liveClassId);
+        if ($liveUser = $this->tutorService->joinLiveClass($liveClassId)) {
             return response()->json([
                 'status' => 200,
                 'message' => 'Tutor joined Live Class',
                 'data' => [
-                    'live_class_name' => $liveClass->class->name,
-                    'room' => $liveClass->uniq_code,
-                    'token' => Crypt::encrypt([
-                        "user_id" => auth()->user()->id,
-                        "live_class_id" => $liveClassId,
-                        "valid_until" => Carbon::now()->addMinutes(5)->toDateTimeString()
-                    ]),
-                    'end_time' => Carbon::parse($liveClass->start_time)->addMinutes($liveClass->duration)->toDateTimeString(),
-                    'thumbnail' => asset('class/thumbnail/' . $liveClass->class->thumbnail),
+                    'live_class_name' => $liveUser->liveClass->class->name,
+                    'room' => $liveUser->liveClass->uniq_code,
+                    'token' => $liveUser->token,
+                    'end_time' => Carbon::parse($liveUser->liveClass->start_time)->addMinutes($liveUser->liveClass->duration)->toDateTimeString(),
+                    'thumbnail' => asset('class/thumbnail/' . $liveUser->liveClass->class->thumbnail),
                 ]
             ], 200);
         }

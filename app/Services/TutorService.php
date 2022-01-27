@@ -153,11 +153,14 @@ class TutorService
      * 
      * @param int $liveClassId
      * 
-     * @return bool
+     * @return LiveUser
      */
     public function joinLiveClass($liveClassId)
     {
-        return $this->liveClassService->isTutorLiveClassNotEnded($liveClassId);
+        if($this->liveClassService->isTutorLiveClassNotEnded($liveClassId)) {
+            return $this->userService->userJoinLiveClass($liveClassId);
+        }
+        return false;
     }
 
     /**
