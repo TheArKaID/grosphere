@@ -7,6 +7,7 @@ use App\Models\Student;
 use App\Models\Tutor;
 use App\Models\User;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Hash;
 
 trait MigrateFreshSeedOnce
 {
@@ -50,7 +51,7 @@ trait MigrateFreshSeedOnce
 
     public function createDummyStudent()
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create(['password' => Hash::make('@Student1234')]);
         $user->assignRole('student');
         Student::factory()->create(['user_id' => $user->id]);
     }

@@ -101,7 +101,7 @@ class LiveClassControllerTest extends TestCase
             'message' => 'Live Class Updated Successfully'
         ]);
     }
-    
+
     /**
      * Test Tutor Can Join Live Class
      * 
@@ -113,7 +113,7 @@ class LiveClassControllerTest extends TestCase
         $response = $this->post(route('tutor.live-classes.join', self::$liveClassId));
 
         $data = json_decode($response->getContent());
-        
+
         self::$tokenJoin = $data->data->token;
         self::$roomJoin = $data->data->room;
 
@@ -156,11 +156,11 @@ class LiveClassControllerTest extends TestCase
 
         $response->assertJson([
             'status' => 200,
-            'message' => 'Success',
+            'message' => 'Live Class validated',
             'data' => []
         ]);
     }
-    
+
     /**
      * Test delete live class as tutor
      * 
