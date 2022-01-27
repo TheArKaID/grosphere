@@ -152,38 +152,30 @@ class LiveClassController extends Controller
      */
     public function validateLiveClass()
     {
-        try {
-            $decrypted = Crypt::decrypt(request('token'));
+        $liveUser = $this->liveUserService->getLiveUserByToken(request('token'));
 
-            if (Carbon::parse($decrypted['valid_until'])->lt(Carbon::now())) {
-                return response()->json([
-                    'status' => 400,
-                    'message' => 'Token is expired'
-                ], 400);
-            }
-
-            if (!$this->liveClassService->isLiveClassStartedByUniqCode(request('room'))) {
-                return response()->json([
-                    'status' => 400,
-                    'message' => 'Live Class is not started yet or it is already ended'
-                ], 400);
-            }
-
-            $user = $this->userService->getById($decrypted['user_id']);
-
-            return response()->json([
-                'status' => 200,
-                'message' => 'Success',
-                'data' => [
-                    'user_name' => $user->name,
-                    'role' => $user->roles[0]->name
-                ],
-            ]);
-        } catch (DecryptException $e) {
+        if (!$this->liveClassService->isLiveClassStartedByUniqCode($liveUser->liveClass->uniq_code)) {
             return response()->json([
                 'status' => 400,
-                'message' => 'Invalid token'
+                'message' => 'Live Class is not started yet or it is already ended'
             ], 400);
         }
+
+        if(!$this->liveUserService->invalidateLiveUserToken($liveUser->id)) {
+            return response()->json([
+                'status' => 400,
+                'message' => 'Token is invalid'
+            ], 400);
+        }
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Live Class validated',
+            'data' => [
+                'tutor_name' => $liveUser->liveClass->class->tutor->user->name,
+                'user_name' => $liveUser->user->name,
+                'role' => $liveUser->user->roles[0]->name
+            ],
+        ]);
     }
 }
