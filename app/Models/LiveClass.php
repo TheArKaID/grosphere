@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property integer $id
@@ -35,5 +36,26 @@ class LiveClass extends Model
     public function class()
     {
         return $this->belongsTo(Classes::class, 'class_id');
+    }
+
+    /**
+     * Get all of the liveUsers for the LiveClass
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function liveUsers(): HasMany
+    {
+        return $this->hasMany(LiveUser::class);
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($liveClass) {
+            foreach ($liveClass->liveUsers as $liveUser) {
+                $liveUser->delete();
+            }
+        });
     }
 }
