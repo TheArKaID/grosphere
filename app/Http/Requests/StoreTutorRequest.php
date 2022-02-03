@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Password;
 
 class StoreTutorRequest extends FormRequest
 {
@@ -26,7 +27,7 @@ class StoreTutorRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6|confirmed',
+            'password' => ['required', 'confirmed', Password::min(8)->letters()->numbers()->mixedCase()],
             'phone' => 'nullable|string|min:8|max:50',
         ];
     }

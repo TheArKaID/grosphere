@@ -21,7 +21,7 @@ class TutorControllerTest extends TestCase
     public function testAddTutor()
     {
         auth()->login((User::find(1)));
-        $password = $this->faker->password(8);
+        $password = '@Tutor1234';
         $tutor = [
             'name' => $this->faker->name,
             'email' => $this->faker->email,
