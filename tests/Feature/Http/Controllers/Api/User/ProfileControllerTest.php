@@ -36,7 +36,7 @@ class ProfileControllerTest extends TestCase
     public function testUserGetProfile()
     {
         auth()->login(self::$student->user);
-        $response = $this->get(route('student.profile'));
+        $response = $this->get(route('user.profile'));
 
         $response->assertJson([
             'status' => 200,
@@ -61,7 +61,7 @@ class ProfileControllerTest extends TestCase
             'birth_place' => $this->faker->city,
             'gender' => 1
         ];
-        $response = $this->put(route('student.profile.update'), $data);
+        $response = $this->put(route('user.profile.update'), $data);
 
         $response->assertJson([
             'status' => 200,
@@ -83,7 +83,7 @@ class ProfileControllerTest extends TestCase
             'new_password' => '@Meet12345',
             'new_password_confirmation' => '@Meet12345'
         ];
-        $response = $this->put(route('student.profile.update.password'), $data);
+        $response = $this->put(route('user.profile.update.password'), $data);
 
         $response->assertJson([
             'status' => 200,

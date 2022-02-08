@@ -20,7 +20,7 @@ class ParentControllerTest extends TestCase
     public function testAddParent()
     {
         auth()->login((User::find(1)));
-        $password = $this->faker->password(8);
+        $password = '@Parent1234';
         $parent = [
             'name' => $this->faker->name,
             'email' => $this->faker->email,

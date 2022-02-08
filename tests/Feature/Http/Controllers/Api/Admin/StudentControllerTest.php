@@ -20,7 +20,7 @@ class StudentControllerTest extends TestCase
     public function testAddStudent()
     {
         auth()->login((User::find(1)));
-        $password = $this->faker->password(8);
+        $password = '@Student1234';
         $student = [
             'name' => $this->faker->name,
             'email' => $this->faker->email,
