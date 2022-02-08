@@ -49,14 +49,14 @@ class Handler extends ExceptionHandler
                 if ($e->getPrevious() instanceof ModelNotFoundException) {
                     return response()->json([
                         'status' => 204,
-                        'message' => 'Failed. Data not found'
+                        'message' => 'Failed. ' . explode('\\', $e->getPrevious()->getModel())[2] . ' not found'
                     ], 200);
                 }
-                
-                if($e->getPrevious() instanceof ModelGetEmptyException){
+
+                if ($e->getPrevious() instanceof ModelGetEmptyException) {
                     return response()->json([
                         'status' => 204,
-                        'message' => 'Failed. No ' . $e->getPrevious()->getMessage() .' found'
+                        'message' => 'Failed. No ' . $e->getPrevious()->getMessage() . ' found'
                     ], 200);
                 }
                 return response()->json([
