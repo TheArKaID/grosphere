@@ -7,13 +7,9 @@ use App\Http\Controllers\Api\Admin\StudentController;
 use App\Http\Controllers\Api\Admin\TutorController;
 use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\Student\ProfileController as StudentProfileController;
 use App\Http\Controllers\Api\Tutor\LiveClassController as TutorLiveClassController;
-use App\Http\Controllers\Api\Tutor\ProfileController as TutorProfileController;
 use App\Http\Controllers\Api\User\LiveClassController as UserLiveClassController;
 use App\Http\Controllers\Api\User\ProfileController as UserProfileController;
-use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -85,9 +81,9 @@ Route::middleware(['auth:api'])->group(function () {
             Route::post('leave', [UserLiveClassController::class, 'leave'])->name('live-classes.leave');
         });
 
-        Route::get('/', [UserProfileController::class, 'index'])->name('index');
-        Route::put('/', [UserProfileController::class, 'update'])->name('update');
-        Route::put('password', [UserProfileController::class, 'changePassword'])->name('change-password');
+        Route::get('/', [UserProfileController::class, 'index'])->name('profile');
+        Route::put('/', [UserProfileController::class, 'update'])->name('profile.update');
+        Route::put('password', [UserProfileController::class, 'updatePassword'])->name('profile.update.password');
     });
 
     Route::post('auth/logout', [AuthController::class, 'logout']);

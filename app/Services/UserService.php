@@ -74,6 +74,31 @@ class UserService
 		$user->phone = $data['phone'] ?? $user->phone;
 		$user->status = $data['status'] ?? $user->status;
 		$user->save();
+		
+		$user->detail->update($data);
+
+		return $user;
+	}
+
+	/**
+	 * Update user for specific role
+	 * 
+	 * @param int $id
+	 * @param array $data
+	 * 
+	 * @return Illuminate\Database\Eloquent\Model
+	 */
+	public function updateUserForRole($id, $data)
+	{
+		$user = $this->user->findOrFail($id);
+		$user->name = $data['name'] ?? $user->name;
+		$user->email = $data['email'] ?? $user->email;
+		$user->phone = $data['phone'] ?? $user->phone;
+		$user->status = $data['status'] ?? $user->status;
+		$user->save();
+		
+		$user->detail->update($data);
+
 		return $user;
 	}
 

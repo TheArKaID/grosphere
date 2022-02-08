@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Tutor\UpdatePasswordRequest;
-use App\Http\Requests\Tutor\UpdateRequest;
+use App\Http\Requests\User\UpdatePasswordRequest;
+use App\Http\Requests\User\UpdateRequest;
 use App\Http\Resources\UserResource;
 use App\Services\UserService;
 use Illuminate\Http\Request;
@@ -43,7 +43,14 @@ class ProfileController extends Controller
      */
     public function update(UpdateRequest $request)
     {
-        
+        $validated = $request->validated();
+
+        $this->userService->updateUserForRole(auth()->user()->id, $validated);
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Profile Updated Successfully'
+        ], 200);
     }
 
     /**
@@ -55,6 +62,13 @@ class ProfileController extends Controller
      */
     public function updatePassword(UpdatePasswordRequest $request)
     {
-        
+        $validated = $request->validated();
+
+        $this->userService->changePassword(auth()->user()->id, $validated['new_password']);
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Password Updated Successfully'
+        ], 200);
     }
 }
