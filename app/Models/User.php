@@ -101,4 +101,48 @@ class User extends Authenticatable implements JWTSubject
 
         return $detail;
     }
+
+    /**
+     * Get detail of user for http response
+     * 
+     * @return array
+     */
+    public function getDetail()
+    {
+        $detail = null;
+
+        switch ($this->roles()->first()->name) {
+            case 'admin':
+                $detail = [
+                    'id' => $this->detail->id
+                ];
+                break;
+            case 'parent':
+                $detail = [
+                    'id' => $this->detail->id,
+                    'address' => $this->detail->address,
+                ];
+                break;
+            case 'student':
+                $detail = [
+                    'id' => $this->detail->id,
+                    'id_number' => $this->detail->id_number,
+                    'birth_place' => $this->detail->birth_place,
+                    'birth_date' => $this->detail->birth_date,
+                    'gender' => $this->detail->gender,
+                    'address' => $this->detail->address,
+                ];
+                break;
+            case 'tutor':
+                $detail = [
+                    'id' => $this->detail->id
+                ];
+                break;
+            default:
+                $detail = $this->detail->toArray();
+                break;
+        }
+
+        return $detail;
+    }
 }

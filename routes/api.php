@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\Student\ProfileController as StudentProfileControll
 use App\Http\Controllers\Api\Tutor\LiveClassController as TutorLiveClassController;
 use App\Http\Controllers\Api\Tutor\ProfileController as TutorProfileController;
 use App\Http\Controllers\Api\User\LiveClassController as UserLiveClassController;
+use App\Http\Controllers\Api\User\ProfileController as UserProfileController;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -60,9 +61,9 @@ Route::middleware(['auth:api'])->group(function () {
     });
 
     Route::name('tutor.')->middleware(['role:tutor'])->prefix('tutor')->group(function () {
-        Route::get('/', [TutorProfileController::class, 'index'])->name('index');
-        Route::put('/', [TutorProfileController::class, 'update'])->name('update');
-        Route::put('password', [TutorProfileController::class, 'changePassword'])->name('change-password');
+        // Route::get('/', [TutorProfileController::class, 'index'])->name('index');
+        // Route::put('/', [TutorProfileController::class, 'update'])->name('update');
+        // Route::put('password', [TutorProfileController::class, 'changePassword'])->name('change-password');
 
         Route::resource('live-classes', TutorLiveClassController::class)->except(['edit', 'create']);
         Route::prefix('live-classes/{live_class_id}')->group(function () {
@@ -72,9 +73,9 @@ Route::middleware(['auth:api'])->group(function () {
     });
 
     Route::name('student.')->middleware(['role:student'])->prefix('student')->group(function () {
-        Route::get('/', [StudentProfileController::class, 'index'])->name('profile');
-        Route::put('/', [StudentProfileController::class, 'update'])->name('profile.update');
-        Route::put('password', [StudentProfileController::class, 'updatePassword'])->name('profile.update.password');
+        // Route::get('/', [StudentProfileController::class, 'index'])->name('profile');
+        // Route::put('/', [StudentProfileController::class, 'update'])->name('profile.update');
+        // Route::put('password', [StudentProfileController::class, 'updatePassword'])->name('profile.update.password');
     });
 
     Route::name('user.')->middleware(['role:admin|tutor|student|parent'])->prefix('user')->group(function () {
@@ -83,6 +84,10 @@ Route::middleware(['auth:api'])->group(function () {
             Route::post('join', [UserLiveClassController::class, 'join'])->name('live-classes.join');
             Route::post('leave', [UserLiveClassController::class, 'leave'])->name('live-classes.leave');
         });
+
+        Route::get('/', [UserProfileController::class, 'index'])->name('index');
+        Route::put('/', [UserProfileController::class, 'update'])->name('update');
+        Route::put('password', [UserProfileController::class, 'changePassword'])->name('change-password');
     });
 
     Route::post('auth/logout', [AuthController::class, 'logout']);
