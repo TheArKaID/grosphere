@@ -35,7 +35,7 @@ class StudentControllerTest extends TestCase
         ];
         $response = $this->post(route('admin.students.store'), $student);
 
-        self::$studentId = $response->original['data']->id;
+        self::$studentId = $response->json('data.id');
 
         unset($student['password']);
         unset($student['password_confirmation']);

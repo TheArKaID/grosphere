@@ -36,7 +36,7 @@ class LiveClassControllerTest extends TestCase
                 'duration' => $this->faker->numberBetween(30, 60)
             ];
             $response = $this->post(route('tutor.live-classes.store'), $liveClass);
-            self::$liveClassId = $response->original['data']->id;
+            self::$liveClassId = $response->json('data.id');
             self::$isSetUpRun = true;
         }
     }

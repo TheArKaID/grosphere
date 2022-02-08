@@ -32,7 +32,7 @@ class TutorControllerTest extends TestCase
 
         $response = $this->post(route('admin.tutors.store'), $tutor);
 
-        self::$tutorId = $response->original['data']->id;
+        self::$tutorId = $response->json('data.id');
 
         unset($tutor['password']);
         unset($tutor['password_confirmation']);

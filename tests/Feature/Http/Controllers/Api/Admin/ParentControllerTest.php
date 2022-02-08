@@ -34,7 +34,7 @@ class ParentControllerTest extends TestCase
         unset($parent['password']);
         unset($parent['password_confirmation']);
 
-        self::$parentId = $response->original['data']->id;
+        self::$parentId = $response->json('data.id');
 
         $response->assertJson([
             'status' => 200,

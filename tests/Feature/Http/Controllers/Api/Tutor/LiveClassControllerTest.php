@@ -36,7 +36,7 @@ class LiveClassControllerTest extends TestCase
 
         $response = $this->post(route('tutor.live-classes.store'), $liveClass);
 
-        self::$liveClassId = $response->original['data']->id;
+        self::$liveClassId = $response->json('data.id');
 
         $response->assertJson([
             'status' => 200,
