@@ -23,7 +23,7 @@ class AnnouncementControllerTest extends TestCase
             'name' => $this->faker->name,
             'message' => $this->faker->text,
             'to' => rand(1, 4),
-            'show_until' => $this->faker->dateTimeBetween('+2 days', '+10 days')->format('Y-m-d H:i:s'),
+            'show_until' => $this->faker->dateTimeBetween('+2 days', '+10 days')->format('d-m-Y H:i:s'),
         ];
 
         $response = $this->post(route('admin.announcements.store'), $announcement);
@@ -80,7 +80,7 @@ class AnnouncementControllerTest extends TestCase
             'name' => $this->faker->name,
             'message' => $this->faker->text,
             'to' => rand(1, 4),
-            'show_until' => $this->faker->dateTimeBetween('+2 days', '+10 days')->format('Y-m-d H:i:s'),
+            'show_until' => $this->faker->dateTimeBetween('+2 days', '+10 days')->format('d-m-Y H:i:s'),
         ];
 
         $response = $this->put(route('admin.announcements.update', 1), $announcement);
