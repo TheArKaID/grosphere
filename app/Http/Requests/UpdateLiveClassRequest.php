@@ -28,7 +28,7 @@ class UpdateLiveClassRequest extends FormRequest
             'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'description' => 'required|string',
             'duration' => 'required|integer',
-            'start_time' => 'required|date_format:Y-m-d H:i:s'
+            'start_time' => 'required|date_format:d-m-Y H:i:s'
         ];
     }
 }

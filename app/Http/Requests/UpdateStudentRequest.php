@@ -25,7 +25,7 @@ class UpdateStudentRequest extends FormRequest
     {
         return [
             'name' => 'string|max:255',
-            'birth_date' => 'date_format:Y-m-d',
+            'birth_date' => 'date_format:d-m-Y',
             'birth_place' => 'string|max:255',
             'gender' => 'numeric|between:0,1',
             'address' => 'string',

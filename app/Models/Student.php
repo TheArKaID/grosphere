@@ -36,6 +36,15 @@ class Student extends Model
     protected $fillable = ['user_id', 'parent_id', 'id_number', 'birth_date', 'birth_place', 'gender', 'address', 'created_at', 'updated_at'];
 
     /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'birth_date' => 'datetime',
+    ];
+    
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function parent()

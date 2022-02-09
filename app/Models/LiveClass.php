@@ -31,6 +31,15 @@ class LiveClass extends Model
     protected $fillable = ['class_id', 'duration', 'start_time', 'uniq_code', 'deleted_at', 'created_at', 'updated_at'];
 
     /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'start_time' => 'datetime',
+    ];
+    
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function class()

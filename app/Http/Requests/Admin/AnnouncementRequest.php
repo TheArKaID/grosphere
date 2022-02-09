@@ -27,7 +27,7 @@ class AnnouncementRequest extends FormRequest
             'name' => 'required|max:255',
             'message' => 'required',
             'to' => 'required|in:1,2,3,4',
-            'show_until' => 'required|date_format:Y-m-d H:i:s'
+            'show_until' => 'required|date_format:d-m-Y H:i:s'
         ];
     }
 }

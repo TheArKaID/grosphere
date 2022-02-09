@@ -33,7 +33,7 @@ class UpdateRequest extends FormRequest
             // Parent
 
             // Student
-            'birth_date' => 'date_format:Y-m-d',
+            'birth_date' => 'date_format:d-m-Y',
             'birth_place' => 'string|max:255',
             'gender' => 'numeric|between:0,1',
 

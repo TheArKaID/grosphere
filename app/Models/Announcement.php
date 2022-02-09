@@ -36,6 +36,15 @@ class Announcement extends Model
     protected $fillable = ['name', 'message', 'to', 'show_until', 'created_at', 'updated_at'];
 
     /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'show_until' => 'datetime',
+    ];
+    
+    /**
      * Get Recipient Name
      * 
      * @return string
