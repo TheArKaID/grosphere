@@ -103,16 +103,29 @@ class Handler extends ExceptionHandler
             }
         });
 
+        $this->renderable(function (AgoraException $e, $request) {
+            if ($request->is('api/*')) {
+                $response = [
+                    'status' => 400,
+                    'message' => 'Failed Creating Meeting Room'                    
+                ];
+                if(config('app.debug')) {
+                    $response['errors'] = collect(json_decode($e->getMessage()))->pluck('message');
+                }
+                return response()->json($response, 404);
+            }
+        });
+
         $this->renderable(function (Throwable $e, $request) {
             if ($request->is('api/*')) {
+                if (config('app.debug')) {
+                    return response($e, 500);
+                }
+
                 $response = [
                     'status' => 500,
                     'message' => 'Internal server error'
                 ];
-                if (env('APP_DEBUG')) {
-                    return response($e, 500);
-                }
-
                 return response()->json($response, 500);
             }
         });
