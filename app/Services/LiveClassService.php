@@ -50,12 +50,15 @@ class LiveClassService
 
         $class = $this->classService->createClass($data);
         $data['class_id'] = $class->id;
-        $data['uniq_code'] = '';
         $liveClass = $this->liveClass->create($data);
-        $liveClass->uniq_code = $this->generateUniqCode($liveClass->id);
+
+        $meetingRoom = $this->classService->createMeetingRoom($data['name']);
+        $liveClass->host_code = $meetingRoom['passphrase']['host'];
+        $liveClass->user_code = $meetingRoom['passphrase']['host'];
         $liveClass->save();
 
         DB::commit();
+
         return $liveClass;
     }
 
@@ -69,18 +72,6 @@ class LiveClassService
     public function getLiveClassById($id)
     {
         return $this->liveClass->findOrFail($id);
-    }
-
-    /**
-     * Get Live Class by Uniq Code
-     * 
-     * @param string $uniqCode
-     * 
-     * @return LiveClass
-     */
-    public function getLiveClassByUniqCode($uniqCode)
-    {
-        return $this->liveClass->where('uniq_code', $uniqCode)->firstOrFail();
     }
 
     /**
@@ -121,18 +112,6 @@ class LiveClassService
 
         DB::commit();
         return true;
-    }
-
-    /**
-     * Generate Uniq Code with Class ID and 10 length
-     * 
-     * @param int $id
-     * 
-     * @return string
-     */
-    public function generateUniqCode(int $id)
-    {
-        return $id . substr(md5($id . rand(1, 100)), 0, 10 - strlen($id));
     }
 
     /**
@@ -250,15 +229,15 @@ class LiveClassService
     }
 
     /**
-     * Check if Live Class is started by Uniq Code
+     * Check if Live Class is started by  Code
      * 
-     * @param string $liveClassUniqCode
+     * @param string $liveClassCode
      * 
      * @return bool
      */
-    public function isLiveClassStartedByUniqCode($liveClassUniqCode)
+    public function isLiveClassStartedByCode($liveClassCode)
     {
-        $liveClass = $this->liveClass->where('uniq_code', $liveClassUniqCode)->first();
+        $liveClass = $this->liveClass->where('host_code', $liveClassCode)->orWhere('user_code', $liveClassCode)->first();
         if (!$liveClass) {
             return false;
         }
