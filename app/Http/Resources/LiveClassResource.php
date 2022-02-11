@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Carbon;
 
 class LiveClassResource extends JsonResource
 {
@@ -15,10 +16,11 @@ class LiveClassResource extends JsonResource
     public function toArray($request)
     {
         parent::wrap('live_classes');
+
         return $this->resource ? [
             'id' => $this->id,
             'duration' => $this->duration,
-            'start_time' => $this->start_time,
+            'start_time' => Carbon::parse($this->start_time)->toDateTimeString(),
             'class' => [
                 'id' => $this->class->id,
                 'name' => $this->class->name,

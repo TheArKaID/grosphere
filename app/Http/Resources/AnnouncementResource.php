@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class AnnouncementResource extends JsonResource
@@ -21,7 +22,7 @@ class AnnouncementResource extends JsonResource
             'name' => $this->name,
             'message' => $this->message,
             'to' => $this->getToName(),
-            'show_until' => $this->show_until,
+            'show_until' => Carbon::parse($this->show_until)->toDateTimeString(),
         ] : [];
     }
 }
