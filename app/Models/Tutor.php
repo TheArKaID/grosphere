@@ -43,4 +43,20 @@ class Tutor extends Model
     {
         return $this->hasMany(Classes::class);
     }
+
+    /**
+     * Delete classes on delete tutor
+     * 
+     * @return void
+     */
+    public static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($tutor) {
+            foreach ($tutor->classes as $class) {
+                $class->delete();
+            }
+        });
+    }
 }

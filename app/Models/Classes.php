@@ -60,7 +60,7 @@ class Classes extends Model
      */
     public function courseClasses()
     {
-        return $this->hasMany(CourseClass::class);
+        return $this->hasMany(CourseClass::class, 'class_id');
     }
 
     /**
@@ -68,6 +68,26 @@ class Classes extends Model
      */
     public function liveClasses()
     {
-        return $this->hasMany(LiveClass::class);
+        return $this->hasMany(LiveClass::class, 'class_id');
+    }
+
+    /**
+     * delete course classes and live classes on delete classes
+     * 
+     * @return void
+     */
+    public static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($classes) {
+            foreach ($classes->courseClasses as $courseClass) {
+                $courseClass->delete();
+            }
+
+            foreach ($classes->liveClasses as $liveClass) {
+                $liveClass->delete();
+            }
+        });
     }
 }

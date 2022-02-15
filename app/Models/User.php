@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -51,6 +52,14 @@ class User extends Authenticatable implements JWTSubject
         'password',
         'remember_token',
     ];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function liveUsers(): HasMany
+    {
+        return $this->hasMany(LiveUser::class);
+    }
 
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
@@ -144,5 +153,19 @@ class User extends Authenticatable implements JWTSubject
         }
 
         return $detail;
+    }
+
+    /**
+     * Delete detail on delete user
+     * 
+     * @return void
+     */
+    public static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($user) {
+            $user->detail->delete();
+        });
     }
 }

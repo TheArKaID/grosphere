@@ -45,4 +45,20 @@ class Parents extends Model
     {
         return $this->hasMany(Student::class, 'parent_id');
     }
+
+    /**
+     * Delete students on delete parent
+     * 
+     * @return void
+     */
+    public static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($parent) {
+            foreach ($parent->students as $student) {
+                $student->parent_id = null;
+            }
+        });
+    }
 }
