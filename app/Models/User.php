@@ -165,7 +165,9 @@ class User extends Authenticatable implements JWTSubject
         parent::boot();
 
         static::deleting(function ($user) {
-            $user->detail->delete();
+            foreach ($user->liveUsers as $liveUser) {
+                $liveUser->delete();
+            }
         });
     }
 }
