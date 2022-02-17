@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Query\Builder;
 
 /**
  * @property integer $id
@@ -62,6 +63,10 @@ class LiveClass extends Model
     {
         parent::boot();
 
+        static::addGlobalScope('ancient', function (Builder $builder) {
+            $builder->orderByDesc('created_at');
+        });
+        
         static::deleting(function ($liveClass) {
             foreach ($liveClass->liveUsers as $liveUser) {
                 $liveUser->delete();
