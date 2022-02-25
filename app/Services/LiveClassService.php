@@ -31,6 +31,23 @@ class LiveClassService
             $search = request()->get('search');
             $this->liveClass = $this->searchLiveClasses($search);
         }
+        if(request()->has('range')) {
+            $range = request()->get('range');
+            switch ($range) {
+                case 'today':
+                    $this->liveClass = $this->liveClass->whereDate('start_time', Carbon::today());
+                    break;
+                case 'this-week':
+                    $this->liveClass = $this->liveClass->whereBetween('start_time', [Carbon::now(), Carbon::now()->addWeek()]);
+                    break;
+                case 'next-week':
+                    $this->liveClass = $this->liveClass->whereBetween('start_time', [Carbon::now()->addWeek(), Carbon::now()->addWeeks(2)]);
+                    break;
+                default:
+                    $this->liveClass = $this->liveClass->whereDate('start_time', Carbon::today());
+                    break;
+            }
+        }
         if (request()->has('page') && request()->get('page') == 'all') {
             return $this->liveClass->get();
         }
