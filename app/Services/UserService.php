@@ -2,9 +2,10 @@
 
 namespace App\Services;
 
-use App\Http\Resources\UserResource;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class UserService
 {
@@ -74,7 +75,7 @@ class UserService
 		$user->phone = $data['phone'] ?? $user->phone;
 		$user->status = $data['status'] ?? $user->status;
 		$user->save();
-		
+
 		$user->detail->update($data);
 
 		return $user;
@@ -90,16 +91,36 @@ class UserService
 	 */
 	public function updateUserForRole($id, $data)
 	{
+		DB::beginTransaction();
 		$user = $this->user->findOrFail($id);
 		$user->name = $data['name'] ?? $user->name;
 		$user->email = $data['email'] ?? $user->email;
 		$user->phone = $data['phone'] ?? $user->phone;
 		$user->status = $data['status'] ?? $user->status;
+
+		if ($photo = $data['photo']) {
+			$this->uploadProfileImage($id, $photo);
+		}
+
 		$user->save();
-		
 		$user->detail->update($data);
 
+		DB::commit();
+
 		return $user;
+	}
+
+	/**
+	 * Upload profile photo
+	 * 
+	 * @param int $id
+	 * @param mix $photo
+	 * 
+	 * @return Illuminate\Database\Eloquent\Model
+	 */
+	public function uploadProfileImage($id, $photo)
+	{
+		return Storage::putFileAs('public/user/' . $id . '/', $photo, 'profile.png');
 	}
 
 	/**
@@ -145,45 +166,45 @@ class UserService
 		$user->save();
 		return $user;
 	}
-	
-    /**
-     * User Join Live Class
-     * 
-     * @param int $id
-     * 
-     * @return LiveUser
-     */
-    public function userJoinLiveClass($id)
-    {
-        if (!$this->liveClassService->isLiveClassStarted($id)) {
-            return false;
-        }
 
-        $userId = auth()->user()->id;
-        $data = [
-            'user_id' => $userId,
-            'live_class_id' => $id
-        ];
+	/**
+	 * User Join Live Class
+	 * 
+	 * @param int $id
+	 * 
+	 * @return LiveUser
+	 */
+	public function userJoinLiveClass($id)
+	{
+		if (!$this->liveClassService->isLiveClassStarted($id)) {
+			return false;
+		}
 
-        return $this->liveUserService->joinOrRejoinLiveUser($data);
-    }
+		$userId = auth()->user()->id;
+		$data = [
+			'user_id' => $userId,
+			'live_class_id' => $id
+		];
 
-    /**
-     * User leave Live Class
-     * 
-     * @param int $id
-     * 
-     * @return bool
-     */
-    public function userLeaveLiveClass($id)
-    {
-        $liveClass = $this->liveClassService->getLiveClassById($id);
-        $userId = auth()->user()->id;
-        $data = [
-            'user_id' => $userId,
-            'live_class_id' => $liveClass->id
-        ];
+		return $this->liveUserService->joinOrRejoinLiveUser($data);
+	}
 
-        return $this->liveUserService->leaveLiveUser($data);
-    }
+	/**
+	 * User leave Live Class
+	 * 
+	 * @param int $id
+	 * 
+	 * @return bool
+	 */
+	public function userLeaveLiveClass($id)
+	{
+		$liveClass = $this->liveClassService->getLiveClassById($id);
+		$userId = auth()->user()->id;
+		$data = [
+			'user_id' => $userId,
+			'live_class_id' => $liveClass->id
+		];
+
+		return $this->liveUserService->leaveLiveUser($data);
+	}
 }

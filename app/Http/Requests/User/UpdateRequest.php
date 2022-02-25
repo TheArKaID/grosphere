@@ -27,6 +27,7 @@ class UpdateRequest extends FormRequest
             // User
             'name' => 'required|string|max:255',
             'phone' => 'nullable|string|min:8|max:50',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
 
             // Admin
 
