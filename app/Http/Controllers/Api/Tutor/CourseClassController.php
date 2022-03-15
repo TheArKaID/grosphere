@@ -47,6 +47,7 @@ class CourseClassController extends Controller
     public function store(StoreCourseClassRequest $request)
     {
         $validated = $request->validated();
+        $validated['tutor_id'] = auth()->user()->detail->id;
 
         $courseClass = $this->courseClassService->createCourseClass($validated);
 
