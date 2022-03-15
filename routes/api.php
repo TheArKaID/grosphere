@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Admin\AnnouncementController;
+use App\Http\Controllers\Api\Admin\CourseClassController;
 use App\Http\Controllers\Api\Admin\LiveClassController;
 use App\Http\Controllers\Api\Admin\ParentController;
 use App\Http\Controllers\Api\Admin\StudentController;
@@ -56,7 +57,7 @@ Route::middleware(['auth:api'])->group(function () {
 
         // Route::resource('classes', ClassController::class)->except(['edit', 'create']);
         Route::resource('live-classes', LiveClassController::class)->except(['edit', 'create']);
-        // Route::resource('course-classes', CourseController::class)->except(['edit', 'create']);
+        Route::resource('course-classes', CourseClassController::class)->except(['edit', 'create']);
 
         Route::resource('announcements', AnnouncementController::class)->except(['edit', 'create']);
     });
