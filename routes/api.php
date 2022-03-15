@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\Admin\StudentController;
 use App\Http\Controllers\Api\Admin\TutorController;
 use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\Tutor\CourseClassController as TutorCourseClassController;
 use App\Http\Controllers\Api\Tutor\LiveClassController as TutorLiveClassController;
 use App\Http\Controllers\Api\User\LiveClassController as UserLiveClassController;
 use App\Http\Controllers\Api\User\ProfileController as UserProfileController;
@@ -23,6 +24,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('time', function () {
+    
+    return \Carbon\Carbon::now()->toDateTimeString();
+});
 Route::prefix('auth')->group(function () {
     Route::post('register', [AuthController::class, 'register']);
     Route::post('login', [AuthController::class, 'login']);
@@ -66,6 +71,8 @@ Route::middleware(['auth:api'])->group(function () {
             Route::post('join', [TutorLiveClassController::class, 'join'])->name('live-classes.join');
             Route::post('leave', [TutorLiveClassController::class, 'leave'])->name('live-classes.leave');
         });
+
+        Route::resource('course-classes', TutorCourseClassController::class)->except(['edit', 'create']);
     });
 
     Route::name('student.')->middleware(['role:student'])->prefix('student')->group(function () {
