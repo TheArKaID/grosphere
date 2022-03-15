@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Classes;
 use App\Models\LiveClass;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -65,6 +66,7 @@ class LiveClassService
     {
         DB::beginTransaction();
 
+        $data['type'] = Classes::$LIVE;
         $class = $this->classService->createClass($data);
         $data['class_id'] = $class->id;
         $liveClass = $this->liveClass->create($data);

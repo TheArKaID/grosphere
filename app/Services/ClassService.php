@@ -37,7 +37,6 @@ class ClassService
      */
     public function createClass(array $data)
     {
-        $data['type'] = Classes::$LIVE;
         $class = $this->class->create($data);
 
         if (isset($data['thumbnail'])) {
