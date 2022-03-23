@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $created_at
  * @property string $updated_at
  * @property Tutor $tutor
- * @property CourseClass[] $courseClasses
+ * @property CourseWork[] $courseWorks
  * @property LiveClass[] $liveClasses
  */
 class Classes extends Model
@@ -58,9 +58,9 @@ class Classes extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function courseClasses()
+    public function courseWorks()
     {
-        return $this->hasMany(CourseClass::class, 'class_id');
+        return $this->hasMany(CourseWork::class, 'class_id');
     }
 
     /**
@@ -72,7 +72,7 @@ class Classes extends Model
     }
 
     /**
-     * delete course classes and live classes on delete classes
+     * delete course works and live classes on delete classes
      * 
      * @return void
      */
@@ -81,8 +81,8 @@ class Classes extends Model
         parent::boot();
 
         static::deleting(function ($classes) {
-            foreach ($classes->courseClasses as $courseClass) {
-                $courseClass->delete();
+            foreach ($classes->courseWorks as $courseWork) {
+                $courseWork->delete();
             }
 
             foreach ($classes->liveClasses as $liveClass) {

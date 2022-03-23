@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Admin\AnnouncementController;
-use App\Http\Controllers\Api\Admin\CourseClassController;
+use App\Http\Controllers\Api\Admin\CourseWorkController;
 use App\Http\Controllers\Api\Admin\LevelController;
 use App\Http\Controllers\Api\Admin\LevelStudentController;
 use App\Http\Controllers\Api\Admin\LiveClassController;
@@ -10,7 +10,7 @@ use App\Http\Controllers\Api\Admin\StudentController;
 use App\Http\Controllers\Api\Admin\TutorController;
 use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\Tutor\CourseClassController as TutorCourseClassController;
+use App\Http\Controllers\Api\Tutor\CourseWorkController as TutorCourseWorkController;
 use App\Http\Controllers\Api\Tutor\LiveClassController as TutorLiveClassController;
 use App\Http\Controllers\Api\User\LiveClassController as UserLiveClassController;
 use App\Http\Controllers\Api\User\ProfileController as UserProfileController;
@@ -57,7 +57,7 @@ Route::middleware(['auth:api'])->group(function () {
 
         // Route::resource('classes', ClassController::class)->except(['edit', 'create']);
         Route::resource('live-classes', LiveClassController::class)->except(['edit', 'create']);
-        Route::resource('course-classes', CourseClassController::class)->except(['edit', 'create']);
+        Route::resource('course-works', CourseWorkController::class)->except(['edit', 'create']);
 
         Route::resource('announcements', AnnouncementController::class)->except(['edit', 'create']);
     });
@@ -73,7 +73,7 @@ Route::middleware(['auth:api'])->group(function () {
             Route::post('leave', [TutorLiveClassController::class, 'leave'])->name('live-classes.leave');
         });
 
-        Route::resource('course-classes', TutorCourseClassController::class)->except(['edit', 'create']);
+        Route::resource('course-works', TutorCourseWorkController::class)->except(['edit', 'create']);
     });
 
     Route::name('student.')->middleware(['role:student'])->prefix('student')->group(function () {

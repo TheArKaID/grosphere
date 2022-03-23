@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $name
  * @property string $created_at
  * @property string $updated_at
- * @property CourseClass[] $courseClasses
+ * @property CourseWork[] $courseWorks
  */
 class CourseCategory extends Model
 {
@@ -28,8 +28,8 @@ class CourseCategory extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function courseClasses()
+    public function courseWorks()
     {
-        return $this->hasMany(CourseClass::class);
+        return $this->hasMany(CourseWork::class);
     }
 }

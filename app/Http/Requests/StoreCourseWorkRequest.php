@@ -3,8 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class UpdateCourseClassRequest extends FormRequest
+class StoreCourseWorkRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,6 +25,7 @@ class UpdateCourseClassRequest extends FormRequest
     public function rules()
     {
         return [
+            'tutor_id' => [Rule::requiredIf(auth()->user()->hasRole('admin')), 'exists:tutors,id'],
             'name' => 'required|string|max:255',
             'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'description' => 'required|string',

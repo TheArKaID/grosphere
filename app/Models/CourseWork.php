@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $updated_at
  * @property Class $class
  */
-class CourseClass extends Model
+class CourseWork extends Model
 {
     /**
      * The "type" of the auto-incrementing ID.
@@ -39,7 +39,7 @@ class CourseClass extends Model
     }
 
     /**
-     * Get the courseCategory that owns the CourseClass
+     * Get the courseCategory that owns the CourseWork
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
