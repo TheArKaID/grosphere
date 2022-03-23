@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $updated_at
  * @property CourseClass[] $courseClasses
  */
-class CourseSubject extends Model
+class CourseCategory extends Model
 {
     /**
      * The "type" of the auto-incrementing ID.

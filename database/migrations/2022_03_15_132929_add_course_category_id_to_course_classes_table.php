@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddCourseSubjectIdToCourseClassesTable extends Migration
+class AddCourseCategoryIdToCourseClassesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,7 @@ class AddCourseSubjectIdToCourseClassesTable extends Migration
     public function up()
     {
         Schema::table('course_classes', function (Blueprint $table) {
-            $table->foreignId('course_subject_id')->nullable()->after('class_id')->constrained();
+            $table->foreignId('course_category_id')->nullable()->after('class_id')->constrained();
         });
     }
 
@@ -26,7 +26,7 @@ class AddCourseSubjectIdToCourseClassesTable extends Migration
     public function down()
     {
         Schema::table('course_classes', function (Blueprint $table) {
-            $table->dropConstrainedForeignId('course_subject_id');
+            $table->dropConstrainedForeignId('course_category_id');
         });
     }
 }

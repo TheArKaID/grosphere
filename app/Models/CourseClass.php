@@ -28,7 +28,7 @@ class CourseClass extends Model
     /**
      * @var array
      */
-    protected $fillable = ['class_id', 'course_subject_id', 'duration', 'published_at', 'deleted_at', 'created_at', 'updated_at'];
+    protected $fillable = ['class_id', 'course_category_id', 'duration', 'deleted_at', 'created_at', 'updated_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -39,12 +39,12 @@ class CourseClass extends Model
     }
 
     /**
-     * Get the courseSubject that owns the CourseClass
+     * Get the courseCategory that owns the CourseClass
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function courseSubject(): BelongsTo
+    public function courseCategory(): BelongsTo
     {
-        return $this->belongsTo(CourseSubject::class);
+        return $this->belongsTo(CourseCategory::class);
     }
 }

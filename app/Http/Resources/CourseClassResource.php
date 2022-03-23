@@ -3,7 +3,6 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Carbon;
 
 class CourseClassResource extends JsonResource
 {
@@ -20,7 +19,6 @@ class CourseClassResource extends JsonResource
         return $this->resource ? [
             'id' => $this->id,
             'duration' => $this->duration,
-            'published_at' => Carbon::parse($this->published_at)->toDateTimeString(),
             'class' => [
                 'id' => $this->class->id,
                 'name' => $this->class->name,
