@@ -19,16 +19,17 @@ class CourseWorkResource extends JsonResource
         return $this->resource ? [
             'id' => $this->id,
             'duration' => $this->duration,
-            'class' => [
-                'id' => $this->class->id,
-                'name' => $this->class->name,
-                'description' => $this->class->description,
-                'thumbnail' => $this->class->thumbnail ? asset('storage/class/thumbnail/' . $this->class->thumbnail) : asset('storage/class/thumbnail/default.png'),
-                'type' => $this->class->type,
-                'tutor' => [
-                    'id' => $this->class->tutor->id,
-                    'name' => $this->class->tutor->user->name
-                ],
+            'name' => $this->class->name,
+            'description' => $this->class->description,
+            'thumbnail' => $this->class->thumbnail ? asset('storage/class/thumbnail/' . $this->class->thumbnail) : asset('storage/class/thumbnail/default.png'),
+            'type' => $this->class->type,
+            'tutor' => [
+                'id' => $this->class->tutor->id,
+                'name' => $this->class->tutor->user->name
+            ],
+            'category' => [
+                'id' => $this->courseCategory->id,
+                'name' => $this->courseCategory->name
             ],
         ] : [];
     }

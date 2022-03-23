@@ -26,11 +26,11 @@ class StoreCourseWorkRequest extends FormRequest
     {
         return [
             'tutor_id' => [Rule::requiredIf(auth()->user()->hasRole('admin')), 'exists:tutors,id'],
+            'course_category_id' => 'required|exists:course_categories,id',
             'name' => 'required|string|max:255',
             'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'description' => 'required|string',
-            'duration' => 'required|integer',
-            'published_at' => 'required|date_format:d-m-Y H:i:s'
+            'duration' => 'required|integer'
         ];
     }
 }

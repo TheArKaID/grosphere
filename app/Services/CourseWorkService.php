@@ -26,7 +26,7 @@ class CourseWorkService
      * 
      * @return Collection
      */
-    public function getAllCourseWorks($tutorId = null)
+    public function getAll($tutorId = null)
     {
         if ($tutorId) {
             $this->courseWork = $this->courseWork->whereHas('class', function ($class) use ($tutorId) {

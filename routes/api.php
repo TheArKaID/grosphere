@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\Admin\StudentController;
 use App\Http\Controllers\Api\Admin\TutorController;
 use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\Student\CourseWorkController as StudentCourseWorkController;
 use App\Http\Controllers\Api\Tutor\CourseWorkController as TutorCourseWorkController;
 use App\Http\Controllers\Api\Tutor\LiveClassController as TutorLiveClassController;
 use App\Http\Controllers\Api\User\LiveClassController as UserLiveClassController;
@@ -73,13 +74,14 @@ Route::middleware(['auth:api'])->group(function () {
             Route::post('leave', [TutorLiveClassController::class, 'leave'])->name('live-classes.leave');
         });
 
-        Route::resource('course-works', TutorCourseWorkController::class)->except(['edit', 'create']);
+        Route::apiResource('course-works', TutorCourseWorkController::class);
     });
 
     Route::name('student.')->middleware(['role:student'])->prefix('student')->group(function () {
         // Route::get('/', [StudentProfileController::class, 'index'])->name('profile');
         // Route::put('/', [StudentProfileController::class, 'update'])->name('profile.update');
         // Route::put('password', [StudentProfileController::class, 'updatePassword'])->name('profile.update.password');
+        Route::apiResource('course-works', StudentCourseWorkController::class)->only(['index', 'show']);
     });
 
     Route::name('user.')->middleware(['role:admin|tutor|student|parent'])->prefix('user')->group(function () {

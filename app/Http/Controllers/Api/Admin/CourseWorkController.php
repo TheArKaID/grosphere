@@ -25,7 +25,7 @@ class CourseWorkController extends Controller
      */
     public function index()
     {
-        $courseWorks = CourseWorkResource::collection($this->courseWorkService->getAllCourseWorks());
+        $courseWorks = CourseWorkResource::collection($this->courseWorkService->getAll());
 
         if ($courseWorks->count() == 0) {
             throw new ModelGetEmptyException('Course Work');
