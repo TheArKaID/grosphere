@@ -4,19 +4,20 @@ namespace App\Services;
 
 use App\Models\Student;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 
 class StudentService
 {
-	private $userService;
+	private $userService, $levelStudentService;
 	private $student;
 
 	public function __construct(
 		Student $student,
-		UserService $userService
+		UserService $userService,
+		LevelStudentService $levelStudentService
 	) {
 		$this->student = $student;
 		$this->userService = $userService;
+		$this->levelStudentService = $levelStudentService;
 	}
 
 	/**
@@ -67,6 +68,11 @@ class StudentService
 		$data['user_id'] = $user->id;
 
 		$student = $this->student->create($data);
+
+		$this->levelStudentService->create([
+			'level_id' => $data['level_id'],
+			'student_id' => $student->id,
+		]);
 
 		DB::commit();
 

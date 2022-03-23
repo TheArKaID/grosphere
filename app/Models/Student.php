@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property integer $id
@@ -58,5 +59,20 @@ class Student extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Get all of the levels for the Student
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function levelStudents(): HasMany
+    {
+        return $this->hasMany(LevelStudent::class);
+    }
+
+    public function levels()
+    {
+        return $this->levelStudents()->where('status', 1)->with('level')->get()->pluck('level')->first();
     }
 }
