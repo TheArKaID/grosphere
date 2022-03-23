@@ -4,19 +4,21 @@ namespace App\Services;
 
 use App\Models\Classes;
 use App\Models\CourseWork;
-use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class CourseWorkService
 {
-    private $courseWork, $classService;
+    private $courseWork, $classService, $courseStudentService;
 
     public function __construct(
         CourseWork $courseWork,
-        ClassService $classService
+        ClassService $classService,
+        CourseStudentService $courseStudentService
     ) {
         $this->courseWork = $courseWork;
         $this->classService = $classService;
+        $this->courseStudentService = $courseStudentService;
     }
 
     /**
@@ -32,16 +34,12 @@ class CourseWorkService
             $this->courseWork = $this->courseWork->whereHas('class', function ($class) use ($tutorId) {
                 $class->where('tutor_id', $tutorId);
             });
+        } elseif (Auth::user()->hasRole('student')) {
+            $this->courseWork = $this->courseWork->where('level_id', Auth::user()->levels->id);
         }
         if (request()->has('search')) {
             $search = request()->get('search');
             $this->courseWork = $this->searchCourseWorks($search);
-        }
-        if (request()->has('subject')) {
-            $subject = request()->get('subject');
-            $this->courseWork = $this->courseWork->whereHas('courseSubject', function ($query) use ($subject) {
-                $query->where('name', $subject);
-            });
         }
         if (request()->has('page') && request()->get('page') == 'all') {
             return $this->courseWork->get();
@@ -86,6 +84,19 @@ class CourseWorkService
             });
         }
         return $this->courseWork->findOrFail($id);
+    }
+
+    /**
+     * Get course work by level id and id
+     * 
+     * @param int $id
+     * @param int $levelId
+     * 
+     * @return CourseWork
+     */
+    public function getCourseWorkByIdAndLevelId($id, $levelId)
+    {
+        return $this->courseWork->where('level_id', $levelId)->findOrFail($id);
     }
 
     /**
@@ -144,5 +155,22 @@ class CourseWorkService
                     $tutor->where('name', 'like', '%' . $search . '%');
                 });
         });
+    }
+
+    /**
+     * Enroll Course Work
+     * 
+     * @param int $id
+     * 
+     * @return CourseWork
+     */
+    public function enroll($id)
+    {
+        $courseWork = $this->getCourseWorkByIdAndLevelId($id, Auth::user()->levels->id);
+        $this->courseStudentService->create([
+            'course_id' => $courseWork->id,
+            'student_id' => Auth::user()->id
+        ]);
+        return true;
     }
 }
