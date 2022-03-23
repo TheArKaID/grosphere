@@ -8,7 +8,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * @property integer $id
  * @property integer $class_id
- * @property integer $course_subject_id
+ * @property integer $level_id
+ * @property integer $course_category_id
  * @property int $duration
  * @property string $published_at
  * @property string $deleted_at
@@ -46,5 +47,15 @@ class CourseWork extends Model
     public function courseCategory(): BelongsTo
     {
         return $this->belongsTo(CourseCategory::class);
+    }
+
+    /**
+     * Get the level that owns the CourseWork
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function level(): BelongsTo
+    {
+        return $this->belongsTo(Level::class);
     }
 }
