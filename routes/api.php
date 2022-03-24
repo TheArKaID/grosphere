@@ -82,6 +82,11 @@ Route::middleware(['auth:api'])->group(function () {
         // Route::put('/', [StudentProfileController::class, 'update'])->name('profile.update');
         // Route::put('password', [StudentProfileController::class, 'updatePassword'])->name('profile.update.password');
         Route::apiResource('course-works', StudentCourseWorkController::class)->only(['index', 'show']);
+        Route::name('course-works.')->prefix('course-works/{course_work_id}')->group(function () {
+            Route::post('enroll', [StudentCourseWorkController::class, 'enroll'])->name('enroll');
+        });
+        // Terkait "My Course"
+        // Route::apiResource('course-students', StudentCourseWorkController::class)->only(['index', 'show']);
     });
 
     Route::name('user.')->middleware(['role:admin|tutor|student|parent'])->prefix('user')->group(function () {

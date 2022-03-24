@@ -35,7 +35,7 @@ class CourseWorkService
                 $class->where('tutor_id', $tutorId);
             });
         } elseif (Auth::user()->hasRole('student')) {
-            $this->courseWork = $this->courseWork->where('level_id', Auth::user()->levels->id);
+            $this->courseWork = $this->courseWork->where('level_id', Auth::user()->detail->levels()->id);
         }
         if (request()->has('search')) {
             $search = request()->get('search');
@@ -166,11 +166,11 @@ class CourseWorkService
      */
     public function enroll($id)
     {
-        $courseWork = $this->getCourseWorkByIdAndLevelId($id, Auth::user()->levels->id);
-        $this->courseStudentService->create([
-            'course_id' => $courseWork->id,
-            'student_id' => Auth::user()->id
+        $courseWork = $this->getCourseWorkByIdAndLevelId($id, Auth::user()->detail->levels()->id);
+        $courseStudent = $this->courseStudentService->create([
+            'course_work_id' => $courseWork->id,
+            'student_id' => Auth::user()->detail->id
         ]);
-        return true;
+        return $courseStudent;
     }
 }

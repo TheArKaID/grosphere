@@ -46,14 +46,27 @@ class CourseWorkController extends Controller
     {
         $courseWork = $this->courseWorkService->getCourseWorkById($courseWorkId);
 
-        if ($courseWork == null) {
-            throw new ModelGetEmptyException('Course Work');
-        }
-
         return response()->json([
             'status' => 200,
             'message' => 'Success',
             'data' => new CourseWorkResource($courseWork)
+        ], 200);
+    }
+
+    /**
+     * Enroll a Course Work.
+     * 
+     * @param  int  $courseWorkId
+     * @return \Illuminate\Http\Response
+     */
+    public function enroll(int $courseWorkId)
+    {
+        $courseWork = $this->courseWorkService->enroll($courseWorkId);
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Enrollment Successfully',
+            'data' => new CourseWorkResource($courseWork->courseWork)
         ], 200);
     }
 }
