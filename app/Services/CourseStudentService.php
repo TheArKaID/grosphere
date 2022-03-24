@@ -59,7 +59,7 @@ class CourseStudentService
      * @param array $data
      * @return CourseStudent
      */
-    public function update($id, array $data,)
+    public function update($id, array $data)
     {
         $courseStudent = $this->getById($id);
         $courseStudent->update($data);
