@@ -53,7 +53,7 @@ class CourseWorkController extends Controller
 
         return response()->json([
             'status' => 201,
-            'message' => 'Success',
+            'message' => 'Course Work Created',
             'data' => new CourseWorkResource($courseWork)
         ], 201);
     }
@@ -90,7 +90,7 @@ class CourseWorkController extends Controller
 
         return response()->json([
             'status' => 200,
-            'message' => 'Success',
+            'message' => 'Course Work Updated',
             'data' => new CourseWorkResource($courseWork)
         ], 200);
     }
@@ -107,7 +107,7 @@ class CourseWorkController extends Controller
 
         return response()->json([
             'status' => 200,
-            'message' => 'Success'
+            'message' => 'Course Work Deleted'
         ], 200);
     }
 }

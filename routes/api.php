@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\Student\CourseStudentController;
 use App\Http\Controllers\Api\Student\CourseWorkController as StudentCourseWorkController;
+use App\Http\Controllers\Api\Tutor\CourseChapterController as TutorCourseChapterController;
 use App\Http\Controllers\Api\Tutor\CourseWorkController as TutorCourseWorkController;
 use App\Http\Controllers\Api\Tutor\LiveClassController as TutorLiveClassController;
 use App\Http\Controllers\Api\User\LiveClassController as UserLiveClassController;
@@ -76,6 +77,7 @@ Route::middleware(['auth:api'])->group(function () {
         });
 
         Route::apiResource('course-works', TutorCourseWorkController::class);
+        Route::apiResource('course-works.chapters', TutorCourseChapterController::class);
     });
 
     Route::name('student.')->middleware(['role:student'])->prefix('student')->group(function () {
