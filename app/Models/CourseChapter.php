@@ -36,7 +36,7 @@ class CourseChapter extends Model
      */
     public function courseWork()
     {
-        return $this->belongsTo(ourseWork::class);
+        return $this->belongsTo(CourseWork::class);
     }
 
     /**
@@ -44,7 +44,7 @@ class CourseChapter extends Model
      */
     public function chapterAssignments()
     {
-        return $this->hasMany(hapterAssignment::class);
+        return $this->hasMany(ChapterAssignment::class);
     }
 
     /**
@@ -52,6 +52,6 @@ class CourseChapter extends Model
      */
     public function courseChapterStudents()
     {
-        return $this->hasMany(ourseChapterStudent::class);
+        return $this->hasMany(CourseChapterStudent::class);
     }
 }

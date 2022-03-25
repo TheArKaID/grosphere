@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property integer $id
@@ -57,5 +58,29 @@ class CourseWork extends Model
     public function level(): BelongsTo
     {
         return $this->belongsTo(Level::class);
+    }
+
+    /**
+     * Get all of the courseChapters for the CourseWork
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function courseChapters(): HasMany
+    {
+        return $this->hasMany(CourseChapter::class);
+    }
+
+    /**
+     * Boot on deleting
+     */
+    public static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($courseWork) {
+            foreach ($courseWork->courseChapters as $courseChapters) {
+                $courseChapters->delete();
+            }
+        });
     }
 }
