@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\Admin\StudentController;
 use App\Http\Controllers\Api\Admin\TutorController;
 use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\Student\CourseChapterController as StudentCourseChapterController;
 use App\Http\Controllers\Api\Student\CourseStudentController;
 use App\Http\Controllers\Api\Student\CourseWorkController as StudentCourseWorkController;
 use App\Http\Controllers\Api\Tutor\CourseChapterController as TutorCourseChapterController;
@@ -86,6 +87,7 @@ Route::middleware(['auth:api'])->group(function () {
         // Route::put('password', [StudentProfileController::class, 'updatePassword'])->name('profile.update.password');
 
         Route::apiResource('course-works', StudentCourseWorkController::class)->only(['index', 'show']);
+        Route::apiResource('course-works.chapters', StudentCourseChapterController::class)->only(['index', 'show']);
         Route::name('course-works.')->prefix('course-works/{course_work_id}')->group(function () {
             Route::post('enroll', [StudentCourseWorkController::class, 'enroll'])->name('enroll');
         });
