@@ -30,7 +30,7 @@ class CourseWork extends Model
     /**
      * @var array
      */
-    protected $fillable = ['class_id', 'course_category_id', 'duration', 'deleted_at', 'created_at', 'updated_at'];
+    protected $fillable = ['class_id', 'level_id', 'course_category_id', 'duration', 'deleted_at', 'created_at', 'updated_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -71,6 +71,16 @@ class CourseWork extends Model
     }
 
     /**
+     * Get all of the courseStudents for the CourseWork
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function courseStudents(): HasMany
+    {
+        return $this->hasMany(CourseStudent::class);
+    }
+
+    /**
      * Boot on deleting
      */
     public static function boot()
@@ -78,8 +88,8 @@ class CourseWork extends Model
         parent::boot();
 
         static::deleting(function ($courseWork) {
-            foreach ($courseWork->courseChapters as $courseChapters) {
-                $courseChapters->delete();
+            foreach ($courseWork->courseChapters as $courseChapter) {
+                $courseChapter->delete();
             }
         });
     }
