@@ -60,19 +60,4 @@ class Student extends Model
     {
         return $this->belongsTo(User::class);
     }
-
-    /**
-     * Get all of the levels for the Student
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function levelStudents(): HasMany
-    {
-        return $this->hasMany(LevelStudent::class);
-    }
-
-    public function levels()
-    {
-        return $this->levelStudents()->where('status', 1)->with('level')->get()->pluck('level')->first();
-    }
 }

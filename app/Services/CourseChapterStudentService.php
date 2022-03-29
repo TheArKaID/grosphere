@@ -31,9 +31,6 @@ class CourseChapterStudentService
             ->select('id', 'course_work_id', 'title', 'order')
             ->with(['courseChapterStudents'])
             ->where('course_work_id', $courseWorkId)
-            ->whereHas('courseWork', function ($query) {
-                $query->where('level_id', Auth::user()->detail->levels()->id);
-            })
             ->orderBy('order')
             ->get();
     }
@@ -65,7 +62,7 @@ class CourseChapterStudentService
             ->whereHas('courseWork', function ($courseWork) {
                 $courseWork->whereHas('courseStudents', function ($courseStudents) {
                     $courseStudents->where('student_id', Auth::user()->detail->id);
-                })->where('level_id', Auth::user()->detail->levels()->id);
+                });
             })
             ->findOrFail($id);
 

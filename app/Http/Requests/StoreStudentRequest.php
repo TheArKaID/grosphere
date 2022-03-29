@@ -26,7 +26,6 @@ class StoreStudentRequest extends FormRequest
     {
         return [
             'parent_id' => 'numeric|nullable',
-            'level_id' => 'numeric|nullable',
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users',
             'password' => ['required', 'confirmed', Password::min(8)->letters()->numbers()->mixedCase()],

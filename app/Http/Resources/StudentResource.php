@@ -30,7 +30,6 @@ class StudentResource extends JsonResource
             'address' => $this->address,
             'status' => $this->user->status,
             'parent' => $this->parent ?? [],
-            'level' => $this->levels() ?? [],
             'created_at' => $this->created_at
         ] : [];
     }

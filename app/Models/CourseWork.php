@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 /**
  * @property integer $id
  * @property integer $class_id
- * @property integer $level_id
  * @property integer $course_category_id
  * @property int $duration
  * @property string $published_at
@@ -30,7 +29,7 @@ class CourseWork extends Model
     /**
      * @var array
      */
-    protected $fillable = ['class_id', 'level_id', 'course_category_id', 'duration', 'deleted_at', 'created_at', 'updated_at'];
+    protected $fillable = ['class_id', 'course_category_id', 'duration', 'deleted_at', 'created_at', 'updated_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -48,16 +47,6 @@ class CourseWork extends Model
     public function courseCategory(): BelongsTo
     {
         return $this->belongsTo(CourseCategory::class);
-    }
-
-    /**
-     * Get the level that owns the CourseWork
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function level(): BelongsTo
-    {
-        return $this->belongsTo(Level::class);
     }
 
     /**

@@ -7,17 +7,15 @@ use Illuminate\Support\Facades\DB;
 
 class StudentService
 {
-	private $userService, $levelStudentService;
+	private $userService;
 	private $student;
 
 	public function __construct(
 		Student $student,
-		UserService $userService,
-		LevelStudentService $levelStudentService
+		UserService $userService
 	) {
 		$this->student = $student;
 		$this->userService = $userService;
-		$this->levelStudentService = $levelStudentService;
 	}
 
 	/**
@@ -68,11 +66,6 @@ class StudentService
 		$data['user_id'] = $user->id;
 
 		$student = $this->student->create($data);
-
-		$this->levelStudentService->create([
-			'level_id' => $data['level_id'],
-			'student_id' => $student->id,
-		]);
 
 		DB::commit();
 

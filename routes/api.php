@@ -2,8 +2,6 @@
 
 use App\Http\Controllers\Api\Admin\AnnouncementController;
 use App\Http\Controllers\Api\Admin\CourseWorkController;
-use App\Http\Controllers\Api\Admin\LevelController;
-use App\Http\Controllers\Api\Admin\LevelStudentController;
 use App\Http\Controllers\Api\Admin\LiveClassController;
 use App\Http\Controllers\Api\Admin\ParentController;
 use App\Http\Controllers\Api\Admin\StudentController;
@@ -45,8 +43,6 @@ Route::middleware(['auth:api'])->group(function () {
         Route::prefix('students/{student_id}')->group(function () {
             Route::put('password', [StudentController::class, 'changePassword'])->name('students.change-password');
         });
-        Route::apiResource('levels', LevelController::class);
-        Route::apiResource('level-students', LevelStudentController::class);
 
         Route::resource('parents', ParentController::class)->except(['edit', 'create']);
         Route::prefix('parents/{parent_id}')->group(function () {
