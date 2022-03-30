@@ -19,6 +19,7 @@ class CourseChapterResource extends JsonResource
         return $this->resource ? [
             'id' => $this->id,
             'title' => $this->title,
+            'description' => $this->description,
             'content' => $this->content,
             'order' => $this->order,
             'status' => $this->status

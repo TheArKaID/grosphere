@@ -25,6 +25,7 @@ class StoreCourseChapterRequest extends FormRequest
     {
         return [
             'title' => 'string|max:255',
+            'description' => 'string|max:250',
             'content' => 'string',
         ];
     }
