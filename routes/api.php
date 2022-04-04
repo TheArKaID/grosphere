@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\Student\CourseChapterController as StudentCourseChapterController;
 use App\Http\Controllers\Api\Student\CourseStudentController;
 use App\Http\Controllers\Api\Student\CourseWorkController as StudentCourseWorkController;
+use App\Http\Controllers\Api\Tutor\ChapterMaterialController as TutorChapterMaterialController;
 use App\Http\Controllers\Api\Tutor\CourseChapterController as TutorCourseChapterController;
 use App\Http\Controllers\Api\Tutor\CourseWorkController as TutorCourseWorkController;
 use App\Http\Controllers\Api\Tutor\LiveClassController as TutorLiveClassController;
@@ -75,6 +76,7 @@ Route::middleware(['auth:api'])->group(function () {
 
         Route::apiResource('course-works', TutorCourseWorkController::class);
         Route::apiResource('course-works.chapters', TutorCourseChapterController::class);
+        Route::apiResource('course-works.chapters.materials', TutorChapterMaterialController::class)->except(['update']);
     });
 
     Route::name('student.')->middleware(['role:student'])->prefix('student')->group(function () {
