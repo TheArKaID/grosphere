@@ -83,7 +83,7 @@ class CourseChapterService
      * @param int $tutorId
      * @return CourseChapter
      */
-    public function getById($courseWorkId, $id, $tutorId)
+    public function getById($courseWorkId, $id, $tutorId = null)
     {
         if ($tutorId) {
             $this->courseChapter = $this->courseChapter->whereHas('courseWork', function ($courseWork) use ($tutorId) {
