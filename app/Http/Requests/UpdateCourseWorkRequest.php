@@ -26,8 +26,7 @@ class UpdateCourseWorkRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-            'description' => 'required|string',
-            'duration' => 'required|integer'
+            'description' => 'required|string'
         ];
     }
 }

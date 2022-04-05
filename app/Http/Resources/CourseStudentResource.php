@@ -20,7 +20,6 @@ class CourseStudentResource extends JsonResource
             'id' => $this->id,
             'status' => $this->status,
             'detail' => [
-                'duration' => $this->courseWork->duration,
                 'name' => $this->courseWork->class->name,
                 'description' => $this->courseWork->class->description,
                 'thumbnail' => $this->courseWork->class->thumbnail ? asset('storage/class/thumbnail/' . $this->courseWork->class->thumbnail) : asset('storage/class/thumbnail/default.png'),

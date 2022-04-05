@@ -63,9 +63,7 @@ class ClassService
 
         $class->update([
             'name' => $data['name'],
-            'description' => $data['description'],
-            'start_time' => $data['start_time'],
-            'duration' => $data['duration']
+            'description' => $data['description']
         ]);
 
         if (isset($data['thumbnail'])) {
