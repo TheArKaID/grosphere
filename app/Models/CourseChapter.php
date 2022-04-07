@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $created_at
  * @property string $updated_at
  * @property CourseWork $courseWork
- * @property ChapterAssignment[] $chapterAssignments
+ * @property ChapterAssignment $chapterAssignments
  * @property CourseChapterStudent[] $courseChapterStudents
  */
 class CourseChapter extends Model
@@ -41,11 +41,11 @@ class CourseChapter extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
     public function chapterAssignments()
     {
-        return $this->hasMany(ChapterAssignment::class);
+        return $this->hasOne(ChapterAssignment::class);
     }
 
     /**

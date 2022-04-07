@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\Student\CourseChapterController as StudentCourseChapterController;
 use App\Http\Controllers\Api\Student\CourseStudentController;
 use App\Http\Controllers\Api\Student\CourseWorkController as StudentCourseWorkController;
+use App\Http\Controllers\Api\Tutor\ChapterAssignmentController as TutorChapterAssignmentController;
 use App\Http\Controllers\Api\Tutor\ChapterMaterialController as TutorChapterMaterialController;
 use App\Http\Controllers\Api\Tutor\CourseChapterController as TutorCourseChapterController;
 use App\Http\Controllers\Api\Tutor\CourseWorkController as TutorCourseWorkController;
@@ -77,6 +78,12 @@ Route::middleware(['auth:api'])->group(function () {
         Route::apiResource('course-works', TutorCourseWorkController::class);
         Route::apiResource('course-works.chapters', TutorCourseChapterController::class);
         Route::apiResource('course-works.chapters.materials', TutorChapterMaterialController::class)->except(['update']);
+        Route::apiResource('course-works.chapters.assignments', TutorChapterAssignmentController::class)->only(['index', 'store']);
+        Route::prefix('course-works/{course_work}/chapters/{chapter}/assignments')->group(function () {
+            Route::delete('/', [TutorChapterAssignmentController::class, 'destroy'])->name('assignments.destroy');
+           Route::post('file', [TutorChapterAssignmentController::class, 'uploadFile'])->name('assignments.upload-file');
+           Route::delete('file', [TutorChapterAssignmentController::class, 'deleteFile'])->name('assignments.delete-file');
+        });
     });
 
     Route::name('student.')->middleware(['role:student'])->prefix('student')->group(function () {
