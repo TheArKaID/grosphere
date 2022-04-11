@@ -28,7 +28,7 @@ class CourseChapterStudentService
     public function getAll($courseWorkId)
     {
         return $this->courseChapter
-            ->select('id', 'course_work_id', 'title', 'order')
+            ->select('id', 'course_work_id', 'title', 'description', 'order')
             ->with(['courseChapterStudents'])
             ->where('course_work_id', $courseWorkId)
             ->orderBy('order')

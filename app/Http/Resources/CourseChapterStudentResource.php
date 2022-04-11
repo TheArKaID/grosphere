@@ -19,6 +19,7 @@ class CourseChapterStudentResource extends JsonResource
         $resource = $this->resource ? [
             'id' => $this->id,
             'title' => $this->title,
+            'description' => $this->description,
             'order' => $this->order,
             'status' => count($this->courseChapterStudents) > 0 ? $this->courseChapterStudents[0]->status : false,
         ] : [];
