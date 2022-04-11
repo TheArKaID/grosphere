@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\CourseStudent;
+use Illuminate\Support\Facades\Auth;
 
 class CourseStudentService
 {
@@ -21,6 +22,8 @@ class CourseStudentService
      */
     public function getAll()
     {
+        $this->courseStudent = $this->courseStudent->where('student_id', Auth::user()->detail->id);
+        
         if (request()->has('page') && request()->get('page') == 'all') {
             return $this->courseStudent->get();
         }
