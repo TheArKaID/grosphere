@@ -46,4 +46,18 @@ class ChapterMaterial extends Model
     {
         return Storage::cloud()->url('course_works/' . $this->courseChapter->courseWork->id . '/chapters/' . $this->courseChapter->id . '/materials/' . $this->saved_filename);
     }
+
+    /**
+     * Delete on boot
+     * 
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($model) {
+            Storage::cloud()->delete('course_works/' . $model->courseChapter->courseWork->id . '/chapters/' . $model->courseChapter->id . '/materials/' . $model->saved_filename);
+        });
+    }
 }

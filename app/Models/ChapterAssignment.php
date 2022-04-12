@@ -48,4 +48,20 @@ class ChapterAssignment extends Model
         }
         return $path;
     }
+
+    /**
+     * Delete on boot
+     * 
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($model) {
+            foreach (Storage::cloud()->allFiles('course_works/' . $model->courseChapter->courseWork->id . '/chapters/' . $model->courseChapter->id . '/assignments') as $file) {
+                Storage::cloud()->delete($file);
+            }
+        });
+    }
 }

@@ -66,4 +66,26 @@ class CourseChapter extends Model
     {
         return $this->hasMany(courseMaterials::class);
     }
+
+    /**
+     * Delete on boot
+     * 
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($model) {
+            foreach ($model->chapterAssignments as $ca) {
+                $ca->delete();
+            }
+            foreach ($model->courseChapterStudents as $ccs) {
+                $ccs->delete();
+            }
+            foreach ($model->courseMaterials as $cm) {
+                $cm->delete();
+            }
+        });
+    }
 }
