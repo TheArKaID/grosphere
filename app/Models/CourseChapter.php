@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property integer $id
@@ -54,5 +55,15 @@ class CourseChapter extends Model
     public function courseChapterStudents()
     {
         return $this->hasMany(CourseChapterStudent::class);
+    }
+
+    /**
+     * Get all of the courseMaterials for the CourseChapter
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function courseMaterials(): HasMany
+    {
+        return $this->hasMany(courseMaterials::class);
     }
 }

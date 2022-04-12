@@ -24,11 +24,12 @@ class ChapterMaterialController extends Controller
     /**
      * Display a listing of the resource.
      * 
+     * @param int $courseWorkId
      * @param int $courseChapterId
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($courseChapterId)
+    public function index($courseWorkId, $courseChapterId)
     {
         $chapterMaterials = ChapterMaterialResource::collection($this->chapterMaterialService->getAll($courseChapterId, Auth::user()->detail->id));
 
