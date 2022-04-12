@@ -22,6 +22,7 @@ class CourseWorkResource extends JsonResource
             'description' => $this->class->description,
             'thumbnail' => $this->class->thumbnail ? asset('storage/class/thumbnail/' . $this->class->thumbnail) : asset('storage/class/thumbnail/default.png'),
             'type' => $this->class->type,
+            'total_chapter' => $this->courseChapters->count(),
             'tutor' => [
                 'id' => $this->class->tutor->id,
                 'name' => $this->class->tutor->user->name
