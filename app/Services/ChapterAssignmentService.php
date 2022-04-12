@@ -77,8 +77,6 @@ class ChapterAssignmentService
      */
     public function uploadFile($file, $courseWorkId, $courseChapterId, $tutorId = null)
     {
-        $courseAssignment = $this->getOne($courseChapterId, $tutorId);
-
         $fileName = $file->getClientOriginalName();
         $fileExt = $file->getClientOriginalExtension();
 
@@ -122,7 +120,6 @@ class ChapterAssignmentService
      */
     public function deleteFile($courseWorkId, $courseChapterId, $fileName, $tutorId = null)
     {
-        $courseChapter = $this->courseChapterService->getById($courseWorkId, $courseChapterId, $tutorId);
         if (Storage::cloud()->exists('course_works/' . $courseWorkId . '/chapters/' . $courseChapterId . '/assignments/' . $fileName)) {
             Storage::cloud()->delete('course_works/' . $courseWorkId . '/chapters/' . $courseChapterId . '/assignments/' . $fileName);
             return true;

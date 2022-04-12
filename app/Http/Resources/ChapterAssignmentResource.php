@@ -20,6 +20,7 @@ class ChapterAssignmentResource extends JsonResource
             'id' => $this->id,
             'course_chapter_id' => $this->course_chapter_id,
             'task' => $this->task,
+            'files' => $this->getFilesPath(),
             'courseChapter' => $this->courseChapter ? [
                 'id' => $this->courseChapter->id,
                 'title' => $this->courseChapter->title,
