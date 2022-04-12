@@ -8,12 +8,14 @@ use App\Http\Controllers\Api\Admin\StudentController;
 use App\Http\Controllers\Api\Admin\TutorController;
 use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\Student\ChapterAssignmentController as StudentChapterAssignmentController;
 use App\Http\Controllers\Api\Student\ChapterMaterialController as StudentChapterMaterialController;
 use App\Http\Controllers\Api\Student\CourseChapterController as StudentCourseChapterController;
 use App\Http\Controllers\Api\Student\CourseStudentController;
 use App\Http\Controllers\Api\Student\CourseWorkController as StudentCourseWorkController;
 use App\Http\Controllers\Api\Tutor\ChapterAssignmentController as TutorChapterAssignmentController;
 use App\Http\Controllers\Api\Tutor\ChapterMaterialController as TutorChapterMaterialController;
+use App\Http\Controllers\Api\Tutor\CourseCategoryController as TutorCourseCategoryController;
 use App\Http\Controllers\Api\Tutor\CourseChapterController as TutorCourseChapterController;
 use App\Http\Controllers\Api\Tutor\CourseWorkController as TutorCourseWorkController;
 use App\Http\Controllers\Api\Tutor\LiveClassController as TutorLiveClassController;
@@ -76,14 +78,15 @@ Route::middleware(['auth:api'])->group(function () {
             Route::post('leave', [TutorLiveClassController::class, 'leave'])->name('live-classes.leave');
         });
 
+        Route::apiResource('course-categories', TutorCourseCategoryController::class)->only(['index', 'show']);
         Route::apiResource('course-works', TutorCourseWorkController::class);
         Route::apiResource('course-works.chapters', TutorCourseChapterController::class);
         Route::apiResource('course-works.chapters.materials', TutorChapterMaterialController::class)->except(['update']);
         Route::apiResource('course-works.chapters.assignments', TutorChapterAssignmentController::class)->only(['index', 'store']);
         Route::prefix('course-works/{course_work}/chapters/{chapter}/assignments')->group(function () {
             Route::delete('/', [TutorChapterAssignmentController::class, 'destroy'])->name('assignments.destroy');
-           Route::post('file', [TutorChapterAssignmentController::class, 'uploadFile'])->name('assignments.upload-file');
-           Route::delete('file', [TutorChapterAssignmentController::class, 'deleteFile'])->name('assignments.delete-file');
+            Route::post('file', [TutorChapterAssignmentController::class, 'uploadFile'])->name('assignments.upload-file');
+            Route::delete('file', [TutorChapterAssignmentController::class, 'deleteFile'])->name('assignments.delete-file');
         });
     });
 
