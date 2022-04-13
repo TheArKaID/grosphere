@@ -102,4 +102,20 @@ class CourseChapterStudentService
 
         return $chapter;
     }
+
+    /**
+     * Get Course Chapter Student
+     * 
+     * @param int $courseChapterId
+     * @param int $courseStudentId
+     * 
+     * @return CourseChapterStudent
+     */
+    public function getOne($courseChapterId, $courseStudentId)
+    {
+        return $this->courseChapterStudent
+            ->where('course_chapter_id', $courseChapterId)
+            ->where('course_student_id', $courseStudentId)
+            ->firstOrFail();
+    }
 }
