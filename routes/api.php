@@ -102,6 +102,12 @@ Route::middleware(['auth:api'])->group(function () {
         Route::apiResource('course-works.chapters', StudentCourseChapterController::class)->only(['index', 'show']);
         Route::name('course-works.chapters.')->prefix('course-works/{course_work_id}/chapters/{chapter_id}')->group(function () {
             Route::apiResource('materials', StudentChapterMaterialController::class)->only(['index', 'show']);
+            Route::apiResource('assignments', StudentChapterAssignmentController::class)->only(['index', 'store']);
+            Route::prefix('assignments')->group(function () {
+                Route::get('answer', [StudentChapterAssignmentController::class, 'answer'])->name('answer');
+                Route::post('file', [StudentChapterAssignmentController::class, 'uploadFile'])->name('upload-file');
+                Route::delete('file', [StudentChapterAssignmentController::class, 'deleteFile'])->name('delete-file');
+            });
         });
 
         // Terkait "My Course"
