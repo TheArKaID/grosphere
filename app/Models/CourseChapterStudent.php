@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $updated_at
  * @property CourseChapter $courseChapter
  * @property CourseStudent $courseStudent
- * @property StudentAssignment[] $studentAssignments
+ * @property StudentAssignment $studentAssignment
  */
 class CourseChapterStudent extends Model
 {
@@ -46,10 +46,10 @@ class CourseChapterStudent extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
-    public function studentAssignments()
+    public function studentAssignment()
     {
-        return $this->hasMany(StudentAssignment::class);
+        return $this->hasOne(StudentAssignment::class);
     }
 }

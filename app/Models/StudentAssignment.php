@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * @property integer $id
@@ -32,5 +33,19 @@ class StudentAssignment extends Model
     public function courseChapterStudent()
     {
         return $this->belongsTo(CourseChapterStudent::class);
+    }
+
+    /**
+     * Return all assignments files path
+     * 
+     * @return array
+     */
+    public function getFilesPath()
+    {
+        $path = [];
+        foreach (Storage::cloud()->allFiles('course_works/' . $this->courseChapterStudent->courseChapter->courseWork->id . '/chapters/' . $this->courseChapterStudent->courseChapter->id . '/assignments_results/' . $this->id) as $file) {
+            array_push($path, Storage::cloud()->url($file));
+        }
+        return $path;
     }
 }
