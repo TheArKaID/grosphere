@@ -62,10 +62,10 @@ class CourseChapterController extends Controller
         $courseChapter = $this->courseChapterService->create($validated);
 
         return response()->json([
-            'status' => 201,
+            'status' => 200,
             'message' => 'Course Chapter Created',
             'data' => new CourseChapterResource($courseChapter)
-        ], 201);
+        ], 200);
     }
 
     /**

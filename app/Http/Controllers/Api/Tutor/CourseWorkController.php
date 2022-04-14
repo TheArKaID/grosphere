@@ -52,10 +52,10 @@ class CourseWorkController extends Controller
         $courseWork = $this->courseWorkService->createCourseWork($validated);
 
         return response()->json([
-            'status' => 201,
+            'status' => 200,
             'message' => 'Course Work Created',
             'data' => new CourseWorkResource($courseWork)
-        ], 201);
+        ], 200);
     }
 
     /**
