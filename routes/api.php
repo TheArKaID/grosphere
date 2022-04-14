@@ -81,13 +81,17 @@ Route::middleware(['auth:api'])->group(function () {
 
         Route::apiResource('course-categories', TutorCourseCategoryController::class)->only(['index', 'show']);
         Route::apiResource('course-works', TutorCourseWorkController::class);
+        Route::name('course-works.chapters.')->prefix('course-works/{course_work}/chapters')->group(function () {
+            Route::post('image', [TutorCourseChapterController::class, 'uploadImage'])->name('image.upload');
+            Route::delete('image', [TutorCourseChapterController::class, 'deleteImage'])->name('image.delete');
+        });
         Route::apiResource('course-works.chapters', TutorCourseChapterController::class);
         Route::apiResource('course-works.chapters.materials', TutorChapterMaterialController::class)->except(['update']);
         Route::apiResource('course-works.chapters.assignments', TutorChapterAssignmentController::class)->only(['index', 'store']);
-        Route::prefix('course-works/{course_work}/chapters/{chapter}/assignments')->group(function () {
-            Route::delete('/', [TutorChapterAssignmentController::class, 'destroy'])->name('assignments.destroy');
-            Route::post('file', [TutorChapterAssignmentController::class, 'uploadFile'])->name('assignments.upload-file');
-            Route::delete('file', [TutorChapterAssignmentController::class, 'deleteFile'])->name('assignments.delete-file');
+        Route::name('course-works.chapters.assignment.')->prefix('course-works/{course_work}/chapters/{chapter}/assignments')->group(function () {
+            Route::delete('/', [TutorChapterAssignmentController::class, 'destroy'])->name('destroy');
+            Route::post('file', [TutorChapterAssignmentController::class, 'uploadFile'])->name('upload-file');
+            Route::delete('file', [TutorChapterAssignmentController::class, 'deleteFile'])->name('delete-file');
         });
     });
 

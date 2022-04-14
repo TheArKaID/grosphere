@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api\Tutor;
 
 use App\Exceptions\ModelGetEmptyException;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\DeleteTutorCourseChapterImageRequest;
 use App\Http\Requests\StoreCourseChapterRequest;
+use App\Http\Requests\StoreTutorCourseChapterImageRequest;
 use App\Http\Requests\UpdateCourseChapterRequest;
 use App\Http\Resources\CourseChapterResource;
 use App\Services\CourseChapterService;
@@ -126,5 +128,59 @@ class CourseChapterController extends Controller
             'status' => 200,
             'message' => 'Course Chapter Deleted'
         ], 200);
+    }
+
+    /**
+     * Upload chapter image
+     * 
+     * @param StoreTutorCourseChapterImageRequest $request
+     * @param int $courseWorkId
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function uploadImage(StoreTutorCourseChapterImageRequest $request, int $courseWorkId)
+    {
+        $validated = $request->validated();
+
+        $uploaded = $this->courseChapterService->uploadImage($validated['image'], $courseWorkId);
+
+        if ($uploaded) {
+            return response()->json([
+                'status' => 200,
+                'message' => 'Image Uploaded Successfully',
+                'url' => $uploaded
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => 400,
+                'message' => 'Image Upload Failed'
+            ], 400);
+        }
+    }
+
+    /**
+     * Delete chapter image
+     * 
+     * @param DeleteTutorCourseChapterImageRequest $request
+     * @param int $courseWorkId
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function deleteImage(DeleteTutorCourseChapterImageRequest $request, $courseWorkId)
+    {
+        $validated = $request->validated();
+        $deleted = $this->courseChapterService->deleteImage($validated['imagename'], $courseWorkId);
+
+        if ($deleted) {
+            return response()->json([
+                'status' => 200,
+                'message' => 'Image Deleted Successfully'
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => 400,
+                'message' => 'Image Deletion Failed'
+            ], 400);
+        }
     }
 }
