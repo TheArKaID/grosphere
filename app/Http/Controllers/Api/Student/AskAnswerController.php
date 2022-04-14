@@ -38,12 +38,15 @@ class AskAnswerController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \App\Http\Requests\StoreAskAnswerRequest  $request
+     * @param  int  $courseWorkId
+     * 
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreStudentAskAnswerRequest $request)
+    public function store(StoreStudentAskAnswerRequest $request, int $courseWorkId)
     {
         $validated = $request->validated();
         $validated['student_id'] = Auth::user()->detail->id;
+        $validated['course_work_id'] = $courseWorkId;
         $askAnswer = $this->service->store($validated);
 
         return response()->json([

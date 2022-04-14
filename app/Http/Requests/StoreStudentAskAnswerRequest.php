@@ -24,7 +24,6 @@ class StoreStudentAskAnswerRequest extends FormRequest
     public function rules()
     {
         return [
-            'course_work_id' => 'required|exists:course_works,id',
             'message' => 'required|string|max:255'
         ];
     }
