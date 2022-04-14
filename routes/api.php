@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\Admin\StudentController;
 use App\Http\Controllers\Api\Admin\TutorController;
 use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\Student\AskAnswerController as StudentAskAnswerController;
 use App\Http\Controllers\Api\Student\ChapterAssignmentController as StudentChapterAssignmentController;
 use App\Http\Controllers\Api\Student\ChapterMaterialController as StudentChapterMaterialController;
 use App\Http\Controllers\Api\Student\CourseChapterController as StudentCourseChapterController;
@@ -98,6 +99,8 @@ Route::middleware(['auth:api'])->group(function () {
         Route::apiResource('course-works', StudentCourseWorkController::class)->only(['index', 'show']);
         Route::name('course-works.')->prefix('course-works/{course_work_id}')->group(function () {
             Route::post('enroll', [StudentCourseWorkController::class, 'enroll'])->name('enroll');
+            Route::get('ask-answer', [StudentAskAnswerController::class, 'index'])->name('ask-answer.index');
+            Route::post('ask-answer', [StudentAskAnswerController::class, 'store'])->name('ask-answer.store');
         });
         Route::apiResource('course-works.chapters', StudentCourseChapterController::class)->only(['index', 'show']);
         Route::name('course-works.chapters.')->prefix('course-works/{course_work_id}/chapters/{chapter_id}')->group(function () {
