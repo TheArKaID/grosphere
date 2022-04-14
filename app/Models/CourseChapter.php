@@ -58,13 +58,13 @@ class CourseChapter extends Model
     }
 
     /**
-     * Get all of the courseMaterials for the CourseChapter
+     * Get all of the chapterMaterial for the CourseChapter
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function courseMaterials(): HasMany
+    public function chapterMaterial(): HasMany
     {
-        return $this->hasMany(courseMaterials::class);
+        return $this->hasMany(ChapterMaterial::class);
     }
 
     /**
@@ -77,13 +77,14 @@ class CourseChapter extends Model
         parent::boot();
 
         static::deleting(function ($model) {
-            foreach ($model->chapterAssignments as $ca) {
-                $ca->delete();
+            if ($model->chapterAssignments) {
+                $model->chapterAssignments->delete();
             }
+
             foreach ($model->courseChapterStudents as $ccs) {
                 $ccs->delete();
             }
-            foreach ($model->courseMaterials as $cm) {
+            foreach ($model->chapterMaterial as $cm) {
                 $cm->delete();
             }
         });
