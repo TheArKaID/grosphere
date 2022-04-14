@@ -3,7 +3,8 @@
 namespace App\Services;
 
 use App\Models\CourseChapter;
-use Error;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class CourseChapterService
 {
@@ -129,5 +130,43 @@ class CourseChapterService
         $courseChapter->delete();
 
         return true;
+    }
+
+    /**
+     * Upload Course Chapter Image
+     * 
+     * @param file $image
+     * @param int $courseWorkId
+     * 
+     * @return string
+     */
+    public function uploadImage($image, $courseWorkId)
+    {
+        $imageName = $image->getClientOriginalName();
+        $imageExt = $image->getClientOriginalExtension();
+
+        $slug = time() . '-' .Str::slug(pathinfo($imageName, PATHINFO_FILENAME));
+
+        if (Str::wordCount($slug) > 255) {
+            $slug = Str::limit($slug, 225, '');
+        }
+        $res = Storage::cloud()->putFileAs('course_works/' . $courseWorkId . '/chapters/contents', $image, $slug . '.' . $imageExt);
+
+        return $res ? Storage::cloud()->url($res) : $res;
+    }
+
+    /**
+     * Delete Course Chapter Image
+     * 
+     * @param string $imageName
+     * @param int $courseWorkId
+     * 
+     * @return bool
+     */
+    public function deleteImage($imageName, $courseWorkId)
+    {
+        $res = Storage::cloud()->delete('course_works/' . $courseWorkId . '/chapters/contents/' . $imageName);
+
+        return $res ? true : false;
     }
 }
