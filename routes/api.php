@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Admin\AnnouncementController;
+use App\Http\Controllers\Api\Admin\CourseCategoryController;
 use App\Http\Controllers\Api\Admin\CourseWorkController;
 use App\Http\Controllers\Api\Admin\LiveClassController;
 use App\Http\Controllers\Api\Admin\ParentController;
@@ -66,6 +67,7 @@ Route::middleware(['auth:api'])->group(function () {
         Route::resource('course-works', CourseWorkController::class)->except(['edit', 'create']);
 
         Route::resource('announcements', AnnouncementController::class)->except(['edit', 'create']);
+        Route::apiResource('course-categories', CourseCategoryController::class);
     });
 
     Route::name('tutor.')->middleware(['role:tutor'])->prefix('tutor')->group(function () {
