@@ -32,4 +32,20 @@ class CourseCategory extends Model
     {
         return $this->hasMany(CourseWork::class);
     }
+
+    /**
+     * Delete on boot
+     * 
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($courseCategory) {
+            foreach ($courseCategory->courseWorks as $cw) {
+                $cw->delete();
+            }
+        });
+    }
 }
