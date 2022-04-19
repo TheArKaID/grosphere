@@ -79,6 +79,9 @@ class CourseWork extends Model
             foreach ($courseWork->courseChapters as $courseChapter) {
                 $courseChapter->delete();
             }
+            foreach ($courseWork->courseStudents as $cs) {
+                $cs->delete();
+            }
         });
     }
 }
