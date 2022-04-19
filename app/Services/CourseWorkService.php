@@ -9,16 +9,18 @@ use Illuminate\Support\Facades\DB;
 
 class CourseWorkService
 {
-    private $courseWork, $classService, $courseStudentService;
+    private $courseWork, $classService, $courseStudentService, $courseChapterService;
 
     public function __construct(
         CourseWork $courseWork,
         ClassService $classService,
-        CourseStudentService $courseStudentService
+        CourseStudentService $courseStudentService,
+        CourseChapterService $courseChapterService
     ) {
         $this->courseWork = $courseWork;
         $this->classService = $classService;
         $this->courseStudentService = $courseStudentService;
+        $this->courseChapterService = $courseChapterService;
     }
 
     /**
@@ -61,6 +63,16 @@ class CourseWorkService
         $data['class_id'] = $class->id;
         $courseWork = $this->courseWork->create($data);
 
+        $this->courseChapterService->create([
+            'course_work_id' => $courseWork->id,
+            'tutor_id' => Auth::user()->detail->id,
+            'title' => 'Chapter 1 - Introduction',
+            'description' => 'Chapter Introduction',
+            'content' => '<p>This is the introduction chapter of the course.</p>',
+            'status' => 1,
+            'order' => 0,
+        ]);
+        
         DB::commit();
 
         return $courseWork;
