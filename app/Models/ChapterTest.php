@@ -33,6 +33,16 @@ class ChapterTest extends Model
     protected $fillable = ['course_chapter_id', 'title', 'duration', 'attempt', 'available_at', 'available_until', 'status', 'created_at', 'updated_at'];
 
     /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'available_at' => 'datetime',
+        'available_until' => 'datetime',
+    ];
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function courseChapter()
