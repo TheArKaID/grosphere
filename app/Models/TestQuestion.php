@@ -17,6 +17,9 @@ use Illuminate\Database\Eloquent\Model;
  */
 class TestQuestion extends Model
 {
+    public static $MULTIPLE_CHOICE = 1;
+    public static $ESSAY = 2;
+    
     /**
      * The "type" of the auto-incrementing ID.
      * 
