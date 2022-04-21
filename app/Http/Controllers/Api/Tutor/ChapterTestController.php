@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api\Tutor;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreChapterTestRequest;
-use App\Http\Requests\UpdateChapterTestRequest;
 use App\Http\Resources\ChapterTestResource;
 use App\Services\ChapterTestService;
 use Illuminate\Support\Facades\Auth;
