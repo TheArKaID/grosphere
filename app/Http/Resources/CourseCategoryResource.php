@@ -14,7 +14,7 @@ class CourseCategoryResource extends JsonResource
      */
     public function toArray($request)
     {
-        parent::wrap('course_category');
+        parent::wrap('course_categories');
 
         return $this->resource ? [
             'id' => $this->id,

@@ -15,7 +15,7 @@ class ChapterTestResource extends JsonResource
      */
     public function toArray($request)
     {
-        parent::wrap('course_category');
+        parent::wrap('course_tests');
 
         return $this->resource ? [
             'id' => $this->id,
