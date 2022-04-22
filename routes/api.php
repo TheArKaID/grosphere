@@ -22,7 +22,7 @@ use App\Http\Controllers\Api\Tutor\CourseCategoryController as TutorCourseCatego
 use App\Http\Controllers\Api\Tutor\CourseChapterController as TutorCourseChapterController;
 use App\Http\Controllers\Api\Tutor\CourseWorkController as TutorCourseWorkController;
 use App\Http\Controllers\Api\Tutor\LiveClassController as TutorLiveClassController;
-use App\Http\Controllers\Api\Tutor\TesQuestiontController;
+use App\Http\Controllers\Api\Tutor\TestQuestionController as TutorTestQuestionController;
 use App\Http\Controllers\Api\User\LiveClassController as UserLiveClassController;
 use App\Http\Controllers\Api\User\ProfileController as UserProfileController;
 use Illuminate\Support\Facades\Route;
@@ -100,9 +100,9 @@ Route::middleware(['auth:api'])->group(function () {
         Route::apiResource('course-works.chapters.tests', TutorChapterTestController::class)->only(['index', 'store']);
         Route::name('course-works.chapters.tests.')->prefix('course-works/{course_work}/chapters/{chapter}/tests')->group(function () {
             Route::delete('/', [TutorChapterTestController::class, 'destroy'])->name('delete');
-            Route::get('questions', [TesQuestiontController::class, 'index'])->name('get-questions');
-            Route::post('questions', [TesQuestiontController::class, 'store'])->name('add-questions');
-            Route::delete('questions', [TesQuestiontController::class, 'deleteQuestion'])->name('delete-questions');
+            Route::get('questions', [TutorTestQuestionController::class, 'index'])->name('get-questions');
+            Route::post('questions', [TutorTestQuestionController::class, 'store'])->name('add-questions');
+            Route::put('questions', [TutorTestQuestionController::class, 'update'])->name('update-questions');
         });
     });
 

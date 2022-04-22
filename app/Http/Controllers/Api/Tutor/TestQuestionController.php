@@ -11,7 +11,7 @@ use App\Models\TestQuestion;
 use App\Services\TestQuestionService;
 use Illuminate\Support\Facades\Auth;
 
-class TesQuestiontController extends Controller
+class TestQuestionController extends Controller
 {
     private $service;
 
