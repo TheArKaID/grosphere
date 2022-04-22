@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreTestQuestionRequest;
 use App\Http\Requests\UpdateTestQuestionRequest;
 use App\Http\Resources\TestQuestionResource;
-use App\Models\TestQuestion;
 use App\Services\TestQuestionService;
 use Illuminate\Support\Facades\Auth;
 
@@ -70,24 +69,45 @@ class TestQuestionController extends Controller
     /**
      * Display the specified resource.
      *
+     * @param int $courseWorkId
+     * @param int $courseChapterId
      * @param  int  $testQuestionId
+     * 
      * @return \Illuminate\Http\Response
      */
-    public function show(int $testQuestionId)
+    public function show($courseWorkId, $courseChapterId, $testQuestionId)
     {
-        //
+        $question = $this->service->getOne($courseChapterId, $testQuestionId, Auth::user()->detail->id);
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Test Question retrieved successfully',
+            'data' => new TestQuestionResource($question)
+        ], 200);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \App\Http\Requests\UpdateTestQuestionRequest  $request
+     * @param int $courseWorkId
+     * @param int $courseChapterId
      * @param  int  $testQuestionId
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateTestQuestionRequest $request, int $testQuestionId)
+    public function update(UpdateTestQuestionRequest $request, $courseWorkId, $courseChapterId, $testQuestionId)
     {
-        //
+        $validated = $request->validated();
+        $validated['course_work_id'] = $courseWorkId;
+        $validated['course_chapter_id'] = $courseChapterId;
+        $validated['tutor_id'] = Auth::user()->detail->id;
+        $question = $this->service->updateQuestion($testQuestionId, $validated);
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Test Question updated successfully',
+            'data' => new TestQuestionResource($question)
+        ], 200);
     }
 
     /**
