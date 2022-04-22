@@ -23,30 +23,34 @@ class TestQuestionService
      * 
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getAll($courseChapterId, $tutorId = null)
+    public function getAllQuestions($courseChapterId, $tutorId = null)
     {
-        if ($tutorId) {
-            $this->model = $this->model->whereHas('chapterTest', function ($query) use ($courseChapterId, $tutorId) {
-                $query->whereHas('courseChapter', function ($courseChapter) use ($tutorId) {
-                    $courseChapter->whereHas('courseWork', function ($courseWork) use ($tutorId) {
-                        $courseWork->whereHas('class', function ($class) use ($tutorId) {
-                            $class->where('tutor_id', $tutorId);
-                        });
-                    });
-                });
-            });
-        }
         if (request()->has('search')) {
             $this->model = $this->model->with('testAnswers')->whereHas('question', function ($query) {
                 $query->where('question', 'like', '%' . request()->get('search') . '%');
             });
         }
-        $courseTest = $this->chapterTestService->getOne($courseChapterId);
+        $courseTest = $this->chapterTestService->getOne($courseChapterId, $tutorId);
         $this->model = $this->model->where('chapter_test_id', $courseTest->id);
         if (request()->has('page') && request()->get('page') == 'all') {
             return $this->student->get();
         }
         return $this->model->paginate(request('size', 10));
+    }
+
+    /**
+     * Get one test question
+     * 
+     * @param int $courseChapterId
+     * @param int $id
+     * @param int $tutorId
+     * 
+     * @return TestQuestion
+     */
+    public function getOne($courseChapterId, $id, $tutorId = null)
+    {
+        $courseTest = $this->chapterTestService->getOne($courseChapterId, $tutorId);
+        return $this->model->where('chapter_test_id', $courseTest->id)->findOrFail($id);
     }
 
     /**
@@ -103,5 +107,21 @@ class TestQuestionService
                 'number' => 4
             ]
         ]);
+    }
+
+    /**
+     * Delete Question from Chapter Test
+     * 
+     * @param int $courseChapterId
+     * @param int $id
+     * @param int $tutorId
+     * 
+     * @return boolean
+     */
+    public function deleteQuestion($courseChapterId, $id, $tutorId = null)
+    {
+        $question = $this->getOne($courseChapterId, $id, $tutorId);
+        $question->delete();
+        return true;
     }
 }

@@ -103,6 +103,7 @@ Route::middleware(['auth:api'])->group(function () {
             Route::get('questions', [TutorTestQuestionController::class, 'index'])->name('get-questions');
             Route::post('questions', [TutorTestQuestionController::class, 'store'])->name('add-questions');
             Route::put('questions', [TutorTestQuestionController::class, 'update'])->name('update-questions');
+            Route::delete('questions/{question_id}', [TutorTestQuestionController::class, 'destroy'])->name('delete-questions');
         });
     });
 

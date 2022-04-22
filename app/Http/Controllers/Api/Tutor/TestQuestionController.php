@@ -30,7 +30,7 @@ class TestQuestionController extends Controller
      */
     public function index($courseWorkId, $courseChapterId)
     {
-        $questions = TestQuestionResource::collection($this->service->getAll($courseChapterId, Auth::user()->detail->id));
+        $questions = TestQuestionResource::collection($this->service->getAllQuestions($courseChapterId, Auth::user()->detail->id));
 
         if ($questions->count() == 0) {
             throw new ModelGetEmptyException('Test Questions');
@@ -70,10 +70,10 @@ class TestQuestionController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\TestQuestion  $testQuestion
+     * @param  int  $testQuestionId
      * @return \Illuminate\Http\Response
      */
-    public function show(TestQuestion $testQuestion)
+    public function show(int $testQuestionId)
     {
         //
     }
@@ -82,10 +82,10 @@ class TestQuestionController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \App\Http\Requests\UpdateTestQuestionRequest  $request
-     * @param  \App\Models\TestQuestion  $testQuestion
+     * @param  int  $testQuestionId
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateTestQuestionRequest $request, TestQuestion $testQuestion)
+    public function update(UpdateTestQuestionRequest $request, int $testQuestionId)
     {
         //
     }
@@ -93,11 +93,19 @@ class TestQuestionController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\TestQuestion  $testQuestion
+     * @param int $courseWorkId
+     * @param int $courseChapterId
+     * @param  int  $testQuestionId
+     * 
      * @return \Illuminate\Http\Response
      */
-    public function destroy(TestQuestion $testQuestion)
+    public function destroy($courseWorkId, $courseChapterId, $testQuestionId)
     {
-        //
+        $this->service->deleteQuestion($courseChapterId, $testQuestionId, Auth::user()->detail->id);
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Question deleted from Chapter Test successfully'
+        ], 200);
     }
 }
