@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * @property integer $id
@@ -68,6 +69,16 @@ class CourseChapter extends Model
     }
 
     /**
+     * Get all of the chapterTest for the CourseChapter
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function chapterTest(): HasOne
+    {
+        return $this->hasOne(ChapterTest::class);
+    }
+
+    /**
      * Delete on boot
      * 
      * @return void
@@ -86,6 +97,9 @@ class CourseChapter extends Model
             }
             foreach ($model->chapterMaterial as $cm) {
                 $cm->delete();
+            }
+            if ($model->chapterTests) {
+                $model->chapterTests->delete();
             }
         });
     }

@@ -17,10 +17,12 @@ use App\Http\Controllers\Api\Student\CourseStudentController;
 use App\Http\Controllers\Api\Student\CourseWorkController as StudentCourseWorkController;
 use App\Http\Controllers\Api\Tutor\ChapterAssignmentController as TutorChapterAssignmentController;
 use App\Http\Controllers\Api\Tutor\ChapterMaterialController as TutorChapterMaterialController;
+use App\Http\Controllers\Api\Tutor\ChapterTestController as TutorChapterTestController;
 use App\Http\Controllers\Api\Tutor\CourseCategoryController as TutorCourseCategoryController;
 use App\Http\Controllers\Api\Tutor\CourseChapterController as TutorCourseChapterController;
 use App\Http\Controllers\Api\Tutor\CourseWorkController as TutorCourseWorkController;
 use App\Http\Controllers\Api\Tutor\LiveClassController as TutorLiveClassController;
+use App\Http\Controllers\Api\Tutor\TestQuestionController as TutorTestQuestionController;
 use App\Http\Controllers\Api\User\LiveClassController as UserLiveClassController;
 use App\Http\Controllers\Api\User\ProfileController as UserProfileController;
 use Illuminate\Support\Facades\Route;
@@ -94,6 +96,15 @@ Route::middleware(['auth:api'])->group(function () {
             Route::delete('/', [TutorChapterAssignmentController::class, 'destroy'])->name('destroy');
             Route::post('file', [TutorChapterAssignmentController::class, 'uploadFile'])->name('upload-file');
             Route::delete('file', [TutorChapterAssignmentController::class, 'deleteFile'])->name('delete-file');
+        });
+        Route::apiResource('course-works.chapters.tests', TutorChapterTestController::class)->only(['index', 'store']);
+        Route::name('course-works.chapters.tests.')->prefix('course-works/{course_work}/chapters/{chapter}/tests')->group(function () {
+            Route::delete('/', [TutorChapterTestController::class, 'destroy'])->name('destroy');
+            Route::get('questions', [TutorTestQuestionController::class, 'index'])->name('questions.index');
+            Route::post('questions', [TutorTestQuestionController::class, 'store'])->name('questions.store');
+            Route::get('questions/{question_id}', [TutorTestQuestionController::class, 'show'])->name('questions.show');
+            Route::put('questions/{question_id}', [TutorTestQuestionController::class, 'update'])->name('questions.update');
+            Route::delete('questions/{question_id}', [TutorTestQuestionController::class, 'destroy'])->name('questions.destroy');
         });
     });
 

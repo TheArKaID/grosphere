@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ChapterAssignmentRequest extends FormRequest
+class StoreChapterTestRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +24,11 @@ class ChapterAssignmentRequest extends FormRequest
     public function rules()
     {
         return [
-            'content' => 'string|required',
+            'title' => 'required|string|max:255',
+            'duration' => 'required|integer',
+            'attempt' => 'required|integer|min:1',
+            'available_at' => 'nullable|date_format:d-m-Y H:i:s',
+            'available_until' => 'nullable|date_format:d-m-Y H:i:s',
         ];
     }
 }

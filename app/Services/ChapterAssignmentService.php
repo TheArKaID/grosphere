@@ -59,13 +59,13 @@ class ChapterAssignmentService
 
         if ($courseChapter->chapterAssignments) {
             $courseChapter->chapterAssignments->update([
-                'task' => $data['task'],
+                'task' => $data['content'],
             ]);
             $courseAssignment = $courseChapter->chapterAssignments;
         } else {
             $courseAssignment = $this->model->create([
                 'course_chapter_id' => $data['course_chapter_id'],
-                'task' => $data['task'],
+                'task' => $data['content'],
             ]);
         }
 
