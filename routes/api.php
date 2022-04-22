@@ -99,11 +99,12 @@ Route::middleware(['auth:api'])->group(function () {
         });
         Route::apiResource('course-works.chapters.tests', TutorChapterTestController::class)->only(['index', 'store']);
         Route::name('course-works.chapters.tests.')->prefix('course-works/{course_work}/chapters/{chapter}/tests')->group(function () {
-            Route::delete('/', [TutorChapterTestController::class, 'destroy'])->name('delete');
-            Route::get('questions', [TutorTestQuestionController::class, 'index'])->name('get-questions');
-            Route::post('questions', [TutorTestQuestionController::class, 'store'])->name('add-questions');
-            Route::put('questions', [TutorTestQuestionController::class, 'update'])->name('update-questions');
-            Route::delete('questions/{question_id}', [TutorTestQuestionController::class, 'destroy'])->name('delete-questions');
+            Route::delete('/', [TutorChapterTestController::class, 'destroy'])->name('destroy');
+            Route::get('questions', [TutorTestQuestionController::class, 'index'])->name('questions.index');
+            Route::post('questions', [TutorTestQuestionController::class, 'store'])->name('questions.store');
+            Route::get('questions/{question_id}', [TutorTestQuestionController::class, 'show'])->name('questions.show');
+            Route::put('questions/{question_id}', [TutorTestQuestionController::class, 'update'])->name('questions.update');
+            Route::delete('questions/{question_id}', [TutorTestQuestionController::class, 'destroy'])->name('questions.destroy');
         });
     });
 
