@@ -24,7 +24,7 @@ class ChapterAssignmentRequest extends FormRequest
     public function rules()
     {
         return [
-            'task' => 'string|required',
+            'content' => 'string|required',
         ];
     }
 }
