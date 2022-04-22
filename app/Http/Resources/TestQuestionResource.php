@@ -15,7 +15,7 @@ class TestQuestionResource extends JsonResource
      */
     public function toArray($request)
     {
-        parent::wrap('test_questions');
+        parent::wrap('questions');
 
         return $this->resource ? [
             'id' => $this->id,

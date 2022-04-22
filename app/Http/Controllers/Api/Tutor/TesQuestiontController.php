@@ -23,11 +23,14 @@ class TesQuestiontController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param int $courseWorkId
+     * @param int $courseChapterId
+     * 
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($courseWorkId, $courseChapterId)
     {
-        $questions = TestQuestionResource::collection($this->service->getAll());
+        $questions = TestQuestionResource::collection($this->service->getAll($courseChapterId, Auth::user()->detail->id));
 
         if ($questions->count() == 0) {
             throw new ModelGetEmptyException('Test Questions');

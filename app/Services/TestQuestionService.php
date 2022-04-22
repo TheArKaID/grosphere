@@ -18,15 +18,31 @@ class TestQuestionService
     /**
      * Get all test questions
      * 
+     * @param int $courseChapterId
+     * @param int $tutorId
+     * 
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getAll()
+    public function getAll($courseChapterId, $tutorId = null)
     {
+        if ($tutorId) {
+            $this->model = $this->model->whereHas('chapterTest', function ($query) use ($courseChapterId, $tutorId) {
+                $query->whereHas('courseChapter', function ($courseChapter) use ($tutorId) {
+                    $courseChapter->whereHas('courseWork', function ($courseWork) use ($tutorId) {
+                        $courseWork->whereHas('class', function ($class) use ($tutorId) {
+                            $class->where('tutor_id', $tutorId);
+                        });
+                    });
+                });
+            });
+        }
         if (request()->has('search')) {
             $this->model = $this->model->with('testAnswers')->whereHas('question', function ($query) {
                 $query->where('question', 'like', '%' . request()->get('search') . '%');
             });
         }
+        $courseTest = $this->chapterTestService->getOne($courseChapterId);
+        $this->model = $this->model->where('chapter_test_id', $courseTest->id);
         if (request()->has('page') && request()->get('page') == 'all') {
             return $this->student->get();
         }
