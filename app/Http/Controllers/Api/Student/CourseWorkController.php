@@ -63,6 +63,12 @@ class CourseWorkController extends Controller
     {
         $courseWork = $this->courseWorkService->enroll($courseWorkId);
 
+        if (!$courseWork) {
+            return response()->json([
+                'status' => 400,
+                'message' => 'Failed to enroll course work'
+            ], 400);
+        }
         return response()->json([
             'status' => 200,
             'message' => 'Enrollment Successfully',

@@ -72,7 +72,7 @@ class CourseWorkService
             'status' => 1,
             'order' => 0,
         ]);
-        
+
         DB::commit();
 
         return $courseWork;
@@ -164,6 +164,9 @@ class CourseWorkService
     public function enroll($id)
     {
         $courseWork = $this->getCourseWorkById($id);
+        if ($this->courseStudentService->getByCourseIdAndStudentId($courseWork->id, Auth::user()->detail->id)) {
+            return false;
+        }
         $courseStudent = $this->courseStudentService->create([
             'course_work_id' => $courseWork->id,
             'student_id' => Auth::user()->detail->id
