@@ -23,7 +23,7 @@ class CourseChapterStudentResource extends JsonResource
             'order' => $this->order,
             'status' => count($this->courseChapterStudents) > 0 ? $this->courseChapterStudents[0]->status : false,
         ] : [];
-        $resource['content'] = $this->content ?? null;
+        $this->content ? $resource['content'] = $this->content : null;
 
         return $resource;
     }
