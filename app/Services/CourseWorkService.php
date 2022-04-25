@@ -173,4 +173,25 @@ class CourseWorkService
         ]);
         return $courseStudent;
     }
+
+    /**
+     * Enroll Course Work by course work id and student id
+     * 
+     * @param int $courseWorkId
+     * @param int $studentId
+     * 
+     * @return CourseWork
+     */
+    public function enrollByCourseWorkIdAndStudentId($courseWorkId, $studentId)
+    {
+        $courseWork = $this->getCourseWorkById($courseWorkId);
+        if ($this->courseStudentService->getByCourseIdAndStudentId($courseWork->id, $studentId, false)) {
+            return false;
+        }
+        $courseStudent = $this->courseStudentService->create([
+            'course_work_id' => $courseWork->id,
+            'student_id' => $studentId
+        ]);
+        return $courseStudent;
+    }
 }

@@ -8,6 +8,7 @@ use App\Http\Requests\StoreCourseWorkRequest;
 use App\Http\Requests\UpdateCourseWorkRequest;
 use App\Http\Resources\CourseWorkResource;
 use App\Services\CourseWorkService;
+use Illuminate\Http\Request;
 
 class CourseWorkController extends Controller
 {
@@ -107,6 +108,24 @@ class CourseWorkController extends Controller
         return response()->json([
             'status' => 200,
             'message' => 'Success'
+        ], 200);
+    }
+
+    /**
+     * Enroll Student to Course Work
+     * 
+     * @param  Request  $data
+     * @param  int  $courseWorkId
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function enrollStudent(Request $data, int $courseWorkId)
+    {
+        $res = $this->courseWorkService->enrollByCourseWorkIdAndStudentId($courseWorkId, $data['student_id']);
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Student enrolled to course work'
         ], 200);
     }
 }

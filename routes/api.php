@@ -67,6 +67,7 @@ Route::middleware(['auth:api'])->group(function () {
         // Route::resource('classes', ClassController::class)->except(['edit', 'create']);
         Route::resource('live-classes', LiveClassController::class)->except(['edit', 'create']);
         Route::resource('course-works', CourseWorkController::class)->except(['edit', 'create']);
+        Route::post('course-works/{id}/students/enroll', [CourseWorkController::class, 'enrollStudent'])->name('course-works.students.enroll');
 
         Route::resource('announcements', AnnouncementController::class)->except(['edit', 'create']);
         Route::apiResource('course-categories', CourseCategoryController::class);
