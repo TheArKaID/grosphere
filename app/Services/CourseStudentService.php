@@ -60,12 +60,19 @@ class CourseStudentService
      * 
      * @param int $courseWorkId
      * @param int $studentId
+     * @param bool $throwException
      * 
      * @return CourseStudent
      */
-    public function getByCourseIdAndStudentId($courseWorkId, $studentId)
+    public function getByCourseIdAndStudentId($courseWorkId, $studentId, $throwException = true)
     {
-        return $this->courseStudent->where('course_work_id', $courseWorkId)->where('student_id', $studentId)->firstOrFail();
+        $this->courseStudent = $this->courseStudent->where('course_work_id', $courseWorkId)->where('student_id', $studentId);
+
+        if ($throwException) {
+            return $this->courseStudent->firstOrFail();
+        } else {
+            return $this->courseStudent->first();
+        }
     }
 
     /**
