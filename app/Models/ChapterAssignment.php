@@ -44,7 +44,12 @@ class ChapterAssignment extends Model
     {
         $path = [];
         foreach (Storage::cloud()->allFiles('course_works/' . $this->courseChapter->courseWork->id . '/chapters/' . $this->courseChapter->id . '/assignments') as $file) {
-            array_push($path, Storage::cloud()->url($file));
+            $pathFile = [
+                'file' => Storage::cloud()->url($file),
+                'shown_filename' => pathinfo($file, PATHINFO_FILENAME) . '.' . pathinfo($file, PATHINFO_EXTENSION),
+                'ext' => pathinfo($file, PATHINFO_EXTENSION),
+            ];
+            array_push($path, $pathFile);
         }
         return $path;
     }
