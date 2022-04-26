@@ -82,12 +82,13 @@ class ChapterMaterialService
 
         $slug = Str::slug(pathinfo($fileName, PATHINFO_FILENAME));
 
-        Storage::cloud()->putFileAs('course_works/' . $data['course_work_id'] . '/chapters/' . $data['course_chapter_id'] . '/materials', $data['file'], $slug . '.' . $fileExt);
+        $savedFilename = time() . '-' . $slug . '.' . $fileExt;
+        Storage::cloud()->putFileAs('course_works/' . $data['course_work_id'] . '/chapters/' . $data['course_chapter_id'] . '/materials', $data['file'], $savedFilename);
 
         return $this->model->create([
             'course_chapter_id' => $courseChapter->id,
             'shown_filename' => $fileName,
-            'saved_filename' => $slug . '.' . $fileExt,
+            'saved_filename' => $savedFilename,
             'ext' => $fileExt,
         ]);
     }
