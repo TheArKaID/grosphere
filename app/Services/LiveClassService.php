@@ -280,6 +280,22 @@ class LiveClassService
         $liveClassEndTime = Carbon::parse($liveClass->start_time)->addMinutes($liveClass->duration);
         $currentTime = Carbon::now();
 
-        return $currentTime->lt($liveClassEndTime);
+        return $currentTime->lt($liveClassEndTime) ?? 'Live Class has ended';
+    }
+
+    /**
+     * Is Tutor Live Class not Started
+     * 
+     * @param int $liveClassId
+     * 
+     * @return bool
+     */
+    public function isTutorLiveClassNotStarted($liveClassId)
+    {
+        $liveClass = $this->getCurrentTutorLiveClass($liveClassId);
+        $liveClassStartTime = Carbon::parse($liveClass->start_time);
+        $currentTime = Carbon::now();
+
+        return $currentTime->lt($liveClassStartTime) ? 'Live Class has not started' : false;
     }
 }

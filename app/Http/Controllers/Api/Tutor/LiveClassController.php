@@ -125,7 +125,8 @@ class LiveClassController extends Controller
      */
     public function join(int $liveClassId)
     {
-        if ($liveUser = $this->tutorService->joinLiveClass($liveClassId)) {
+        $liveUser = $this->tutorService->joinLiveClass($liveClassId);
+        if (gettype($liveUser) != 'string') {
             return response()->json([
                 'status' => 200,
                 'message' => 'Tutor joined Live Class',
@@ -141,7 +142,7 @@ class LiveClassController extends Controller
 
         return response()->json([
             'status' => 400,
-            'message' => 'Live Class has ended'
+            'message' => $liveUser
         ], 400);
     }
 
@@ -161,7 +162,7 @@ class LiveClassController extends Controller
             ], 400);
         }
 
-        if(!$this->liveUserService->invalidateLiveUserToken($liveUser->id)) {
+        if (!$this->liveUserService->invalidateLiveUserToken($liveUser->id)) {
             return response()->json([
                 'status' => 400,
                 'message' => 'Token is invalid'

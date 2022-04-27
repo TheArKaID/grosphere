@@ -137,7 +137,7 @@ class TutorService
      * @param int $id
      * @param array $data
      * 
-	 * @return bool
+     * @return bool
      */
     public function changePasswordByTutor(int $id, array $data)
     {
@@ -153,14 +153,19 @@ class TutorService
      * 
      * @param int $liveClassId
      * 
-     * @return LiveUser
+     * @return LiveUser|string
      */
     public function joinLiveClass($liveClassId)
     {
-        if($this->liveClassService->isTutorLiveClassNotEnded($liveClassId)) {
-            return $this->userService->userJoinLiveClass($liveClassId);
+        $status = $this->liveClassService->isTutorLiveClassNotStarted($liveClassId);
+        if (gettype($status) == 'string') {
+            return $status;
         }
-        return false;
+        $status = $this->liveClassService->isTutorLiveClassNotEnded($liveClassId);
+        if (gettype($status) == 'string') {
+            return $status;
+        }
+        return $this->userService->userJoinLiveClass($liveClassId);
     }
 
     /**
