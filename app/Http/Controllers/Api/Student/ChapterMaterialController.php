@@ -27,7 +27,7 @@ class ChapterMaterialController extends Controller
      */
     public function index($courseWorkId, $courseChapterId)
     {
-        $chapterMaterials = ChapterMaterialResource::collection($this->service->getAll($courseChapterId, Auth::user()->detail->id));
+        $chapterMaterials = ChapterMaterialResource::collection($this->service->getAll($courseChapterId));
 
         if (count($chapterMaterials) == 0) {
             throw new ModelGetEmptyException('Chapter Materials');

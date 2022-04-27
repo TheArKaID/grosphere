@@ -66,6 +66,7 @@ class CourseChapterStudentService
             })
             ->findOrFail($id);
 
+        $courseStudent = $chapter->courseWork->courseStudents()->where('student_id', Auth::user()->detail->id)->first();
         // Check if this chapter has been read
         if ($chapter->courseChapterStudents()->count() == 0) {
             // Not Yet
@@ -74,14 +75,14 @@ class CourseChapterStudentService
                 // Yes, create new record
                 $this->create([
                     'course_chapter_id' => $chapter->id,
-                    'course_student_id' => $chapter->courseWork->courseStudents[0]->id,
+                    'course_student_id' => $courseStudent->id,
                     'status' => 1,
                 ]);
             } else {
                 // No, Check previous chapter status
                 $previousChapter = $this->courseChapter
-                    ->whereHas('courseChapterStudents', function ($courseChapterStudents) use ($chapter) {
-                        $courseChapterStudents->where('course_student_id', $chapter->courseWork->courseStudents[0]->id);
+                    ->whereHas('courseChapterStudents', function ($courseChapterStudents) use ($chapter, $courseStudent) {
+                        $courseChapterStudents->where('course_student_id', $courseStudent->id);
                     })->where('course_work_id', $courseWorkId)
                     ->where('order', $chapter->order - 1)
                     ->first();
@@ -91,11 +92,11 @@ class CourseChapterStudentService
                     return 'Please read previous chapter first';
                 } else {
                     // Otherwise, create new record
-                    $this->create([
-                        'course_chapter_id' => $chapter->id,
-                        'course_student_id' => $chapter->courseWork->courseStudents[0]->id,
-                        'status' => 1,
-                    ]);
+                $this->create([
+                    'course_chapter_id' => $chapter->id,
+                    'course_student_id' => $courseStudent->id,
+                    'status' => 1,
+                ]);
                 }
             }
         }
