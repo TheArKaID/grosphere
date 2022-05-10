@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\Student\ChapterMaterialController as StudentChapter
 use App\Http\Controllers\Api\Student\CourseChapterController as StudentCourseChapterController;
 use App\Http\Controllers\Api\Student\CourseStudentController;
 use App\Http\Controllers\Api\Student\CourseWorkController as StudentCourseWorkController;
+use App\Http\Controllers\Api\Student\TestQuestionController as StudentTestQuestiontController;
 use App\Http\Controllers\Api\Tutor\ChapterAssignmentController as TutorChapterAssignmentController;
 use App\Http\Controllers\Api\Tutor\ChapterMaterialController as TutorChapterMaterialController;
 use App\Http\Controllers\Api\Tutor\ChapterTestController as TutorChapterTestController;
@@ -128,6 +129,16 @@ Route::middleware(['auth:api'])->group(function () {
                 Route::get('answer', [StudentChapterAssignmentController::class, 'answer'])->name('answer');
                 Route::post('file', [StudentChapterAssignmentController::class, 'uploadFile'])->name('upload-file');
                 Route::delete('file', [StudentChapterAssignmentController::class, 'deleteFile'])->name('delete-file');
+            });
+            // Route::apiResource('tests', StudentTestQuestiontController::class)->only(['index', 'store']);
+            Route::prefix('tests')->group(function () {
+                // Get test summary
+                // Different response when test is not enrolled
+                Route::get('/', [StudentTestQuestiontController::class, 'index'])->name('index');
+                // Enroll to test
+                Route::post('enroll', [StudentTestQuestiontController::class, 'enroll'])->name('enroll');
+                // Get Question
+                Route::get('{test_id}', [StudentTestQuestiontController::class, 'getQuestion'])->name('show');
             });
         });
 
