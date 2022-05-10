@@ -88,4 +88,32 @@ class TestQuestionController extends Controller
             'data' => $question
         ]);
     }
+
+    /**
+     * Answer a question.
+     * 
+     * @param  Request  $request
+     * @param int $courseWorkId
+     * @param int $ccourseChapterId
+     * @param int $questionId
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function answerQuestion(Request $request, $courseWorkId, $courseChapterId, $questionId)
+    {
+        $result = $this->takeChapterTestService->answerQuestion($courseChapterId, Auth::user()->detail->id, $questionId, $request->answer);
+
+        if (gettype($result) == 'string') {
+            return response()->json([
+                'status' => 400,
+                'message' => $result,
+            ]);
+        }
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Success',
+            // 'data' => $result
+        ]);
+    }
 }

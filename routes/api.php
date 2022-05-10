@@ -139,6 +139,8 @@ Route::middleware(['auth:api'])->group(function () {
                 Route::post('enroll', [StudentTestQuestiontController::class, 'enroll'])->name('enroll');
                 // Get Question
                 Route::get('{test_id}', [StudentTestQuestiontController::class, 'getQuestion'])->name('show');
+                // Answer Question
+                Route::post('{test_id}', [StudentTestQuestiontController::class, 'answerQuestion'])->name('answer');
             });
         });
 

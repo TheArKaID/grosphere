@@ -5,23 +5,26 @@ namespace App\Services;
 use App\Models\ChapterTest;
 use App\Models\CourseChapterStudent;
 use App\Models\StudentTest;
+use App\Models\StudentTestAnswer;
 use App\Models\TestQuestion;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class TakeChapterTestService
 {
-    private $testQuestion, $studentTest, $chapterTestService, $courseStudentService, $courseChapterStudentService;
+    private $testQuestion, $studentTest, $studentTestAnswer, $chapterTestService, $courseStudentService, $courseChapterStudentService;
 
     public function __construct(
         TestQuestion $testQuestion,
         StudentTest $studentTest,
+        StudentTestAnswer $studentTestAnswer,
         ChapterTestService $chapterTestService,
         CourseStudentService $courseStudentService,
         CourseChapterStudentService $courseChapterStudentService
     ) {
         $this->testQuestion = $testQuestion;
         $this->studentTest = $studentTest;
+        $this->studentTestAnswer = $studentTestAnswer;
         $this->chapterTestService = $chapterTestService;
         $this->courseStudentService = $courseStudentService;
         $this->courseChapterStudentService = $courseChapterStudentService;
@@ -93,11 +96,11 @@ class TakeChapterTestService
         if ($this->isTakenChapterTestActive($courseChapterStudent, $studentId)) {
             return $courseChapterStudent->latestStudentTest;
         }
-        
+
         if ($courseChapterStudent->studentTests()->count() >= $courseChapterStudent->courseChapter->chapterTest->attempt) {
             return "You have reached the maximum number of attempts";
         }
-        
+
         return $this->studentTest->create([
             'course_chapter_student_id' => $courseChapterStudent->id,
             'status' => 1,
@@ -129,6 +132,40 @@ class TakeChapterTestService
     }
 
     /**
+     * Answer a question by id
+     * 
+     * @param int $courseChapterId
+     * @param int $studentId
+     * @param int $questionId
+     * @param string $answer
+     * 
+     * @return TestQuestion|boolean
+     */
+    public function answerQuestion($courseChapterId, $studentId, $questionId, $answer)
+    {
+        $courseChapterStudent = $this->getCourseChapterStudent($courseChapterId, $studentId);
+
+        if ($this->isTakenChapterTestActive($courseChapterStudent, $studentId)) {
+            $question = $this->testQuestion->findOrFail($questionId);
+            $is_correct = null;
+            if ($question->type == $this->testQuestion::$MULTIPLE_CHOICE) {
+                $is_correct = $question->answer_number == $answer;
+            }
+            $ans = $this->studentTestAnswer->updateOrCreate([
+                'test_question_id' => $questionId,
+                'student_test_id' => $courseChapterStudent->latestStudentTest->id
+            ], [
+                'test_question_id' => $questionId,
+                'student_test_id' => $courseChapterStudent->latestStudentTest->id,
+                'answer' => $answer,
+                'is_correct' => $is_correct
+            ]);
+            return $ans;
+        }
+        return 'Cannot access Question. Make sure you\'ve enrolled to the test.';
+    }
+
+    /**
      * Is Taken Chapter Test Active
      * 
      * @param CourseChapterStudent $courseChapterStudent
@@ -147,7 +184,7 @@ class TakeChapterTestService
         if (Carbon::parse($courseChapterStudent->latestStudentTest->created_at)->addMinutes($courseChapterStudent->courseChapter->chapterTest->duration)->isPast()) {
             return false;
         }
-        
+
         return true;
     }
 
