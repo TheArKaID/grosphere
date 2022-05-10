@@ -166,6 +166,28 @@ class TakeChapterTestService
     }
 
     /**
+     * Submit test
+     * 
+     * @param int $courseChapterId
+     * @param int $studentId
+     * 
+     * @return StudentTest|string
+     */
+    public function submitTest($courseChapterId, $studentId)
+    {
+        $courseChapterStudent = $this->getCourseChapterStudent($courseChapterId, $studentId);
+
+        if ($this->isTakenChapterTestActive($courseChapterStudent, $studentId)) {
+            $test = $courseChapterStudent->latestStudentTest;
+            $test->status = $test::$SUBMITTED;
+            $test->score = $this->scoreTheTest($test);
+            $test->save();
+            return $test;
+        }
+        return 'Cannot access Test. Make sure you\'ve enrolled to the test.';
+    }
+
+    /**
      * Is Taken Chapter Test Active
      * 
      * @param CourseChapterStudent $courseChapterStudent
@@ -208,5 +230,27 @@ class TakeChapterTestService
         }
 
         return false;
+    }
+
+    /**
+     * Score the test
+     * 
+     * @param StudentTest $test
+     * 
+     * @return float|string
+     */
+    public function scoreTheTest($test)
+    {
+        $score = 0;
+        $answers = $test->studentTestAnswers;
+        foreach ($answers as $answer) {
+            if ($answer->is_correct) {
+                // if ($answer->testQuestion->type == $this->testQuestion::$ESSAY) {
+                //     return 'Failed. The Essay question is not scored.';
+                // }
+                $score += 1;
+            }
+        }
+        return ($score / $test->courseChapterStudent->courseChapter->chapterTest->testQuestions()->count()) * 100;
     }
 }

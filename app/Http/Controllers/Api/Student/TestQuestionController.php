@@ -116,4 +116,31 @@ class TestQuestionController extends Controller
             // 'data' => $result
         ]);
     }
+
+    /**
+     * Submit test.
+     * 
+     * @param  Request  $request
+     * @param int $courseWorkId
+     * @param int $ccourseChapterId
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function submitTest(Request $request, $courseWorkId, $courseChapterId)
+    {
+        $result = $this->takeChapterTestService->submitTest($courseChapterId, Auth::user()->detail->id);
+
+        if (gettype($result) == 'string') {
+            return response()->json([
+                'status' => 400,
+                'message' => $result,
+            ]);
+        }
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Success',
+            'data' => $result
+        ]);
+    }
 }

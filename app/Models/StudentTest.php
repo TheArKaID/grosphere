@@ -16,6 +16,9 @@ use Illuminate\Database\Eloquent\Model;
  */
 class StudentTest extends Model
 {
+    public static $WORKING = 1;
+    public static $SUBMITTED = 2;
+
     /**
      * The "type" of the auto-incrementing ID.
      * 
