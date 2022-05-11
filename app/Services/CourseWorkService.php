@@ -68,7 +68,7 @@ class CourseWorkService
             'tutor_id' => Auth::user()->detail->id,
             'title' => 'Chapter 1 - Introduction',
             'description' => 'Chapter Introduction',
-            'content' => '<p>This is the introduction chapter of the course.</p>',
+            'content' => '{"blocks":[{"key":"b09di","text":"This is the introduction chapter of the course","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}',
             'status' => 1,
             'order' => 0,
         ]);
