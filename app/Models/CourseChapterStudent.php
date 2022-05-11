@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * @property integer $id
@@ -51,5 +53,25 @@ class CourseChapterStudent extends Model
     public function studentAssignment()
     {
         return $this->hasOne(StudentAssignment::class);
+    }
+
+    /**
+     * Get all of the studentTests for the CourseChapterStudent
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function studentTests(): HasMany
+    {
+        return $this->hasMany(StudentTest::class);
+    }
+
+    /**
+     * Get latest student test
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function latestStudentTest(): HasOne
+    {
+        return $this->hasOne(StudentTest::class)->latest();
     }
 }

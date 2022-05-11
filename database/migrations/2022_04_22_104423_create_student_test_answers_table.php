@@ -18,7 +18,7 @@ class CreateStudentTestAnswersTable extends Migration
             $table->foreignId('student_test_id')->constrained();
             $table->foreignId('test_question_id')->constrained();
             $table->text('answer');
-            $table->tinyInteger('is_correct');
+            $table->tinyInteger('is_correct')->nullable()->default(null);
             $table->timestamps();
         });
     }
