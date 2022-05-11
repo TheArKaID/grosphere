@@ -280,7 +280,7 @@ class LiveClassService
         $liveClassEndTime = Carbon::parse($liveClass->start_time)->addMinutes($liveClass->duration);
         $currentTime = Carbon::now();
 
-        return $currentTime->lt($liveClassEndTime) ?? 'Live Class has ended';
+        return $currentTime->lt($liveClassEndTime) ? true : 'Live Class has ended';
     }
 
     /**
