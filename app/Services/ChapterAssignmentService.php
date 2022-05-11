@@ -182,6 +182,29 @@ class ChapterAssignmentService
     }
 
     /**
+     * Get student assignment answers
+     * 
+     * @param int $courseWorkId
+     * @param int $courseChapterId
+     * 
+     * @return Collection
+     */
+    public function getStudentAnswers($courseWorkId, $courseChapterId)
+    {
+        $courseChapter = $this->courseChapterService->getById($courseWorkId, $courseChapterId);
+        
+        return $courseChapter->courseChapterStudents()->get()->map(function ($assignment) {
+            return [
+                'id' => $assignment->id,
+                'student_id' => $assignment->course_student_id,
+                'student_name' => $assignment->courseStudent->student->user->name,
+                'answer' => $assignment->studentAssignment->answer,
+                'files' => $assignment->studentAssignment->getFilesPath(),
+            ];
+        });
+    }
+
+    /**
      * Upload Student Assignment File
      * 
      * @param mix $file

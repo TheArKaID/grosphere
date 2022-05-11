@@ -138,4 +138,23 @@ class ChapterAssignmentController extends Controller
             ], 400);
         }
     }
+
+    /**
+     * Get student's chapter assignment answers
+     * 
+     * @param int $courseWorkId
+     * @param int $courseChapterId
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function getStudentAnswers(int $courseWorkId, int $courseChapterId)
+    {
+        $answers = $this->service->getStudentAnswers($courseWorkId, $courseChapterId);
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Success',
+            'data' => $answers
+        ], 200);
+    }
 }
