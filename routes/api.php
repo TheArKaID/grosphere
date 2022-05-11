@@ -94,7 +94,7 @@ Route::middleware(['auth:api'])->group(function () {
         Route::apiResource('course-works.chapters', TutorCourseChapterController::class);
         Route::apiResource('course-works.chapters.materials', TutorChapterMaterialController::class)->except(['update']);
         Route::apiResource('course-works.chapters.assignments', TutorChapterAssignmentController::class)->only(['index', 'store']);
-        Route::name('course-works.chapters.assignment.')->prefix('course-works/{course_work}/chapters/{chapter}/assignments')->group(function () {
+        Route::name('course-works.chapters.assignments.')->prefix('course-works/{course_work}/chapters/{chapter}/assignments')->group(function () {
             Route::delete('/', [TutorChapterAssignmentController::class, 'destroy'])->name('destroy');
             Route::post('file', [TutorChapterAssignmentController::class, 'uploadFile'])->name('upload-file');
             Route::delete('file', [TutorChapterAssignmentController::class, 'deleteFile'])->name('delete-file');
@@ -125,13 +125,13 @@ Route::middleware(['auth:api'])->group(function () {
         Route::name('course-works.chapters.')->prefix('course-works/{course_work_id}/chapters/{chapter_id}')->group(function () {
             Route::apiResource('materials', StudentChapterMaterialController::class)->only(['index', 'show']);
             Route::apiResource('assignments', StudentChapterAssignmentController::class)->only(['index', 'store']);
-            Route::prefix('assignments')->group(function () {
+            Route::name('assignments.')->prefix('assignments')->group(function () {
                 Route::get('answer', [StudentChapterAssignmentController::class, 'answer'])->name('answer');
                 Route::post('file', [StudentChapterAssignmentController::class, 'uploadFile'])->name('upload-file');
                 Route::delete('file', [StudentChapterAssignmentController::class, 'deleteFile'])->name('delete-file');
             });
             // Route::apiResource('tests', StudentTestQuestiontController::class)->only(['index', 'store']);
-            Route::prefix('tests')->group(function () {
+            Route::name('tests.')->prefix('tests')->group(function () {
                 // Get test summary
                 // Different response when test is not enrolled
                 Route::get('/', [StudentTestQuestiontController::class, 'index'])->name('index');
