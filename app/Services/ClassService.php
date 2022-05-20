@@ -96,37 +96,4 @@ class ClassService
 
         return $class->delete();
     }
-
-    /**
-     * Send POST request to Agora to create meeting room
-     * 
-     * @param string $roomName
-     * 
-     * @return mixed
-     */
-    public function createMeetingRoom(string $roomName)
-    {
-        $backendUrl = config('agora.backend_url');
-        $isPstnEnabled = config('agora.enable_pstn');
-
-        $data = json_encode([
-            'operationName' => 'CreateChannel',
-            'variables' => [
-                'title' => $roomName,
-                'backendURL' => $backendUrl,
-                'enablePSTN' => $isPstnEnabled,
-            ],
-            'query' => 'mutation CreateChannel($title: String!, $backendURL: String!, $enablePSTN: Boolean) { createChannel(title: $title, backendURL: $backendURL, enablePSTN: $enablePSTN) { passphrase { host view __typename } channel title pstn { number dtmf __typename } __typename }}',
-        ]);
-
-        $response = Http::withHeaders([
-            'Content-Type' => 'application/json'
-        ])->withBody(($data), 'application/json')->post($backendUrl . '/query')->json();
-
-        if(isset($response['errors'])) {
-            throw new AgoraException(json_encode($response['errors']), 400);
-        }
-        
-        return $response['data']['createChannel'];
-    }
 }

@@ -135,7 +135,6 @@ class LiveClassController extends Controller
                 'message' => 'Tutor joined Live Class',
                 'data' => [
                     'live_class_name' => $liveClass->class->name,
-                    'room' => $liveClass->host_code,
                     'token' => $liveUser->token,
                     'end_time' => Carbon::parse($liveClass->start_time)->addMinutes($liveClass->duration)->toDateTimeString(),
                     'duration' => $liveClass->duration,
@@ -159,7 +158,7 @@ class LiveClassController extends Controller
     {
         $liveUser = $this->liveUserService->getLiveUserByToken(request('token'));
 
-        if (!$this->liveClassService->isLiveClassStartedByCode($liveUser->liveClass->host_code)) {
+        if (!$this->liveClassService->isLiveClassStarted($liveUser->liveClass->id)) {
             return response()->json([
                 'status' => 400,
                 'message' => 'Live Class is not started yet or it is already ended'

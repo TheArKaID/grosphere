@@ -11,8 +11,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property integer $class_id
  * @property int $duration
  * @property string $start_time
- * @property string $host_code
- * @property string $user_code
  * @property string $deleted_at
  * @property string $created_at
  * @property string $updated_at
@@ -30,7 +28,7 @@ class LiveClass extends Model
     /**
      * @var array
      */
-    protected $fillable = ['class_id', 'duration', 'start_time', 'host_code', 'user_code', 'deleted_at', 'created_at', 'updated_at'];
+    protected $fillable = ['class_id', 'duration', 'start_time', 'deleted_at', 'created_at', 'updated_at'];
 
     /**
      * The attributes that should be cast.

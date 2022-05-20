@@ -71,11 +71,6 @@ class LiveClassService
         $data['class_id'] = $class->id;
         $liveClass = $this->liveClass->create($data);
 
-        $meetingRoom = $this->classService->createMeetingRoom($data['name']);
-        $liveClass->host_code = $meetingRoom['passphrase']['host'];
-        $liveClass->user_code = $meetingRoom['passphrase']['host'];
-        $liveClass->save();
-
         DB::commit();
 
         return $liveClass;
@@ -240,26 +235,6 @@ class LiveClassService
     public function isLiveClassStarted($liveClassId)
     {
         $liveClass = $this->getLiveClassById($liveClassId);
-        $liveClassStartTime = Carbon::parse($liveClass->start_time);
-        $liveClassEndTime = Carbon::parse($liveClass->start_time)->addMinutes($liveClass->duration);
-        $currentTime = Carbon::now();
-
-        return $currentTime->between($liveClassStartTime, $liveClassEndTime);
-    }
-
-    /**
-     * Check if Live Class is started by  Code
-     * 
-     * @param string $liveClassCode
-     * 
-     * @return bool
-     */
-    public function isLiveClassStartedByCode($liveClassCode)
-    {
-        $liveClass = $this->liveClass->where('host_code', $liveClassCode)->orWhere('user_code', $liveClassCode)->first();
-        if (!$liveClass) {
-            return false;
-        }
         $liveClassStartTime = Carbon::parse($liveClass->start_time);
         $liveClassEndTime = Carbon::parse($liveClass->start_time)->addMinutes($liveClass->duration);
         $currentTime = Carbon::now();
