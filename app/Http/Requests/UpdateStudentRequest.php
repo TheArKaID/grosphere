@@ -30,6 +30,9 @@ class UpdateStudentRequest extends FormRequest
             'gender' => 'numeric|between:0,1',
             'address' => 'string',
             'phone' => 'nullable|string|min:8|max:50',
+            'id_number' => 'nullable|string|max:50',
+            'parent_id' => 'numeric|nullable|exists:parents,id',
+            'email' => 'nullable|email',
         ];
     }
 }
