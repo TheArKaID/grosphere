@@ -89,6 +89,7 @@ class LiveClassController extends Controller
                 'room' => $liveClass->user_code,
                 'token' => $liveUser->token,
                 'end_time' => Carbon::parse($liveClass->start_time)->addMinutes($liveClass->duration)->toDateTimeString(),
+                'duration' => $liveClass->duration,
                 'thumbnail' => $liveClass->class->thumbnail ? asset('storage/class/thumbnail/' . $liveClass->class->thumbnail) : asset('storage/class/thumbnail/default.png'),
             ]
         ], 200);

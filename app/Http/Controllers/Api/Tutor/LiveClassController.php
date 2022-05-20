@@ -126,16 +126,20 @@ class LiveClassController extends Controller
     public function join(int $liveClassId)
     {
         $liveUser = $this->tutorService->joinLiveClass($liveClassId);
+
+        $liveClass = $liveUser->liveClass;
+        
         if (gettype($liveUser) != 'string') {
             return response()->json([
                 'status' => 200,
                 'message' => 'Tutor joined Live Class',
                 'data' => [
-                    'live_class_name' => $liveUser->liveClass->class->name,
-                    'room' => $liveUser->liveClass->host_code,
+                    'live_class_name' => $liveClass->class->name,
+                    'room' => $liveClass->host_code,
                     'token' => $liveUser->token,
-                    'end_time' => Carbon::parse($liveUser->liveClass->start_time)->addMinutes($liveUser->liveClass->duration)->toDateTimeString(),
-                    'thumbnail' => asset('storage/class/thumbnail/' . $liveUser->liveClass->class->thumbnail),
+                    'end_time' => Carbon::parse($liveClass->start_time)->addMinutes($liveClass->duration)->toDateTimeString(),
+                    'duration' => $liveClass->duration,
+                    'thumbnail' => asset('storage/class/thumbnail/' . $liveClass->class->thumbnail),
                 ]
             ], 200);
         }
