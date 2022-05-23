@@ -20,6 +20,8 @@ class ChapterTestResource extends JsonResource
         return $this->resource ? [
             'id' => $this->id,
             'course_chapter_id' => $this->course_chapter_id,
+            'type' => $this->type,
+            'file' => $this->getFile(),
             'title' => $this->title,
             'duration' => $this->duration,
             'attempt' => $this->attempt,

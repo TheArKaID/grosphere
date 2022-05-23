@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * @property integer $id
@@ -20,6 +21,9 @@ use Illuminate\Database\Eloquent\Model;
  */
 class ChapterTest extends Model
 {
+    public static $ON_APP = 1;
+    public static $ON_FILE = 2;
+
     /**
      * The "type" of the auto-incrementing ID.
      * 
@@ -30,7 +34,7 @@ class ChapterTest extends Model
     /**
      * @var array
      */
-    protected $fillable = ['course_chapter_id', 'title', 'duration', 'attempt', 'available_at', 'available_until', 'status', 'created_at', 'updated_at'];
+    protected $fillable = ['course_chapter_id', 'title', 'duration', 'attempt', 'type', 'available_at', 'available_until', 'status', 'created_at', 'updated_at'];
 
     /**
      * The attributes that should be cast.
@@ -58,6 +62,17 @@ class ChapterTest extends Model
         return $this->hasMany(TestQuestion::class);
     }
 
+    /**
+     * Get Uploaded Test File
+     * 
+     * @return string
+     */
+    public function getFile()
+    {
+        foreach (Storage::cloud()->allFiles('course_works/' . $this->courseChapter->courseWork->id . '/chapters/' . $this->courseChapter->id . '/tests') as $file) {
+            return Storage::cloud()->url($file);
+        }
+    }
     /**
      * Delete on boot
      * 
