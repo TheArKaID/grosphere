@@ -127,9 +127,9 @@ class LiveClassController extends Controller
     {
         $liveUser = $this->tutorService->joinLiveClass($liveClassId);
 
-        $liveClass = $liveUser->liveClass;
-        
         if (gettype($liveUser) != 'string') {
+            $liveClass = $liveUser->liveClass;
+
             return response()->json([
                 'status' => 200,
                 'message' => 'Tutor joined Live Class',
