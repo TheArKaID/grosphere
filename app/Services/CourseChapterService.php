@@ -71,6 +71,7 @@ class CourseChapterService
         $currentOrder = $this->getLast($data['course_work_id'], $data['tutor_id']);
         $data['order'] = $currentOrder ? $currentOrder->order + 1 : 0;
         $data['status'] = 1;
+        $data['content'] = $data['content'] ?? '{"blocks":[{"key":"b09di","text":"This is the introduction chapter of the course","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}';
         $courseChapter = $this->courseChapter->create($data);
 
         return $courseChapter;
