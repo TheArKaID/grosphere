@@ -71,6 +71,20 @@ class CourseStudentService
             });
         })->firstOrFail();
     }
+
+    /**
+     * Get by id and Student id
+     * 
+     * @param int $id
+     * @param int $studentId
+     * 
+     * @return CourseStudent
+     */
+    public function getByIdAndStudentId($id, $studentId)
+    {
+        return $this->courseStudent->where('id', $id)->where('student_id', $studentId)->firstOrFail();
+    }
+
     /**
      * Get Course Student by course work id and student id
      * 
