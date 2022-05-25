@@ -22,14 +22,14 @@ class AskAnswerService
     /**
      * Get all Ask Answers
      * 
-     * @param int $courseWorkId
+     * @param int $courseStudentId
      * @param int $studentId
      * 
      * @return Collection
      */
-    public function getAll(int $courseWorkId, int $studentId)
+    public function getAll(int $courseStudentId, int $studentId)
     {
-        $courseStudent = $this->courseStudentService->getByCourseWorkIdAndStudentId($courseWorkId, $studentId);
+        $courseStudent = $this->courseStudentService->getByIdAndStudentId($courseStudentId, $studentId);
 
         return $this->model->where('course_student_id', $courseStudent->id)->get();
     }
@@ -37,33 +37,51 @@ class AskAnswerService
     /**
      * Get all formatted Ask Answers
      * 
-     * @param int $courseWorkId
+     * @return Collection
+     */
+    public function getAllFormatted()
+    {
+        $courseStudents = $this->courseStudentService->getAll();
+
+        $askAnswers = [];
+        foreach ($courseStudents as $cs) {
+            $new = [
+                'tutor_name' => $cs->courseWork->class->tutor->user->name,
+                'course_work_id' => $cs->courseWork->id,
+                'course_name' => $cs->courseWork->class->name,
+                'course_student_id' => $cs->id,
+                'unread' => $cs->askAnswers()->where('updated_at', null)->where('from', AskAnswer::$FROM_TUTOR)->count(),
+            ];
+            $askAnswers[] = $new;
+        }
+
+        return $askAnswers;
+    }
+
+    /**
+     * Get One formatted for Student
+     * 
+     * @param int $courseStudentId
      * @param int $studentId
      * 
      * @return Collection
      */
-    public function getAllFormatted(int $courseWorkId, int $studentId)
+    public function getOneFormattedForStudent(int $courseStudentId, int $studentId)
     {
-        $allQNA = $this->getAll($courseWorkId, $studentId);
-
-        if ($allQNA->count() == 0) {
-            return false;
-        }
-        $course_name = $allQNA[0]->courseStudent->courseWork->class->name;
-        $tutor_name = $allQNA[0]->courseStudent->courseWork->class->tutor->user->name;
-        $new = $allQNA->map(function ($item) {
+        $courseStudent = $this->courseStudentService->getByIdAndStudentId($courseStudentId, $studentId);
+        $askAnswers = $courseStudent->askAnswers->map(function ($askAnswer) {
+            if ($askAnswer->updated_at == null && $askAnswer->from == AskAnswer::$FROM_TUTOR) {
+                $askAnswer->updated_at = now();
+                $askAnswer->save();
+            }
             return [
-                'from' => $item->from == 1 ? 'Student' : 'Tutor',
-                'message' => $item->message,
-                'time' => Carbon::parse($item->created_at)->format('d-m-Y H:i:s'),
+                'from' => $askAnswer->from == 1 ? 'Student' : 'Tutor',
+                'message' => $askAnswer->message,
+                'time' => Carbon::parse($askAnswer->created_at)->format('d-m-Y H:i:s'),
             ];
         });
 
-        return [
-            'course_name' => $course_name,
-            'tutor_name' => $tutor_name,
-            'messages' => $new
-        ];
+        return $askAnswers;
     }
 
     /**
@@ -139,7 +157,7 @@ class AskAnswerService
      */
     public function store(array $data)
     {
-        $courseStudent = $this->courseStudentService->getByCourseWorkIdAndStudentId($data['course_work_id'], $data['student_id']);
+        $courseStudent = $this->courseStudentService->getByIdAndStudentId($data['course_student_id'], $data['student_id']);
         $data['course_student_id'] = $courseStudent->id;
         $data['from'] = AskAnswer::$FROM_STUDENT;
         $data['updated_at'] = null;
@@ -156,7 +174,8 @@ class AskAnswerService
      */
     public function storeForTutor(array $data)
     {
-        $data['course_student_id'] = $data['course_student_id'];
+        $courseStudent = $this->courseStudentService->getByIdAndTutorId($data['course_student_id'], $data['tutor_id']);
+        $data['course_student_id'] = $courseStudent->id;
         $data['from'] = AskAnswer::$FROM_TUTOR;
         $data['updated_at'] = null;
 
