@@ -98,8 +98,8 @@ class CourseChapter extends Model
             foreach ($model->chapterMaterial as $cm) {
                 $cm->delete();
             }
-            if ($model->chapterTests) {
-                $model->chapterTests->delete();
+            if ($model->chapterTest) {
+                $model->chapterTest->delete();
             }
         });
     }
