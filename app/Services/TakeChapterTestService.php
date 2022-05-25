@@ -70,7 +70,7 @@ class TakeChapterTestService
     {
         $chapterTest = $this->chapterTestService->getOne($courseChapterId);
 
-        $courseStudent = $this->courseStudentService->getByCourseIdAndStudentId($chapterTest->courseChapter->course_work_id, $studentId);
+        $courseStudent = $this->courseStudentService->getByCourseWorkIdAndStudentId($chapterTest->courseChapter->course_work_id, $studentId);
 
         $courseChapterStudent = $this->courseChapterStudentService->getOne($courseChapterId, $courseStudent->id);
 

@@ -146,7 +146,7 @@ class ChapterAssignmentService
      */
     public function storeStudentAnswer($courseWorkId, $courseChapterId, $studentId, $answer)
     {
-        $courseStudent = $this->courseStudentService->getByCourseIdAndStudentId($courseWorkId, $studentId);
+        $courseStudent = $this->courseStudentService->getByCourseWorkIdAndStudentId($courseWorkId, $studentId);
         $courseChapterStudent = $this->courseChapterStudentService->getOne($courseChapterId, $courseStudent->id);
 
         if ($courseChapterStudent->studentAssignment) {
@@ -175,7 +175,7 @@ class ChapterAssignmentService
      */
     public function getStudentAnswer($courseWorkId, $courseChapterId, $studentId)
     {
-        $courseStudent = $this->courseStudentService->getByCourseIdAndStudentId($courseWorkId, $studentId);
+        $courseStudent = $this->courseStudentService->getByCourseWorkIdAndStudentId($courseWorkId, $studentId);
         $courseChapterStudent = $this->courseChapterStudentService->getOne($courseChapterId, $courseStudent->id);
 
         return $courseChapterStudent->studentAssignment;

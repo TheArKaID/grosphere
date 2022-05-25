@@ -29,7 +29,7 @@ class AskAnswerService
      */
     public function getAll(int $courseWorkId, int $studentId)
     {
-        $courseStudent = $this->courseStudentService->getByCourseIdAndStudentId($courseWorkId, $studentId);
+        $courseStudent = $this->courseStudentService->getByCourseWorkIdAndStudentId($courseWorkId, $studentId);
 
         return $this->model->where('course_student_id', $courseStudent->id)->get();
     }
@@ -139,7 +139,7 @@ class AskAnswerService
      */
     public function store(array $data)
     {
-        $courseStudent = $this->courseStudentService->getByCourseIdAndStudentId($data['course_work_id'], $data['student_id']);
+        $courseStudent = $this->courseStudentService->getByCourseWorkIdAndStudentId($data['course_work_id'], $data['student_id']);
         $data['course_student_id'] = $courseStudent->id;
         $data['from'] = AskAnswer::$FROM_STUDENT;
         $data['updated_at'] = null;

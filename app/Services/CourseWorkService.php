@@ -164,7 +164,7 @@ class CourseWorkService
     public function enroll($id)
     {
         $courseWork = $this->getCourseWorkById($id);
-        if ($this->courseStudentService->getByCourseIdAndStudentId($courseWork->id, Auth::user()->detail->id, false)) {
+        if ($this->courseStudentService->getByCourseWorkIdAndStudentId($courseWork->id, Auth::user()->detail->id, false)) {
             return false;
         }
         $courseStudent = $this->courseStudentService->create([
@@ -185,7 +185,7 @@ class CourseWorkService
     public function enrollByCourseWorkIdAndStudentId($courseWorkId, $studentId)
     {
         $courseWork = $this->getCourseWorkById($courseWorkId);
-        if ($this->courseStudentService->getByCourseIdAndStudentId($courseWork->id, $studentId, false)) {
+        if ($this->courseStudentService->getByCourseWorkIdAndStudentId($courseWork->id, $studentId, false)) {
             return false;
         }
         $courseStudent = $this->courseStudentService->create([

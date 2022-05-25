@@ -80,7 +80,7 @@ class CourseStudentService
      * 
      * @return CourseStudent
      */
-    public function getByCourseIdAndStudentId($courseWorkId, $studentId, $throwException = true)
+    public function getByCourseWorkIdAndStudentId($courseWorkId, $studentId, $throwException = true)
     {
         $this->courseStudent = $this->courseStudent->where('course_work_id', $courseWorkId)->where('student_id', $studentId);
 
