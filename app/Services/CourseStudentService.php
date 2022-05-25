@@ -23,7 +23,7 @@ class CourseStudentService
     public function getAll()
     {
         $this->courseStudent = $this->courseStudent->where('student_id', Auth::user()->detail->id);
-        
+
         if (request()->has('page') && request()->get('page') == 'all') {
             return $this->courseStudent->get();
         }
@@ -55,6 +55,22 @@ class CourseStudentService
         return $this->courseStudent->findOrFail($id);
     }
 
+    /**
+     * Get by id and tutor id
+     * 
+     * @param int $id
+     * @param int $tutorId
+     * 
+     * @return CourseStudent
+     */
+    public function getByIdAndTutorId($id, $tutorId)
+    {
+        return $this->courseStudent->where('id', $id)->whereHas('courseWork', function ($courseWork) use ($tutorId) {
+            $courseWork->whereHas('class', function ($class) use ($tutorId) {
+                $class->where('tutor_id', $tutorId);
+            });
+        })->firstOrFail();
+    }
     /**
      * Get Course Student by course work id and student id
      * 
