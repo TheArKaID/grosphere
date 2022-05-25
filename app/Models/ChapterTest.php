@@ -70,7 +70,11 @@ class ChapterTest extends Model
     public function getFile()
     {
         foreach (Storage::cloud()->allFiles('course_works/' . $this->courseChapter->courseWork->id . '/chapters/' . $this->courseChapter->id . '/tests') as $file) {
-            return Storage::cloud()->url($file);
+            return [
+                'url' => Storage::cloud()->url($file),
+                'filename' => pathinfo($file, PATHINFO_FILENAME),
+                'extension' => pathinfo($file, PATHINFO_EXTENSION),
+            ];
         }
     }
     /**
