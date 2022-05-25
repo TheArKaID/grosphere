@@ -48,6 +48,27 @@ class CourseWorkService
     }
 
     /**
+     * Get All Course Works and sort by newest AskAnswers relation
+     * 
+     * @param int $tutorId
+     * 
+     * @return Collection
+     */
+    public function getAllWithNewestAskAnswers($tutorId = null)
+    {
+        $this->courseWork = $this->courseWork->whereHas('class', function ($class) use ($tutorId) {
+            $class->where('tutor_id', $tutorId);
+        });
+
+        $this->courseWork = $this->courseWork->with(['courseStudents' => function ($courseStudent) {
+            $courseStudent->with(['askAnswers' => function ($askAnswers) {
+                $askAnswers->orderBy('created_at', 'desc');
+            }]);
+        }]);
+
+        return $this->courseWork->get();
+    }
+    /**
      * Cretae Course Work
      * 
      * @param array $data

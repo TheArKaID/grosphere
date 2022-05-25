@@ -51,11 +51,12 @@ class AskAnswerService
                 'course_name' => $cs->courseWork->class->name,
                 'course_student_id' => $cs->id,
                 'unread' => $cs->askAnswers()->where('updated_at', null)->where('from', AskAnswer::$FROM_TUTOR)->count(),
+                'last_message' => $cs->askAnswers->count() != 0 ? Carbon::parse($cs->askAnswers->last()->created_at)->format('d-m-Y H:i:s') : null,
             ];
             $askAnswers[] = $new;
         }
 
-        return $askAnswers;
+        return collect($askAnswers)->sortByDesc('last_message')->values();
     }
 
     /**
@@ -93,23 +94,26 @@ class AskAnswerService
      */
     public function getAllFormattedForTutor($tutorId)
     {
-        $courseWorks = $this->courseWorkService->getAll($tutorId);
+        $courseWorks = $this->courseWorkService->getAllWithNewestAskAnswers($tutorId);
 
         $askAnswers = [];
         foreach ($courseWorks as $courseWork) {
             $new = [
                 'course_work_id' => $courseWork->id,
-                'course_name' => $courseWork->class->name
+                'course_name' => $courseWork->class->name,
+                'last_message' => null
             ];
+
             foreach ($courseWork->courseStudents as $cs) {
                 $new['course_student_id'] = $cs->id;
                 $new['student_name'] = $cs->student->user->name;
                 $new['unread'] = $cs->askAnswers()->where('updated_at', null)->where('from', AskAnswer::$FROM_STUDENT)->count();
+                $new['last_message'] = $cs->askAnswers->count() != 0 ? Carbon::parse($cs->askAnswers->first()->created_at)->format('d-m-Y H:i:s') : null;
                 $askAnswers[] = $new;
             }
         }
 
-        return $askAnswers;
+        return collect($askAnswers)->sortByDesc('last_message')->values();
     }
 
     /**
