@@ -44,6 +44,7 @@ class AskAnswerController extends Controller
     {
         $validated = $request->validated();
         $validated['course_student_id'] = $courseStudentid;
+        $validated['tutor_id'] = Auth::user()->detail->id;
         
         $askAnswer = $this->service->storeForTutor($validated);
 

@@ -88,6 +88,7 @@ Route::middleware(['auth:api'])->group(function () {
 
         Route::apiResource('course-categories', TutorCourseCategoryController::class)->only(['index', 'show']);
         Route::apiResource('course-works', TutorCourseWorkController::class);
+
         Route::name('ask-answers.')->prefix('ask-answers')->group(function () {
             Route::get('', [TutorAskAnswerController::class, 'index'])->name('index');
             Route::get('{course_student_id}', [TutorAskAnswerController::class, 'show'])->name('show');
@@ -122,11 +123,16 @@ Route::middleware(['auth:api'])->group(function () {
         // Route::put('/', [StudentProfileController::class, 'update'])->name('profile.update');
         // Route::put('password', [StudentProfileController::class, 'updatePassword'])->name('profile.update.password');
 
+        
+        Route::name('ask-answers.')->prefix('ask-answers')->group(function () {
+            Route::get('', [StudentAskAnswerController::class, 'index'])->name('index');
+            Route::get('{course_student_id}', [StudentAskAnswerController::class, 'show'])->name('show');
+            Route::post('{course_student_id}', [StudentAskAnswerController::class, 'store'])->name('store');
+        });
+
         Route::apiResource('course-works', StudentCourseWorkController::class)->only(['index', 'show']);
         Route::name('course-works.')->prefix('course-works/{course_work_id}')->group(function () {
             Route::post('enroll', [StudentCourseWorkController::class, 'enroll'])->name('enroll');
-            Route::get('ask-answer', [StudentAskAnswerController::class, 'index'])->name('ask-answer.index');
-            Route::post('ask-answer', [StudentAskAnswerController::class, 'store'])->name('ask-answer.store');
         });
         Route::apiResource('course-works.chapters', StudentCourseChapterController::class)->only(['index', 'show']);
         Route::name('course-works.chapters.')->prefix('course-works/{course_work_id}/chapters/{chapter_id}')->group(function () {

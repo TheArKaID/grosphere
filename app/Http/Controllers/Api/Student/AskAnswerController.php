@@ -19,13 +19,27 @@ class AskAnswerController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param  int  $courseWorkId
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        $askAnswer = $this->service->getAllFormatted();
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Success',
+            'data' => $askAnswer
+        ], 200);
+    }
+
+    /**
+     * @param $courseStudentId
      * 
      * @return \Illuminate\Http\Response
      */
-    public function index(int $courseWorkId)
+    public function show($courseStudentId)
     {
-        $askAnswer = $this->service->getAllFormatted($courseWorkId, Auth::user()->detail->id);
+        $askAnswer = $this->service->getOneFormattedForStudent($courseStudentId, Auth::user()->detail->id);
 
         return response()->json([
             'status' => 200,
@@ -38,15 +52,15 @@ class AskAnswerController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \App\Http\Requests\StoreAskAnswerRequest  $request
-     * @param  int  $courseWorkId
+     * @param  int  $courseStudentId
      * 
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreStudentAskAnswerRequest $request, int $courseWorkId)
+    public function store(StoreStudentAskAnswerRequest $request, int $courseStudentId)
     {
         $validated = $request->validated();
         $validated['student_id'] = Auth::user()->detail->id;
-        $validated['course_work_id'] = $courseWorkId;
+        $validated['course_student_id'] = $courseStudentId;
         $askAnswer = $this->service->store($validated);
 
         return response()->json([
