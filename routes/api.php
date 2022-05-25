@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\Student\CourseChapterController as StudentCourseCha
 use App\Http\Controllers\Api\Student\CourseStudentController;
 use App\Http\Controllers\Api\Student\CourseWorkController as StudentCourseWorkController;
 use App\Http\Controllers\Api\Student\TestQuestionController as StudentTestQuestiontController;
+use App\Http\Controllers\Api\Tutor\AskAnswerController as TutorAskAnswerController;
 use App\Http\Controllers\Api\Tutor\ChapterAssignmentController as TutorChapterAssignmentController;
 use App\Http\Controllers\Api\Tutor\ChapterMaterialController as TutorChapterMaterialController;
 use App\Http\Controllers\Api\Tutor\ChapterTestController as TutorChapterTestController;
@@ -87,6 +88,11 @@ Route::middleware(['auth:api'])->group(function () {
 
         Route::apiResource('course-categories', TutorCourseCategoryController::class)->only(['index', 'show']);
         Route::apiResource('course-works', TutorCourseWorkController::class);
+        Route::name('ask-answers.')->prefix('ask-answers')->group(function () {
+            Route::get('', [TutorAskAnswerController::class, 'index'])->name('index');
+            Route::get('{course_student_id}', [TutorAskAnswerController::class, 'show'])->name('show');
+            Route::post('{course_student_id}', [TutorAskAnswerController::class, 'store'])->name('store');
+        });
         Route::name('course-works.chapters.')->prefix('course-works/{course_work}/chapters')->group(function () {
             Route::post('image', [TutorCourseChapterController::class, 'uploadImage'])->name('image.upload');
             Route::delete('image', [TutorCourseChapterController::class, 'deleteImage'])->name('image.delete');
