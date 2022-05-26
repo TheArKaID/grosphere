@@ -172,7 +172,7 @@ Route::middleware(['auth:api'])->group(function () {
         });
         
         Route::get('announcements', [UserAnnouncementController::class, 'index'])->name('announcements.index');
-        Route::get('announcements/{announcement_id', [UserAnnouncementController::class, 'show'])->name('announcements.index');
+        Route::get('announcements/{announcement_id}', [UserAnnouncementController::class, 'show'])->name('announcements.show');
 
         Route::get('/', [UserProfileController::class, 'index'])->name('profile');
         Route::put('/', [UserProfileController::class, 'update'])->name('profile.update');
