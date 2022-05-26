@@ -48,4 +48,20 @@ class StudentAssignment extends Model
         }
         return $path;
     }
+
+    /**
+     * Boot on deleting
+     * 
+     * @return void
+     */
+    public static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($studentAssignment) {
+            foreach (Storage::cloud()->allFiles('course_works/' . $studentAssignment->courseChapterStudent->courseChapter->courseWork->id . '/chapters/' . $studentAssignment->courseChapterStudent->courseChapter->id . '/assignments_results/' . $studentAssignment->id) as $file) {
+                Storage::cloud()->delete($file);
+            }
+        });
+    }
 }

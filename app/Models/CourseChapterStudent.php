@@ -74,4 +74,24 @@ class CourseChapterStudent extends Model
     {
         return $this->hasOne(StudentTest::class)->latest();
     }
+
+    /**
+     * Boot on deleting
+     * 
+     * @return void
+     */
+    public static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($courseChapterStudent) {
+            foreach ($courseChapterStudent->studentTests as $studentTest) {
+                $studentTest->delete();
+            }
+
+            if ($courseChapterStudent->studentAssignment) {
+                $courseChapterStudent->studentAssignment->delete();
+            }
+        });
+    }
 }

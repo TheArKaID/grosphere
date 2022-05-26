@@ -46,4 +46,20 @@ class StudentTest extends Model
     {
         return $this->hasMany(StudentTestAnswer::class);
     }
+
+    /**
+     * Boot on deleting
+     * 
+     * @return void
+     */
+    public static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($studentTest) {
+            foreach ($studentTest->studentTestAnswers as $sta) {
+                $sta->delete();
+            }
+        });
+    }
 }
