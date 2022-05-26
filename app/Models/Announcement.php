@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property integer $id
@@ -43,7 +44,17 @@ class Announcement extends Model
     protected $casts = [
         'show_until' => 'datetime',
     ];
-    
+
+    /**
+     * Get all of the announcementUsers for the Announcement
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function announcementUsers(): HasMany
+    {
+        return $this->hasMany(announcementUsers::class);
+    }
+
     /**
      * Get Recipient Name
      * 
@@ -63,5 +74,21 @@ class Announcement extends Model
             default:
                 return 'Unknown';
         }
+    }
+
+    /**
+     * boot on deleting
+     * 
+     * @return void
+     */
+    public static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($announcement) {
+            foreach ($announcement->announcementUsers as $au) {
+                $au->delete();
+            }
+        });
     }
 }

@@ -62,6 +62,16 @@ class User extends Authenticatable implements JWTSubject
     }
 
     /**
+     * Get all of the announcementUsers for the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function announcementUsers(): HasMany
+    {
+        return $this->hasMany(announcementUsers::class);
+    }
+
+    /**
      * Get the identifier that will be stored in the subject claim of the JWT.
      *
      * @return mixed
@@ -167,6 +177,10 @@ class User extends Authenticatable implements JWTSubject
         static::deleting(function ($user) {
             foreach ($user->liveUsers as $liveUser) {
                 $liveUser->delete();
+            }
+
+            foreach ($user->announcementUsers as $au) {
+                $au->delete();
             }
         });
     }
