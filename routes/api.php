@@ -25,6 +25,7 @@ use App\Http\Controllers\Api\Tutor\CourseChapterController as TutorCourseChapter
 use App\Http\Controllers\Api\Tutor\CourseWorkController as TutorCourseWorkController;
 use App\Http\Controllers\Api\Tutor\LiveClassController as TutorLiveClassController;
 use App\Http\Controllers\Api\Tutor\TestQuestionController as TutorTestQuestionController;
+use App\Http\Controllers\Api\User\AnnouncementController as UserAnnouncementController;
 use App\Http\Controllers\Api\User\LiveClassController as UserLiveClassController;
 use App\Http\Controllers\Api\User\ProfileController as UserProfileController;
 use Illuminate\Support\Facades\Route;
@@ -169,6 +170,9 @@ Route::middleware(['auth:api'])->group(function () {
             Route::post('join', [UserLiveClassController::class, 'join'])->name('live-classes.join');
             Route::post('leave', [UserLiveClassController::class, 'leave'])->name('live-classes.leave');
         });
+        
+        Route::get('announcements', [UserAnnouncementController::class, 'index'])->name('announcements.index');
+        Route::get('announcements/{announcement_id', [UserAnnouncementController::class, 'show'])->name('announcements.index');
 
         Route::get('/', [UserProfileController::class, 'index'])->name('profile');
         Route::put('/', [UserProfileController::class, 'update'])->name('profile.update');
