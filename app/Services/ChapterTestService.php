@@ -51,8 +51,6 @@ class ChapterTestService
         $chapter = $this->courseChapterService->getById($data['course_work_id'], $data['course_chapter_id'], $data['tutor_id']);
 
         if ($data['type'] == ChapterTest::$ON_FILE) {
-            $data['title'] = '';
-            $data['duration'] = 0;
             $data['status'] = 1;
             
             $fileName = $data['file']->getClientOriginalName();

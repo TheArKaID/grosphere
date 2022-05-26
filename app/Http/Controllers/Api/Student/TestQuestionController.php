@@ -128,7 +128,7 @@ class TestQuestionController extends Controller
      */
     public function submitTest(Request $request, $courseWorkId, $courseChapterId)
     {
-        $result = $this->takeChapterTestService->submitTest($courseChapterId, Auth::user()->detail->id);
+        $result = $this->takeChapterTestService->submitTest($courseChapterId, Auth::user()->detail->id, $request->file('file'));
 
         if (gettype($result) == 'string') {
             return response()->json([

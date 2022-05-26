@@ -9,6 +9,8 @@ use App\Models\StudentTestAnswer;
 use App\Models\TestQuestion;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class TakeChapterTestService
 {
@@ -45,14 +47,18 @@ class TakeChapterTestService
             "title" => $chapterTest->title,
             "duration" => $chapterTest->duration,
             "attempt" => $chapterTest->attempt,
-            "available_at" => Carbon::parse($chapterTest->available_at)->toDateTimeString(),
-            "available_until" => Carbon::parse($chapterTest->available_until)->toDateTimeString(),
+            "available_at" => $chapterTest->available_at ? Carbon::parse($chapterTest->available_at)->toDateTimeString() : null,
+            "available_until" => $chapterTest->available_until ? Carbon::parse($chapterTest->available_until)->toDateTimeString() : null,
             "total_question" => $chapterTest->testQuestions()->count(),
         ];
 
         $courseChapterStudent = $this->getCourseChapterStudent($courseChapterId, $studentId);
         if ($this->isTakenChapterTestActive($courseChapterStudent, $studentId)) {
-            $testSum['questions'] = $chapterTest->testQuestions()->select('id', 'type')->get();
+            if ($chapterTest->type == $chapterTest::$ON_FILE) {
+                $testSum["file"] = $chapterTest->getFile();
+            } else {
+                $testSum['questions'] = $chapterTest->testQuestions()->select('id', 'type')->get();
+            }
         }
 
         return $testSum;
@@ -170,20 +176,28 @@ class TakeChapterTestService
      * 
      * @param int $courseChapterId
      * @param int $studentId
+     * @param $file
      * 
      * @return StudentTest|string
      */
-    public function submitTest($courseChapterId, $studentId)
+    public function submitTest($courseChapterId, $studentId, $file)
     {
-        $courseChapterStudent = $this->getCourseChapterStudent($courseChapterId, $studentId);
+        $chapterTest = $this->chapterTestService->getOne($courseChapterId);
+        // dd($courseChapterId);
+        if ($chapterTest->type == $chapterTest::$ON_FILE) {
+            return $this->uploadFile($courseChapterId, $studentId, $file);
+        } else {
+            $courseChapterStudent = $this->getCourseChapterStudent($courseChapterId, $studentId);
 
-        if ($this->isTakenChapterTestActive($courseChapterStudent, $studentId)) {
-            $test = $courseChapterStudent->latestStudentTest;
-            $test->status = $test::$SUBMITTED;
-            $test->score = $this->scoreTheTest($test);
-            $test->save();
-            return $test;
+            if ($this->isTakenChapterTestActive($courseChapterStudent, $studentId)) {
+                $test = $courseChapterStudent->latestStudentTest;
+                $test->status = $test::$SUBMITTED;
+                $test->score = $this->scoreTheTest($test);
+                $test->save();
+                return $test;
+            }
         }
+
         return 'Cannot access Test. Make sure you\'ve enrolled to the test.';
     }
 
@@ -221,11 +235,11 @@ class TakeChapterTestService
     {
         $chapterTest = $this->chapterTestService->getOne($courseChapterId);
 
-        if (Carbon::parse($chapterTest->available_at)->isFuture()) {
+        if ($chapterTest->available_at && Carbon::parse($chapterTest->available_at)->isFuture()) {
             return "Chapter Test is not started yet";
         }
 
-        if (Carbon::parse($chapterTest->available_until)->isPast()) {
+        if ($chapterTest->available_until && Carbon::parse($chapterTest->available_until)->isPast()) {
             return "Chapter Test is ended";
         }
 
@@ -252,5 +266,34 @@ class TakeChapterTestService
             }
         }
         return ($score / $test->courseChapterStudent->courseChapter->chapterTest->testQuestions()->count()) * 100;
+    }
+
+    /**
+     * Upload file for ON_FILE type test
+     * 
+     * @param int $courseChapterId
+     * @param int $studentId
+     * @param $file
+     * 
+     * @return StudentTest|string
+     */
+    public function uploadFile($courseChapterId, $studentId, $file)
+    {
+        $courseChapterStudent = $this->getCourseChapterStudent($courseChapterId, $studentId);
+
+        // if ($this->isTakenChapterTestActive($courseChapterStudent, $studentId)) {
+        DB::beginTransaction();
+        $test = $courseChapterStudent->latestStudentTest;
+        $test->status = $test::$SUBMITTED;
+        $test->score = $test->type == ChapterTest::$ON_APP ? $this->scoreTheTest($test) : 0;
+        $test->save();
+        $fileExt = $file->getClientOriginalExtension();
+
+        Storage::cloud()->putFileAs('course_works/' . $courseChapterStudent->courseChapter->course_work_id . '/chapters/' . $courseChapterId . '/tests_answers', $file, $studentId . '.' . $fileExt);
+
+        DB::commit();
+        return $test;
+        // }
+        // return 'Cannot access Test. Make sure you\'ve enrolled to the test.';
     }
 }
