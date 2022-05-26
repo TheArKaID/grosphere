@@ -3,6 +3,9 @@
 namespace App\Services;
 
 use App\Models\Announcement;
+use App\Models\AnnouncementUser;
+use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Facades\Auth;
 
 class AnnouncementService
 {
@@ -31,6 +34,29 @@ class AnnouncementService
     }
 
     /**
+     * Get all announcements for user
+     * 
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getAllForUser()
+    {
+        return $this->annoucement->where(function (Builder $query) {
+            $query->where('to', '=', Announcement::$ALL)
+                ->orWhere('to', '=', $this->getToForUser());
+        })->get();
+    }
+
+    /**
+     * Get To of User for announcement
+     * 
+     * @return int
+     */
+    public function getToForUser()
+    {
+        return Auth::user()->hasRole('tutor') ? Announcement::$TUTOR : (Auth::user()->hasRole('student') ? Announcement::$STUDENT : Announcement::$PARENT);
+    }
+
+    /**
      * Get announcement by id
      * 
      * @param int $id
@@ -40,6 +66,39 @@ class AnnouncementService
     public function getById($id)
     {
         return $this->annoucement->findOrFail($id);
+    }
+
+    /**
+     * Get by ID for User
+     * 
+     * @param int $id
+     * 
+     * @return Announcement
+     */
+    public function getByIdForUser($id)
+    {
+        $annoucement = $this->annoucement->where('to', Announcement::$ALL)->orWhere('to', $this->getToForUser())->findOrFail($id);
+
+        $this->createUserAnnouncement($annoucement);
+
+        return $annoucement;
+    }
+
+    /**
+     * Create User announcement as announcement read
+     * 
+     * @param int $announcementId
+     *
+     * @return AnnouncementUser
+     */
+    public function createUserAnnouncement($announcementId)
+    {
+        $announcementUser = new AnnouncementUser();
+        $announcementUser->announcement_id = $announcementId;
+        $announcementUser->user_id = Auth::user()->id;
+        $announcementUser->save();
+
+        return $announcementUser;
     }
 
     /**
