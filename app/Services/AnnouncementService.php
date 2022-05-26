@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Models\Announcement;
 use App\Models\AnnouncementUser;
-use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 
 class AnnouncementService
