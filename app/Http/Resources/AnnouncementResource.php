@@ -21,8 +21,7 @@ class AnnouncementResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'message' => $this->message,
-            'to' => $this->getToName(),
-            'show_until' => Carbon::parse($this->show_until)->toDateTimeString(),
+            'to' => $this->getToName()
         ] : [];
     }
 }

@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $name
  * @property string $message
  * @property boolean $to
- * @property string $show_until
  * @property string $created_at
  * @property string $updated_at
  */
@@ -34,16 +33,7 @@ class Announcement extends Model
     /**
      * @var array
      */
-    protected $fillable = ['name', 'message', 'to', 'show_until', 'created_at', 'updated_at'];
-
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'show_until' => 'datetime',
-    ];
+    protected $fillable = ['name', 'message', 'to', 'created_at', 'updated_at'];
 
     /**
      * Get all of the announcementUsers for the Announcement

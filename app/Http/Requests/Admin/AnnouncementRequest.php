@@ -26,8 +26,7 @@ class AnnouncementRequest extends FormRequest
         return [
             'name' => 'required|max:255',
             'message' => 'required',
-            'to' => 'required|in:1,2,3,4',
-            'show_until' => 'required|date_format:d-m-Y H:i:s'
+            'to' => 'required|in:1,2,3,4'
         ];
     }
 }
