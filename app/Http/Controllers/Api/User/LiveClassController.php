@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\User;
 use App\Exceptions\ModelGetEmptyException;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\LiveClassResource;
+use App\Http\Resources\ValidatedLiveClassResource;
 use App\Services\LiveClassService;
 use App\Services\LiveUserService;
 use App\Services\UserService;
@@ -137,11 +138,7 @@ class LiveClassController extends Controller
         return response()->json([
             'status' => 200,
             'message' => 'Live Class validated',
-            'data' => [
-                'tutor_name' => $liveUser->liveClass->class->tutor->user->name,
-                'user_name' => $liveUser->user->name,
-                'role' => $liveUser->user->roles[0]->name
-            ],
+            'data' => new ValidatedLiveClassResource($liveUser),
         ]);
     }
 }

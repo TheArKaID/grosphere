@@ -7,20 +7,21 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreLiveClassRequest;
 use App\Http\Requests\UpdateLiveClassRequest;
 use App\Http\Resources\LiveClassResource;
+use App\Http\Resources\ValidatedLiveClassResource;
 use App\Services\LiveClassService;
+use App\Services\LiveUserService;
 use App\Services\TutorService;
-use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Crypt;
 
 class LiveClassController extends Controller
 {
-    private $liveClassService, $tutorService;
+    private $liveClassService, $tutorService, $liveUserService;
 
-    public function __construct(LiveClassService $liveClassService, TutorService $tutorService)
+    public function __construct(LiveClassService $liveClassService, TutorService $tutorService, LiveUserService $liveUserService)
     {
         $this->liveClassService = $liveClassService;
         $this->tutorService = $tutorService;
+        $this->liveUserService = $liveUserService;
     }
 
     /**
@@ -175,11 +176,7 @@ class LiveClassController extends Controller
         return response()->json([
             'status' => 200,
             'message' => 'Live Class validated',
-            'data' => [
-                'tutor_name' => $liveUser->liveClass->class->tutor->user->name,
-                'user_name' => $liveUser->user->name,
-                'role' => $liveUser->user->roles[0]->name
-            ],
+            'data' => new ValidatedLiveClassResource($liveUser),
         ]);
     }
 }
