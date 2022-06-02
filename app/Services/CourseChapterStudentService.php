@@ -68,7 +68,7 @@ class CourseChapterStudentService
 
         $courseStudent = $chapter->courseWork->courseStudents()->where('student_id', Auth::user()->detail->id)->first();
         // Check if this chapter has been read
-        if ($chapter->courseChapterStudents()->count() == 0) {
+        if ($chapter->courseChapterStudents()->where('course_student_id', $courseStudent->id)->count() == 0) {
             // Not Yet
             // Is the order is 0/first ?
             if ($chapter->order == 0) {
@@ -92,11 +92,11 @@ class CourseChapterStudentService
                     return 'Please read previous chapter first';
                 } else {
                     // Otherwise, create new record
-                $this->create([
-                    'course_chapter_id' => $chapter->id,
-                    'course_student_id' => $courseStudent->id,
-                    'status' => 1,
-                ]);
+                    $this->create([
+                        'course_chapter_id' => $chapter->id,
+                        'course_student_id' => $courseStudent->id,
+                        'status' => 1,
+                    ]);
                 }
             }
         }

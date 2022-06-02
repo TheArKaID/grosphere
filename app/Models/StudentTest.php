@@ -48,6 +48,33 @@ class StudentTest extends Model
     }
 
     /**
+     * Get Status
+     * 
+     * @return string
+     */
+    public function getStatus()
+    {
+        if ($this->status == self::$WORKING) {
+            return 'Working';
+        } elseif ($this->status == self::$SUBMITTED) {
+            return 'Submitted';
+        }
+    }
+
+    /**
+     * Get Score (if submitted)
+     * 
+     * @return string
+     */
+    public function getScore()
+    {
+        if ($this->status == self::$SUBMITTED) {
+            // format score
+            return number_format($this->score, 2);
+        }
+    }
+    
+    /**
      * Boot on deleting
      * 
      * @return void

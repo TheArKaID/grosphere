@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use App\Models\TestQuestion;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Auth;
 
 class TestQuestionResource extends JsonResource
 {
@@ -17,12 +18,11 @@ class TestQuestionResource extends JsonResource
     {
         parent::wrap('questions');
 
-        return $this->resource ? [
+        $res = $this->resource ? [
             'id' => $this->id,
             'chapter_test_id' => $this->chapter_test_id,
-            'question' => $this->question,
             'type' => $this->type,
-            'answer_number' => $this->answer_number,
+            'question' => $this->question,
             'answers' => $this->type == TestQuestion::$MULTIPLE_CHOICE ? $this->testAnswers->map(function ($answer) {
                 return [
                     'answer' => $answer->answer,
@@ -30,5 +30,11 @@ class TestQuestionResource extends JsonResource
                 ];
             }) : null,
         ] : [];
+
+        if (Auth::user()->hasRole('tutor')) {
+            $res['answer_number'] = $this->answer_number;
+        }
+
+        return $res;
     }
 }

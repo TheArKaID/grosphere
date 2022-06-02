@@ -107,6 +107,7 @@ Route::middleware(['auth:api'])->group(function () {
             Route::post('file', [TutorChapterAssignmentController::class, 'uploadFile'])->name('upload-file');
             Route::delete('file', [TutorChapterAssignmentController::class, 'deleteFile'])->name('delete-file');
             Route::get('answers', [TutorChapterAssignmentController::class, 'getStudentAnswers'])->name('answers');
+            Route::get('score/', [TutorChapterAssignmentController::class, 'getStudentAnswers'])->name('score');
         });
         Route::apiResource('course-works.chapters.tests', TutorChapterTestController::class)->only(['index', 'store']);
         Route::name('course-works.chapters.tests.')->prefix('course-works/{course_work}/chapters/{chapter}/tests')->group(function () {
@@ -116,6 +117,17 @@ Route::middleware(['auth:api'])->group(function () {
             Route::get('questions/{question_id}', [TutorTestQuestionController::class, 'show'])->name('questions.show');
             Route::put('questions/{question_id}', [TutorTestQuestionController::class, 'update'])->name('questions.update');
             Route::delete('questions/{question_id}', [TutorTestQuestionController::class, 'destroy'])->name('questions.destroy');
+
+            Route::name('course-works.chapters.tests.results')->prefix('results')->group(function () {
+                Route::get('/', [TutorChapterTestController::class, 'showResults'])->name('index');
+                Route::get('{student_test_id}', [TutorChapterTestController::class, 'showResult'])->name('show');
+                // Perlukah dijadikan status = Scored?
+                // Route::post('{student_test_id}', [TutorChapterTestController::class, 'saveScoring'])->name('show');
+
+                Route::get('{student_test_id}/file', [TutorChapterTestController::class, 'downloadFile'])->name('download-file');
+
+                Route::post('{student_test_id}/{student_answer_id}', [TutorChapterTestController::class, 'scoreStudentAnswer'])->name('score-student-answer');
+            });
         });
     });
 
@@ -124,7 +136,6 @@ Route::middleware(['auth:api'])->group(function () {
         // Route::put('/', [StudentProfileController::class, 'update'])->name('profile.update');
         // Route::put('password', [StudentProfileController::class, 'updatePassword'])->name('profile.update.password');
 
-        
         Route::name('ask-answers.')->prefix('ask-answers')->group(function () {
             Route::get('', [StudentAskAnswerController::class, 'index'])->name('index');
             Route::get('{course_student_id}', [StudentAskAnswerController::class, 'show'])->name('show');

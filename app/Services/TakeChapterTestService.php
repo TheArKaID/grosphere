@@ -296,4 +296,46 @@ class TakeChapterTestService
         // }
         // return 'Cannot access Test. Make sure you\'ve enrolled to the test.';
     }
+
+    /**
+     * Get Student Test By ID
+     * 
+     * @param int $courseChapterId
+     * @param int $studentTestId
+     * @param int $tutorId
+     * 
+     * @return StudentTest|string
+     */
+    public function getStudentTestByID($courseChapterId, $studentTestId, $tutorId)
+    {
+        $this->chapterTestService->getOne($courseChapterId, $tutorId);
+
+        return $this->studentTest->findOrFail($studentTestId);
+    }
+
+    /**
+     * Score Student Answer by Student Test Answer ID
+     * 
+     * @param int $courseChapterId
+     * @param int $studentTestId
+     * @param int $studentTestAnswerId
+     * @param int $isCorrect
+     * 
+     * @return StudentTestAnswer|string
+     */
+    public function scoreStudentAnswer($courseChapterId, $studentTestId, $studentTestAnswerId, $isCorrect)
+    {
+        $studentTestAnswer = $this->studentTestAnswer->whereHas('studentTest', function ($query) use ($courseChapterId) {
+            $query->whereHas('courseChapterStudent', function ($query) use ($courseChapterId) {
+                $query->where('course_chapter_id', '=', $courseChapterId);
+            });
+        })->findOrFail($studentTestAnswerId);
+
+        $studentTestAnswer->is_correct = $isCorrect;
+        $studentTestAnswer->save();
+        $test = $this->studentTest->findOrFail($studentTestId);
+        $test->score = $this->scoreTheTest($test);
+        $test->save();
+        return $studentTestAnswer;
+    }
 }

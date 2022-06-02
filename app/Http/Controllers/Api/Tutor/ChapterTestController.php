@@ -4,17 +4,21 @@ namespace App\Http\Controllers\Api\Tutor;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreChapterTestRequest;
+use App\Http\Requests\StoreTutorScoreStudentAnswerRequest;
 use App\Http\Resources\ChapterTestResource;
+use App\Http\Resources\StudentTestResource;
 use App\Services\ChapterTestService;
+use App\Services\TakeChapterTestService;
 use Illuminate\Support\Facades\Auth;
 
 class ChapterTestController extends Controller
 {
-    private $service;
+    private $service, $takeChapterTestService;
 
-    public function __construct(ChapterTestService $service)
+    public function __construct(ChapterTestService $service, TakeChapterTestService $takeChapterTestService)
     {
         $this->service = $service;
+        $this->takeChapterTestService = $takeChapterTestService;
     }
 
     /**
@@ -73,6 +77,68 @@ class ChapterTestController extends Controller
         return response()->json([
             'status' => 200,
             'message' => 'Chapter Test deleted successfully'
+        ], 200);
+    }
+
+    /**
+     * Show Results
+     * 
+     * @param int $courseWorkId
+     * @param int $courseChapterId
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function showResults($courseWorkId, $courseChapterId)
+    {
+        $results = $this->service->getResults($courseChapterId, Auth::user()->detail->id);
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Chapter Test results retrieved successfully',
+            'data' => $results
+        ], 200);
+    }
+
+    /**
+     * Show Results
+     * 
+     * @param int $courseWorkId
+     * @param int $courseChapterId
+     * @param int $studentTestId
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function showResult($courseWorkId, $courseChapterId, $studentTestId)
+    {
+        $results = $this->takeChapterTestService->getStudentTestByID($courseChapterId, $studentTestId, Auth::user()->detail->id);
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Chapter Test result retrieved successfully',
+            'data' => new StudentTestResource($results)
+        ], 200);
+    }
+
+    /**
+     * Score Student Answer
+     * 
+     * @param  \App\Http\Requests\StoreTutorScoreStudentAnswerRequest  $request
+     * @param int $courseWorkId
+     * @param int $courseChapterId
+     * @param int $studentTestId
+     * @param int $studentAnswerId
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function scoreStudentAnswer(StoreTutorScoreStudentAnswerRequest $request, $courseWorkId, $courseChapterId, $studentTestId, $studentAnswerId)
+    {
+        $validated = $request->validated();
+
+        $this->takeChapterTestService->scoreStudentAnswer($courseChapterId, $studentTestId, $studentAnswerId, $validated['is_correct']);
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Scored student answer successfully',
         ], 200);
     }
 }

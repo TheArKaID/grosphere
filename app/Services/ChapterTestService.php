@@ -90,4 +90,35 @@ class ChapterTestService
         Storage::cloud()->deleteDirectory('course_works/' . $model->courseChapter->courseWork->id . '/chapters/' . $model->courseChapter->id . '/tests');
         return true;
     }
+
+    /**
+     * Get Chapter Test Results
+     * 
+     * @param int $courseChapterId
+     * @param int $tutorId
+     * 
+     * @return Collection
+     */
+    public function getResults($courseChapterId, $tutorId = null)
+    {
+        $chapterTest = $this->getOne($courseChapterId, $tutorId);
+
+        $courseChapterStudents = (object) $chapterTest->courseChapter->courseChapterStudents;
+
+        $results = [];
+        foreach ($courseChapterStudents as $ccs) {
+            $resulkt = $ccs->studentTests->map(function ($studentTest) {
+                return [
+                    'student_name' => $studentTest->courseChapterStudent->courseStudent->student->user->name,
+                    'student_test_id' => $studentTest->id,
+                    'status' => $studentTest->getStatus(),
+                    'score' => $studentTest->score,
+                    'student_answers' => $studentTest->studentTestAnswers,
+                ];
+            })[0];
+            array_push($results, $resulkt);
+        }
+        
+        return $results;
+    }
 }
