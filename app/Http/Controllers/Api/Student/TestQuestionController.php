@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Api\Student;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\StudentTestResource;
 use App\Http\Resources\TakeChapterTestResource;
+use App\Http\Resources\TestQuestionResource;
 use Illuminate\Http\Request;
 use App\Services\TakeChapterTestService;
 use Illuminate\Support\Facades\Auth;
@@ -74,18 +76,18 @@ class TestQuestionController extends Controller
      */
     public function getQuestion(Request $request, $courseWorkId, $courseChapterId, $questionId)
     {
-        $question = $this->takeChapterTestService->getQuestion($courseChapterId, Auth::user()->detail->id, $questionId);
+        $response = $this->takeChapterTestService->getQuestion($courseChapterId, Auth::user()->detail->id, $questionId);
 
-        if (gettype($question) == 'string') {
+        if (gettype($response) == 'string') {
             return response()->json([
                 'status' => 400,
-                'message' => $question,
+                'message' => $response,
             ]);
         }
         return response()->json([
             'status' => 200,
             'message' => 'Success',
-            'data' => $question
+            'data' => new TestQuestionResource($response)
         ]);
     }
 
@@ -128,19 +130,19 @@ class TestQuestionController extends Controller
      */
     public function submitTest(Request $request, $courseWorkId, $courseChapterId)
     {
-        $result = $this->takeChapterTestService->submitTest($courseChapterId, Auth::user()->detail->id, $request->file('file'));
+        $studentTest = $this->takeChapterTestService->submitTest($courseChapterId, Auth::user()->detail->id, $request->file('file'));
 
-        if (gettype($result) == 'string') {
+        if (gettype($studentTest) == 'string') {
             return response()->json([
                 'status' => 400,
-                'message' => $result,
+                'message' => $studentTest,
             ]);
         }
 
         return response()->json([
             'status' => 200,
             'message' => 'Success',
-            'data' => $result
+            'data' => new StudentTestResource($studentTest)
         ]);
     }
 }
