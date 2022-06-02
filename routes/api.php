@@ -122,9 +122,7 @@ Route::middleware(['auth:api'])->group(function () {
                 Route::get('/', [TutorChapterTestController::class, 'showResults'])->name('index');
                 Route::get('{student_test_id}', [TutorChapterTestController::class, 'showResult'])->name('show');
                 // Perlukah dijadikan status = Scored?
-                // Route::post('{student_test_id}', [TutorChapterTestController::class, 'saveScoring'])->name('show');
-
-                Route::get('{student_test_id}/file', [TutorChapterTestController::class, 'downloadFile'])->name('download-file');
+                Route::post('{student_test_id}', [TutorChapterTestController::class, 'saveScoring'])->name('show');
 
                 Route::post('{student_test_id}/{student_answer_id}', [TutorChapterTestController::class, 'scoreStudentAnswer'])->name('score-student-answer');
             });

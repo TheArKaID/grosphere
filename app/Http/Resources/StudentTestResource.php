@@ -18,11 +18,14 @@ class StudentTestResource extends JsonResource
     {
         parent::wrap('student_tests');
 
-        return $this->resource ? [
+        $res = $this->resource ? [
             'student_test_id' => $this->id,
             'status' => $this->getStatus(),
-            'score' => $this->getScore(),
-            'student_test_answers' => $this->studentTestAnswers->map(function ($answer) {
+            'score' => $this->getScore()
+        ] : [];
+
+        if ($this->type == TestQuestion::$MULTIPLE_CHOICE) {
+            $res['student_test_answers'] = $this->studentTestAnswers->map(function ($answer) {
                 $res = [
                     'student_answer_id' => $answer->id,
                     'question_id' => $answer->test_question_id,
@@ -43,7 +46,11 @@ class StudentTestResource extends JsonResource
                 }
 
                 return $res;
-            }),
-        ] : [];
+            });
+        } else {
+            $res['file'] = $this->getAnswerFilePath();
+        }
+
+        return $res;
     }
 }

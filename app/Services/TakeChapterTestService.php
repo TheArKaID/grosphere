@@ -338,4 +338,23 @@ class TakeChapterTestService
         $test->save();
         return $studentTestAnswer;
     }
+    
+    /**
+     * Score Student Test by Student Test ID
+     * 
+     * @param int $courseChapterId
+     * @param int $studentTestId
+     * @param int $tutorId
+     * @param int $score
+     * 
+     * @return StudentTest|string
+     */
+    public function scoreStudentTest($courseChapterId, $studentTestId, $tutorId, $score)
+    {
+        $studentTest = $this->getStudentTestByID($courseChapterId, $studentTestId, $tutorId);
+
+        $studentTest->score = $score;
+        $studentTest->save();
+        return $studentTest;
+    }
 }

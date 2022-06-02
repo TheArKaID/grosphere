@@ -141,4 +141,23 @@ class ChapterTestController extends Controller
             'message' => 'Scored student answer successfully',
         ], 200);
     }
+
+    /**
+     * Score Student Test
+     * 
+     * @param int $courseWorkId
+     * @param int $courseChapterId
+     * @param int $studentTestId
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function saveScoring($courseWorkId, $courseChapterId, $studentTestId)
+    {
+        $this->takeChapterTestService->scoreStudentTest($courseChapterId, $studentTestId, Auth::user()->detail->id, request('score'));
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Scored student test successfully',
+        ], 200);
+    }
 }

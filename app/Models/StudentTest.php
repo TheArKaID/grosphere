@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * @property integer $id
@@ -73,7 +74,21 @@ class StudentTest extends Model
             return number_format($this->score, 2);
         }
     }
-    
+
+    /**
+     * Return Submitted Test file path
+     * 
+     * @return array
+     */
+    public function getAnswerFilePath()
+    {
+        foreach (Storage::cloud()->allFiles('course_works/' . $this->courseChapterStudent->courseChapter->courseWork->id . '/chapters/' . $this->courseChapterStudent->courseChapter->id . '/tests_answers') as $file) {
+            if (pathinfo($file, PATHINFO_FILENAME) == $this->courseChapterStudent->courseStudent->student_id) {
+                return Storage::cloud()->url($file);
+            }
+        }
+    }
+
     /**
      * Boot on deleting
      * 

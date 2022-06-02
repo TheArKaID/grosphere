@@ -52,7 +52,7 @@ class ChapterTestService
 
         if ($data['type'] == ChapterTest::$ON_FILE) {
             $data['status'] = 1;
-            
+
             $fileName = $data['file']->getClientOriginalName();
             $fileExt = $data['file']->getClientOriginalExtension();
 
@@ -107,18 +107,29 @@ class ChapterTestService
 
         $results = [];
         foreach ($courseChapterStudents as $ccs) {
-            $resulkt = $ccs->studentTests->map(function ($studentTest) {
-                return [
-                    'student_name' => $studentTest->courseChapterStudent->courseStudent->student->user->name,
-                    'student_test_id' => $studentTest->id,
-                    'status' => $studentTest->getStatus(),
-                    'score' => $studentTest->score,
-                    'student_answers' => $studentTest->studentTestAnswers,
+            if ($chapterTest->type == ChapterTest::$ON_FILE) {
+                $test = $ccs->latestStudentTest;
+                $resulkt = [
+                    'student_name' => $ccs->courseStudent->student->user->name,
+                    'student_test_id' => $test->id,
+                    'status' => $test->getStatus(),
+                    'score' => $test->getScore(),
+                    'file' => $test->getAnswerFilePath()
                 ];
-            })[0];
+            } else {
+                $resulkt = $ccs->studentTests->map(function ($studentTest) {
+                    return [
+                        'student_name' => $studentTest->courseChapterStudent->courseStudent->student->user->name,
+                        'student_test_id' => $studentTest->id,
+                        'status' => $studentTest->getStatus(),
+                        'score' => $studentTest->score,
+                        'student_answers' => $studentTest->studentTestAnswers,
+                    ];
+                })[0];
+            }
             array_push($results, $resulkt);
         }
-        
+
         return $results;
     }
 }
