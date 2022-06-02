@@ -23,7 +23,7 @@ class ValidatedLiveClassResource extends JsonResource
             'class_name' => $liveClass->class->name,
             'tutor_name' => $liveClass->class->tutor->user->name,
             'user_name' => $this->user->name,
-            'role' => $this->user->roles[0]->name,
+            'role' => $this->user->roles[0]->name == 'tutor' ? 'Teacher' : 'Student',
             'start_time' => $startTime->toDateTimeString(),
             'duration' => $liveClass->duration,
             'end_time' => $endTime->toDateTimeString(),
