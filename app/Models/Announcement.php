@@ -46,6 +46,18 @@ class Announcement extends Model
     }
 
     /**
+     * Get is read status by user
+     * 
+     * @param User $user
+     * 
+     * @return boolean
+     */
+    public function isReadByUser(User $user)
+    {
+        return $this->announcementUsers()->where('user_id', $user->id)->first();
+    }
+
+    /**
      * Get Recipient Name
      * 
      * @return string

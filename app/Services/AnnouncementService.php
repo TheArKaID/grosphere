@@ -79,7 +79,7 @@ class AnnouncementService
     {
         $annoucement = $this->annoucement->where('to', Announcement::$ALL)->orWhere('to', $this->getToForUser())->findOrFail($id);
 
-        $this->createUserAnnouncement($annoucement);
+        $this->createUserAnnouncement($annoucement->id);
 
         return $annoucement;
     }
@@ -93,12 +93,15 @@ class AnnouncementService
      */
     public function createUserAnnouncement($announcementId)
     {
-        $announcementUser = new AnnouncementUser();
-        $announcementUser->announcement_id = $announcementId;
-        $announcementUser->user_id = Auth::user()->id;
-        $announcementUser->save();
+        $annoucementUser = AnnouncementUser::select('id')->where('user_id', Auth::user()->id)->where('announcement_id', $announcementId)->first();
 
-        return $announcementUser;
+        if (!$annoucementUser) {
+            return AnnouncementUser::create([
+                'user_id' => Auth::user()->id,
+                'announcement_id' => $announcementId,
+            ]);
+        }
+        return $annoucementUser;
     }
 
     /**

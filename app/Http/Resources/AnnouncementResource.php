@@ -21,7 +21,8 @@ class AnnouncementResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'message' => $this->message,
-            'to' => $this->getToName()
+            'to' => $this->getToName(),
+            'is_read' => $this->isReadByUser($request->user()) ? true : false,
         ] : [];
     }
 }
