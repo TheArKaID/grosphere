@@ -42,7 +42,7 @@ class Announcement extends Model
      */
     public function announcementUsers(): HasMany
     {
-        return $this->hasMany(announcementUsers::class);
+        return $this->hasMany(AnnouncementUser::class);
     }
 
     /**
