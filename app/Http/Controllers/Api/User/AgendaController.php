@@ -71,4 +71,20 @@ class AgendaController extends Controller
             'message' => 'Agenda deleted successfully'
         ], 200);
     }
+
+    /**
+     * Get Calendar
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function calendar()
+    {
+        $calendar = $this->agendaService->getCalendar();
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Calendar retrieved successfully',
+            'data' => $calendar
+        ], 200);
+    }
 }
