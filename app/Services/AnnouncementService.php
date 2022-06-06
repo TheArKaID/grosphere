@@ -77,8 +77,10 @@ class AnnouncementService
      */
     public function getByIdForUser($id)
     {
-        $annoucement = $this->annoucement->where('to', Announcement::$ALL)->orWhere('to', $this->getToForUser())->findOrFail($id);
-
+        $annoucement = $this->annoucement->where(function ($query) {
+            $query->where('to', Announcement::$ALL)->orWhere('to', $this->getToForUser());
+        })->findOrFail($id);
+        
         $this->createUserAnnouncement($annoucement->id);
 
         return $annoucement;
