@@ -72,6 +72,16 @@ class User extends Authenticatable implements JWTSubject
     }
 
     /**
+     * Get all of the agendas for the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function agendas(): HasMany
+    {
+        return $this->hasMany(Agenda::class);
+    }
+
+    /**
      * Get the identifier that will be stored in the subject claim of the JWT.
      *
      * @return mixed
@@ -181,6 +191,10 @@ class User extends Authenticatable implements JWTSubject
 
             foreach ($user->announcementUsers as $au) {
                 $au->delete();
+            }
+
+            foreach ($user->agendas as $agenda) {
+                $agenda->delete();
             }
         });
     }
