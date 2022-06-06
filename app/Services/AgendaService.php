@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Models\Agenda;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 class AgendaService
@@ -39,7 +39,7 @@ class AgendaService
      */
     public function dateFilter($date)
     {
-        return $this->agenda->whereDate('date', $date);
+        return $this->agenda->whereDate('date', Carbon::parse($date)->format('Y-m-d'));
     }
 
     /**
