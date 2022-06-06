@@ -3,16 +3,18 @@
 namespace App\Services;
 
 use App\Models\Agenda;
+use App\Models\Calendar;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 class AgendaService
 {
-    private $agenda;
+    private $agenda, $calendars;
 
-    public function __construct(Agenda $agenda)
+    public function __construct(Agenda $agenda, Calendar $calendars)
     {
         $this->agenda = $agenda;
+        $this->calendars = $calendars;
     }
 
     /**
@@ -24,7 +26,7 @@ class AgendaService
     {
         if (request()->has('date')) {
             $date = request()->get('date');
-            $this->agenda = $this->dateFilter($date);
+            $this->agenda = $this->dateFilter($date, $this->agenda);
         }
 
         return $this->agenda->where('user_id', Auth::user()->id)->get();
@@ -34,12 +36,13 @@ class AgendaService
      * Date FIlter
      * 
      * @param string $date
+     * @param mix $model
      * 
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function dateFilter($date)
+    public function dateFilter($date, $model)
     {
-        return $this->agenda->whereDate('date', Carbon::parse($date)->format('Y-m-d'));
+        return $model->whereDate('date', Carbon::parse($date)->format('Y-m-d'));
     }
 
     /**
@@ -73,5 +76,22 @@ class AgendaService
         $agenda->delete();
 
         return $agenda;
+    }
+
+    /**
+     * Get Calendar
+     * 
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getCalendar()
+    {
+        if (request()->has('date')) {
+            $date = request()->get('date');
+            $this->calendars = $this->dateFilter($date, $this->calendars);
+        }
+
+        return $this->calendars->where(function ($query) {
+            $query->where('user_id', Auth::user()->id)->orWhere('user_id', 0);
+        })->orderBy('date')->get()->makeHidden(['created_at', 'updated_at']);
     }
 }
