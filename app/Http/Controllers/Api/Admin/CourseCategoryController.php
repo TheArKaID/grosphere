@@ -33,7 +33,7 @@ class CourseCategoryController extends Controller
 
         return response()->json([
             'status' => 200,
-            'message' => 'Course Categorys retrieved successfully',
+            'message' => 'Course Categories retrieved successfully',
             'data' => $courseCategories->response()->getData(true)
         ], 200);
     }
