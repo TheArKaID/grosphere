@@ -19,7 +19,7 @@ class AgendaResource extends JsonResource
 
         return $this->resource ? [
             'id' => $this->id,
-            'date' => Carbon::parse($this->date)->format('d-m-Y'),
+            'date' => Carbon::parse($this->date)->format('d-m-Y H:i'),
             'detail' => $this->detail
         ] : [];
     }
