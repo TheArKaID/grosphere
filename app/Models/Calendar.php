@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property int $agenda_id
+ * @property int $liveclass_id
  * @property int $user_id
  * @property string $detail
  * @property string $date
@@ -26,7 +27,7 @@ class Calendar extends Model
     /**
      * @var array
      */
-    protected $fillable = ['agenda_id', 'user_id', 'detail', 'date', 'type'];
+    protected $fillable = ['agenda_id', 'liveclass_id', 'user_id', 'detail', 'date', 'type'];
 
     /**
      * Parse type to string
