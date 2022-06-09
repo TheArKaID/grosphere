@@ -143,13 +143,15 @@ class User extends Authenticatable implements JWTSubject
         switch ($this->roles()->first()->name) {
             case 'admin':
                 $detail = [
-                    'id' => $this->detail->id
+                    'id' => $this->detail->id,
+                    'phone' => $this->phone ?? 0
                 ];
                 break;
             case 'parent':
                 $detail = [
                     'id' => $this->detail->id,
                     'address' => $this->detail->address,
+                    'phone' => $this->phone ?? 0
                 ];
                 break;
             case 'student':
@@ -160,11 +162,13 @@ class User extends Authenticatable implements JWTSubject
                     'birth_date' => $this->detail->birth_date,
                     'gender' => $this->detail->gender,
                     'address' => $this->detail->address,
+                    'phone' => $this->phone ?? 0
                 ];
                 break;
             case 'tutor':
                 $detail = [
-                    'id' => $this->detail->id
+                    'id' => $this->detail->id,
+                    'phone' => $this->phone ?? 0
                 ];
                 break;
             default:
