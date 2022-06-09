@@ -198,8 +198,8 @@ class ChapterAssignmentService
                 'id' => $assignment->id,
                 'student_id' => $assignment->course_student_id,
                 'student_name' => $assignment->courseStudent->student->user->name,
-                'answer' => $assignment->studentAssignment->answer,
-                'files' => $assignment->studentAssignment->getFilesPath(),
+                'answer' => $assignment->studentAssignment ? $assignment->studentAssignment->answer : null,
+                'files' => $assignment->studentAssignment ? $assignment->studentAssignment->getFilesPath() : null,
             ];
         });
     }
@@ -224,6 +224,7 @@ class ChapterAssignmentService
         if (Str::wordCount($slug) > 255) {
             $slug = Str::limit($slug, 255, '');
         }
+        Storage::cloud()->deleteDirectory('course_works/' . $courseWorkId . '/chapters/' . $courseChapterId . '/assignments_results/' . $studentId);
         $res = Storage::cloud()->putFileAs('course_works/' . $courseWorkId . '/chapters/' . $courseChapterId . '/assignments_results/' . $studentId, $file, $slug . '.' . $fileExt);
 
         return $res ? Storage::cloud()->url($res) : $res;
