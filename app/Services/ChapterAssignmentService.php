@@ -200,8 +200,8 @@ class ChapterAssignmentService
                 'student_name' => $assignment->courseStudent->student->user->name,
                 'answer' => $assignment->studentAssignment ? $assignment->studentAssignment->answer : null,
                 'files' => $assignment->studentAssignment ? $assignment->studentAssignment->getFilesPath() : null,
-                'is_scored' => $assignment->studentAssignment->score == null ? false : true,
-                'score' => $assignment->studentAssignment->score
+                'is_scored' => $assignment->studentAssignment ? ($assignment->studentAssignment->score == null ? false : true) : false,
+                'score' => $assignment->studentAssignment ? $assignment->studentAssignment->score ? 0
             ];
         });
     }
