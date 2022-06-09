@@ -157,4 +157,24 @@ class ChapterAssignmentController extends Controller
             'data' => $answers
         ], 200);
     }
+
+    /**
+     * Score Student Assignment
+     * 
+     * @param int $courseWorkId
+     * @param int $courseChapterId
+     * @param int $studentAssignmentId
+     * 
+     */
+    public function scoreStudentAssignment(int $courseWorkId, int $courseChapterId, $studentAssignmentId)
+    {
+        $studentAssignment = $this->service->scoreStudentAssignment($courseWorkId, $courseChapterId, $studentAssignmentId, request('score'));
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Success',
+            'data' => $studentAssignment
+        ], 200);
+        
+    }
 }

@@ -200,6 +200,8 @@ class ChapterAssignmentService
                 'student_name' => $assignment->courseStudent->student->user->name,
                 'answer' => $assignment->studentAssignment ? $assignment->studentAssignment->answer : null,
                 'files' => $assignment->studentAssignment ? $assignment->studentAssignment->getFilesPath() : null,
+                'is_scored' => $assignment->studentAssignment->score == null ? false : true,
+                'score' => $assignment->studentAssignment->score
             ];
         });
     }
@@ -247,5 +249,38 @@ class ChapterAssignmentService
             return true;
         }
         return false;
+    }
+
+    /**
+     * Score Student Assignment
+     * 
+     * @param int $courseWorkId
+     * @param int $courseChapterId
+     * @param int $studentAssignmentId
+     * @param mix $score
+     * 
+     * @return StudentAssignment
+     */
+    public function scoreStudentAssignment($courseWorkId, $courseChapterId, $studentAssignmentId, $score)
+    {
+        $studentAssignment = $this->getStudentAssignmentForTutor($courseWorkId, $courseChapterId, $studentAssignmentId);
+
+        $studentAssignment->score = $score;
+        $studentAssignment->save();
+
+        return $studentAssignment;
+    }
+
+    /**
+     * Get Student Assignment by StudentAssignmentId for tutor
+     * 
+     * @param int $courseWorkId
+     * @param int $courseChapterId
+     * @param int $studentAssignmentId
+     * 
+     */
+    public function getStudentAssignmentForTutor($courseWorkId, $courseChapterId, $studentAssignmentId)
+    {
+        return $this->studentAssignment->findOrFail($studentAssignmentId);
     }
 }

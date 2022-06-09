@@ -108,7 +108,7 @@ Route::middleware(['auth:api'])->group(function () {
             Route::post('file', [TutorChapterAssignmentController::class, 'uploadFile'])->name('upload-file');
             Route::delete('file', [TutorChapterAssignmentController::class, 'deleteFile'])->name('delete-file');
             Route::get('answers', [TutorChapterAssignmentController::class, 'getStudentAnswers'])->name('answers');
-            Route::get('score/', [TutorChapterAssignmentController::class, 'getStudentAnswers'])->name('score');
+            Route::post('score', [TutorChapterAssignmentController::class, 'scoreStudentAnswers'])->name('score');
         });
         Route::apiResource('course-works.chapters.tests', TutorChapterTestController::class)->only(['index', 'store']);
         Route::name('course-works.chapters.tests.')->prefix('course-works/{course_work}/chapters/{chapter}/tests')->group(function () {
