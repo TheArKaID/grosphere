@@ -201,7 +201,7 @@ class ChapterAssignmentService
                 'answer' => $assignment->studentAssignment ? $assignment->studentAssignment->answer : null,
                 'files' => $assignment->studentAssignment ? $assignment->studentAssignment->getFilesPath() : null,
                 'is_scored' => $assignment->studentAssignment ? ($assignment->studentAssignment->score == null ? false : true) : false,
-                'score' => $assignment->studentAssignment ? $assignment->studentAssignment->score ? 0
+                'score' => $assignment->studentAssignment ? $assignment->studentAssignment->score : 0
             ];
         });
     }
