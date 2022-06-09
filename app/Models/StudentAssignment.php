@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Storage;
  * @property integer $id
  * @property integer $course_chapter_student_id
  * @property string $answer
+ * @property float $score
  * @property string $created_at
  * @property string $updated_at
  * @property CourseChapterStudent $courseChapterStudent
@@ -25,7 +26,7 @@ class StudentAssignment extends Model
     /**
      * @var array
      */
-    protected $fillable = ['course_chapter_student_id', 'answer', 'created_at', 'updated_at'];
+    protected $fillable = ['course_chapter_student_id', 'answer', 'score', 'created_at', 'updated_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
