@@ -98,8 +98,8 @@ class UserService
 		$user->phone = $data['phone'] ?? $user->phone;
 		$user->status = $data['status'] ?? $user->status;
 
-		if ($photo = $data['photo']) {
-			$this->uploadProfileImage($id, $photo);
+		if (isset($data['photo'])) {
+			$this->uploadProfileImage($id, $data['photo']);
 		}
 
 		$user->save();

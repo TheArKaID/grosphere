@@ -194,15 +194,17 @@ class ChapterAssignmentService
         $courseChapter = $this->courseChapterService->getById($courseWorkId, $courseChapterId);
         
         return $courseChapter->courseChapterStudents()->get()->map(function ($assignment) {
-            return [
-                'id' => $assignment->id,
+            return $assignment->studentAssignment ? [
+                'id' => $assignment->studentAssignment ? $assignment->studentAssignment->id : null,
                 'student_id' => $assignment->course_student_id,
                 'student_name' => $assignment->courseStudent->student->user->name,
                 'answer' => $assignment->studentAssignment ? $assignment->studentAssignment->answer : null,
                 'files' => $assignment->studentAssignment ? $assignment->studentAssignment->getFilesPath() : null,
                 'is_scored' => $assignment->studentAssignment ? ($assignment->studentAssignment->score == null ? false : true) : false,
                 'score' => $assignment->studentAssignment ? $assignment->studentAssignment->score : 0
-            ];
+            ] : null;
+        })->filter(function ($assignment) {
+            return $assignment != null;
         });
     }
 
