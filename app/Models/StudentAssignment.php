@@ -46,7 +46,7 @@ class StudentAssignment extends Model
         foreach (Storage::cloud()->allFiles('course_works/' . $this->courseChapterStudent->courseChapter->courseWork->id . '/chapters/' . $this->courseChapterStudent->courseChapter->id . '/assignments_results/' . $this->id) as $file) {
             return [
                 'file' => Storage::cloud()->url($file),
-                'shown_filename' => 'dummy.pdf'
+                'shown_filename' => pathinfo($file, PATHINFO_FILENAME)
             ];
         }
     }

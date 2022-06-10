@@ -205,7 +205,7 @@ class ChapterAssignmentService
             ] : null;
         })->filter(function ($assignment) {
             return $assignment != null;
-        });
+        })->values();
     }
 
     /**
