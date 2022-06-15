@@ -43,10 +43,11 @@ class StudentAssignment extends Model
      */
     public function getFilesPath()
     {
-        foreach (Storage::cloud()->allFiles('course_works/' . $this->courseChapterStudent->courseChapter->courseWork->id . '/chapters/' . $this->courseChapterStudent->courseChapter->id . '/assignments_results/' . $this->id) as $file) {
+        foreach (Storage::cloud()->allFiles('course_works/' . $this->courseChapterStudent->courseChapter->courseWork->id . '/chapters/' . $this->courseChapterStudent->courseChapter->id . '/assignments_results/' . $this->courseChapterStudent->courseStudent->student_id) as $file) {
             return [
                 'file' => Storage::cloud()->url($file),
-                'shown_filename' => pathinfo($file, PATHINFO_FILENAME)
+                'shown_filename' => pathinfo($file, PATHINFO_FILENAME),
+                'extension' => pathinfo($file, PATHINFO_EXTENSION),
             ];
         }
     }
