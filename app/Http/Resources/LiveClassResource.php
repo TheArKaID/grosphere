@@ -32,6 +32,10 @@ class LiveClassResource extends JsonResource
                     'name' => $this->class->tutor->user->name
                 ],
             ],
+            'setting' => [
+                'mic_on' => $this->setting->mic_on,
+                'cam_on' => $this->setting->cam_on,
+            ],
         ] : [];
     }
 }
