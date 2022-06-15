@@ -29,8 +29,8 @@ class UpdateLiveClassRequest extends FormRequest
             'description' => 'required|string',
             'duration' => 'required|integer',
             'start_time' => 'required|date_format:d-m-Y H:i:s',
-            'set_mic_on' => 'required|boolean',
-            'set_cam_on' => 'required|boolean',
+            'mic_on' => 'required|boolean',
+            'cam_on' => 'required|boolean',
         ];
     }
 }
