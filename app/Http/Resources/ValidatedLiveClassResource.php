@@ -27,6 +27,10 @@ class ValidatedLiveClassResource extends JsonResource
             'start_time' => $startTime->toDateTimeString(),
             'duration' => $liveClass->duration,
             'end_time' => $endTime->toDateTimeString(),
+            'setting' => [
+                'mic_on' => $liveClass->setting->mic_on,
+                'cam_on' => $liveClass->setting->cam_on,
+            ],
         ] : [];
     }
 }
