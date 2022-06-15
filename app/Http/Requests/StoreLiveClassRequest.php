@@ -30,7 +30,9 @@ class StoreLiveClassRequest extends FormRequest
             'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'description' => 'required|string',
             'duration' => 'required|integer',
-            'start_time' => 'required|date_format:d-m-Y H:i:s'
+            'start_time' => 'required|date_format:d-m-Y H:i:s',
+            'set_mic_on' => 'required|boolean',
+            'set_cam_on' => 'required|boolean',
         ];
     }
 }
