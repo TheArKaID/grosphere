@@ -4,21 +4,22 @@ namespace App\Services;
 
 use App\Models\Classes;
 use App\Models\LiveClass;
+use App\Models\LiveClassSetting;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class LiveClassService
 {
-    private $liveClass, $classService, $liveUserService;
+    private $liveClass, $classService, $liveClassSetting;
 
     public function __construct(
         LiveClass $liveClass,
         ClassService $classService,
-        LiveUserService $liveUserService
+        LiveClassSetting $liveClassSetting
     ) {
         $this->liveClass = $liveClass;
         $this->classService = $classService;
-        $this->liveUserService = $liveUserService;
+        $this->liveClassSetting = $liveClassSetting;
     }
 
     /**
@@ -32,7 +33,7 @@ class LiveClassService
             $search = request()->get('search');
             $this->liveClass = $this->searchLiveClasses($search);
         }
-        if(request()->has('range')) {
+        if (request()->has('range')) {
             $range = request()->get('range');
             switch ($range) {
                 case 'today':
@@ -70,6 +71,11 @@ class LiveClassService
         $class = $this->classService->createClass($data);
         $data['class_id'] = $class->id;
         $liveClass = $this->liveClass->create($data);
+        $this->liveClassSetting->create([
+            'live_class_id' => $liveClass->id,
+            'mic_on' => $data['mic_on'],
+            'cam_on' => $data['cam_on']
+        ]);
 
         DB::commit();
 
@@ -102,7 +108,10 @@ class LiveClassService
 
         $liveClass = $this->getLiveClassById($id);
         $liveClass->update($data);
-
+        $liveClass->setting->update([
+            'mic_on' => $data['mic_on'],
+            'cam_on' => $data['cam_on']
+        ]);
         $this->classService->updateClass($liveClass->class_id, $data);
 
         DB::commit();
