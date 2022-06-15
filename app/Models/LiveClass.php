@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * @property integer $id
@@ -38,7 +39,7 @@ class LiveClass extends Model
     protected $casts = [
         'start_time' => 'datetime',
     ];
-    
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -57,6 +58,16 @@ class LiveClass extends Model
         return $this->hasMany(LiveUser::class);
     }
 
+    /**
+     * Get the setting associated with the LiveClass
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function setting(): HasOne
+    {
+        return $this->hasOne(LiveClassSetting::class);
+    }
+
     protected static function boot()
     {
         parent::boot();
@@ -64,10 +75,13 @@ class LiveClass extends Model
         static::addGlobalScope('ancient', function (Builder $builder) {
             $builder->orderByDesc('created_at');
         });
-        
+
         static::deleting(function ($liveClass) {
             foreach ($liveClass->liveUsers as $liveUser) {
                 $liveUser->delete();
+            }
+            if ($liveClass->setting) {
+                $liveClass->setting->delete();
             }
         });
     }
