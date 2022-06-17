@@ -176,8 +176,8 @@ class UserService
 	 */
 	public function userJoinLiveClass($id)
 	{
-		if (!$this->liveClassService->isLiveClassStarted($id)) {
-			return false;
+		if ($status = $this->liveClassService->isLiveClassStarted($id) !== true) {
+			return $status;
 		}
 
 		$userId = auth()->user()->id;

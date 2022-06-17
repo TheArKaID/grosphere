@@ -239,7 +239,7 @@ class LiveClassService
      * 
      * @param int $liveClassId
      * 
-     * @return bool
+     * @return bool|string
      */
     public function isLiveClassStarted($liveClassId)
     {
@@ -248,6 +248,8 @@ class LiveClassService
         $liveClassEndTime = Carbon::parse($liveClass->start_time)->addMinutes($liveClass->duration);
         $currentTime = Carbon::now();
 
+        return $currentTime->lt($liveClassStartTime) ? 'Live Class Not Started' : 
+            ($currentTime->gt($liveClassEndTime) ? 'Live Class Ended' : true);
         return $currentTime->between($liveClassStartTime, $liveClassEndTime);
     }
 

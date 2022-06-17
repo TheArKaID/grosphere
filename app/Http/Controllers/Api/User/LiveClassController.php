@@ -73,10 +73,10 @@ class LiveClassController extends Controller
     {
         $liveUser = $this->userService->userJoinLiveClass($id);
 
-        if (!$liveUser) {
+        if (gettype($liveUser) == 'string') { {
             return response()->json([
                 'status' => 400,
-                'message' => 'Live Class is not started yet or it is already ended'
+                'message' => $liveUser
             ], 400);
         }
 
