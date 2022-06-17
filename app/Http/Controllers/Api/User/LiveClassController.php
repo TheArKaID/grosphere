@@ -73,7 +73,7 @@ class LiveClassController extends Controller
     {
         $liveUser = $this->userService->userJoinLiveClass($id);
 
-        if (gettype($liveUser) == 'string') { {
+        if (gettype($liveUser) == 'string') {
             return response()->json([
                 'status' => 400,
                 'message' => $liveUser
