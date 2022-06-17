@@ -29,7 +29,7 @@ class StoreCourseWorkRequest extends FormRequest
             'course_category_id' => 'required|exists:course_categories,id',
             'name' => 'required|string|max:255',
             'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-            'description' => 'required|string'
+            'description' => 'nullable|string'
         ];
     }
 }

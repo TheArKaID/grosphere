@@ -28,7 +28,7 @@ class StoreLiveClassRequest extends FormRequest
             'tutor_id' => [Rule::requiredIf(auth()->user()->hasRole('admin')), 'exists:tutors,id'],
             'name' => 'required|string|max:255',
             'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-            'description' => 'required|string',
+            'description' => 'nullable|string',
             'duration' => 'required|integer',
             'start_time' => 'required|date_format:d-m-Y H:i:s',
             'mic_on' => 'required|boolean',
