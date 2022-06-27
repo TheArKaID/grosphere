@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -66,7 +67,7 @@ class Classes extends Model
     {
         return $this->belongsTo(Institute::class);
     }
-    
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
@@ -100,6 +101,18 @@ class Classes extends Model
             foreach ($classes->liveClasses as $liveClass) {
                 $liveClass->delete();
             }
+        });
+    }
+
+    /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
+    protected static function booted()
+    {
+        static::addGlobalScope('institute', function (Builder $builder) {
+            $builder->where('institute_id', '=', auth()->user()->institute_id);
         });
     }
 }
