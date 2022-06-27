@@ -14,7 +14,7 @@ class AddInstituteIdToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->foreignId('institute_id')->after('id')->nullable()->constrained();
+            $table->foreignId('institute_id')->after('id')->default(1)->constrained();
         });
     }
 

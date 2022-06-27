@@ -14,7 +14,7 @@ class AddInstituteIdToClassesTable extends Migration
     public function up()
     {
         Schema::table('classes', function (Blueprint $table) {
-            $table->foreignId('institute_id')->default(1)->default(1)->constrained();
+            $table->foreignId('institute_id')->after('id')->default(1)->constrained();
         });
     }
 
