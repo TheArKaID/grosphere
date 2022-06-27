@@ -123,6 +123,9 @@ class User extends Authenticatable implements JWTSubject
         $detail = null;
 
         switch ($this->roles()->first()->name) {
+            case 'super-admin':
+                $detail = $this->hasOne(SuperAdmin::class);
+                break;
             case 'admin':
                 $detail = $this->hasOne(Admin::class);
                 break;
@@ -153,6 +156,12 @@ class User extends Authenticatable implements JWTSubject
         $detail = null;
 
         switch ($this->roles()->first()->name) {
+            case 'super-admin':
+                $detail = [
+                    'id' => $this->detail->id,
+                    'email' => $this->email ?? ''
+                ];
+                break;
             case 'admin':
                 $detail = [
                     'id' => $this->detail->id,

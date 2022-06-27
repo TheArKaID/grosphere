@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Admin;
+use App\Models\SuperAdmin;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -15,16 +15,16 @@ class UserTableSeeder extends Seeder
      */
     public function run()
     {
-        $admin = User::create([
-            'name' => 'Admin',
-            'email' => 'admin@gmail.com',
+        $super = User::create([
+            'name' => 'Super Admin',
+            'email' => 'super-admin@gmail.com',
             'password' => bcrypt('12345678')
         ]);
 
-        $admin->assignRole('admin');
+        $super->assignRole('super-admin');
 
-        Admin::create([
-            'user_id' => $admin->id,
+        SuperAdmin::create([
+            'user_id' => $super->id,
         ]);
     }
 }
