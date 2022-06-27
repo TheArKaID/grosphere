@@ -3,10 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property integer $id
  * @property integer $tutor_id
+ * @property integer $institute_id
  * @property string $name
  * @property string $description
  * @property string $thumbnail
@@ -45,7 +47,7 @@ class Classes extends Model
     /**
      * @var array
      */
-    protected $fillable = ['tutor_id', 'name', 'description', 'thumbnail', 'type', 'deleted_at', 'created_at', 'updated_at'];
+    protected $fillable = ['tutor_id', 'institute_id', 'name', 'description', 'thumbnail', 'type', 'deleted_at', 'created_at', 'updated_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -55,6 +57,16 @@ class Classes extends Model
         return $this->belongsTo(Tutor::class);
     }
 
+    /**
+     * Get the institute that owns the Classes
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function institute(): BelongsTo
+    {
+        return $this->belongsTo(Institute::class);
+    }
+    
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
