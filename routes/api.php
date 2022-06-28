@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\Student\CourseChapterController as StudentCourseCha
 use App\Http\Controllers\Api\Student\CourseStudentController;
 use App\Http\Controllers\Api\Student\CourseWorkController as StudentCourseWorkController;
 use App\Http\Controllers\Api\Student\TestQuestionController as StudentTestQuestiontController;
+use App\Http\Controllers\Api\Super\InstituteController;
 use App\Http\Controllers\Api\Tutor\AskAnswerController as TutorAskAnswerController;
 use App\Http\Controllers\Api\Tutor\ChapterAssignmentController as TutorChapterAssignmentController;
 use App\Http\Controllers\Api\Tutor\ChapterMaterialController as TutorChapterMaterialController;
@@ -49,6 +50,9 @@ Route::prefix('auth')->group(function () {
 });
 
 Route::middleware(['auth:api'])->group(function () {
+    Route::name('super-admin.')->middleware(['role:super-admin'])->prefix('super-admin')->group(function () {
+        Route::resource('institutes', InstituteController::class);
+    });
     Route::name('admin.')->middleware(['role:admin'])->prefix('admin')->group(function () {
         Route::resource('users', UserController::class)->except(['edit', 'create']);
 
