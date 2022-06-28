@@ -56,7 +56,7 @@ class InstituteService
         $data['email'] = $data['email'] ?? "-";
         $data['website'] = $data['website'] ?? "-";
         $data['about'] = $data['about'] ?? "-";
-        return Institute::create($data);
+        return $this->institute->create($data);
     }
 
     /**
