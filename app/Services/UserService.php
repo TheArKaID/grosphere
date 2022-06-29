@@ -57,6 +57,7 @@ class UserService
 	 */
 	public function createUser($data)
 	{
+		$data['institute_id'] = auth()->user()->institute_id;
 		return $this->user->create($data);
 	}
 
@@ -70,6 +71,7 @@ class UserService
 	public function updateUser($id, $data)
 	{
 		$user = $this->user->findOrFail($id);
+		$user->institute_id = $data['institute_id'] ?? $user->institute_id;
 		$user->name = $data['name'] ?? $user->name;
 		$user->email = $data['email'] ?? $user->email;
 		$user->phone = $data['phone'] ?? $user->phone;
