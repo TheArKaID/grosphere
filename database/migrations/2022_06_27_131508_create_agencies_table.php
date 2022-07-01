@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-class CreateInstitutesTable extends Migration
+class CreateAgenciesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,7 @@ class CreateInstitutesTable extends Migration
      */
     public function up()
     {
-        Schema::create('institutes', function (Blueprint $table) {
+        Schema::create('agencies', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->text('address')->nullable();
@@ -24,7 +24,7 @@ class CreateInstitutesTable extends Migration
             $table->string('about')->default("");
             $table->timestamps();
         });
-        DB::table('institutes')->updateOrInsert(['id' => 1], [
+        DB::table('agencies')->updateOrInsert(['id' => 1], [
             'name' => 'Grosphere X',
             'address' => '',
             'phone' => '',
@@ -43,6 +43,6 @@ class CreateInstitutesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('institutes');
+        Schema::dropIfExists('agencies');
     }
 }

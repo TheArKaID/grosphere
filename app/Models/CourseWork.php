@@ -93,7 +93,7 @@ class CourseWork extends Model
      */
     protected static function booted()
     {
-        static::addGlobalScope('institute', function (Builder $builder) {
+        static::addGlobalScope('agency', function (Builder $builder) {
             $builder->whereHas('class');
         });
     }

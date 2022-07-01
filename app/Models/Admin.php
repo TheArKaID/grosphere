@@ -35,12 +35,12 @@ class Admin extends Model
     }
 
     /**
-     * Get the institute that owns the Admin
+     * Get the agency that owns the Admin
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function institute(): BelongsTo
+    public function agency(): BelongsTo
     {
-        return $this->belongsTo(Institute::class);
+        return $this->belongsTo(Agency::class);
     }
 }

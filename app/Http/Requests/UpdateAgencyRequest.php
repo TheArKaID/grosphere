@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreInstituteRequest extends FormRequest
+class UpdateAgencyRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,7 +27,7 @@ class StoreInstituteRequest extends FormRequest
             'name' => 'required|string|max:255',
             'address' => 'nullable',
             'phone' => '|nullable|max:50',
-            'email' => 'nullable|email|max:255|unique:institutes',
+            'email' => 'nullable|email|max:255|unique:agencies',
             'website' => 'nullable|max:255',
             'about' => 'nullable|max:255',
         ];

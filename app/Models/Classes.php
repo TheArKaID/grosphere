@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * @property integer $id
  * @property integer $tutor_id
- * @property integer $institute_id
+ * @property integer $agency_id
  * @property string $name
  * @property string $description
  * @property string $thumbnail
@@ -48,7 +48,7 @@ class Classes extends Model
     /**
      * @var array
      */
-    protected $fillable = ['tutor_id', 'institute_id', 'name', 'description', 'thumbnail', 'type', 'deleted_at', 'created_at', 'updated_at'];
+    protected $fillable = ['tutor_id', 'agency_id', 'name', 'description', 'thumbnail', 'type', 'deleted_at', 'created_at', 'updated_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -59,13 +59,13 @@ class Classes extends Model
     }
 
     /**
-     * Get the institute that owns the Classes
+     * Get the agency that owns the Classes
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function institute(): BelongsTo
+    public function agency(): BelongsTo
     {
-        return $this->belongsTo(Institute::class);
+        return $this->belongsTo(Agency::class);
     }
 
     /**
@@ -111,8 +111,8 @@ class Classes extends Model
      */
     protected static function booted()
     {
-        static::addGlobalScope('institute', function (Builder $builder) {
-            $builder->where('institute_id', '=', auth()->user()->institute_id);
+        static::addGlobalScope('agency', function (Builder $builder) {
+            $builder->where('agency_id', '=', auth()->user()->agency_id);
         });
     }
 }

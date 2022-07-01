@@ -4,18 +4,18 @@ namespace App\Http\Controllers\Api\Super;
 
 use App\Exceptions\ModelGetEmptyException;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreInstituteRequest;
-use App\Http\Requests\UpdateInstituteRequest;
-use App\Http\Resources\InstituteResource;
-use App\Services\InstituteService;
+use App\Http\Requests\StoreAgencyRequest;
+use App\Http\Requests\UpdateAgencyRequest;
+use App\Http\Resources\AgencyResource;
+use App\Services\AgencyService;
 
-class InstituteController extends Controller
+class AgencyController extends Controller
 {
-    protected $instituteService;
+    protected $agencyService;
 
-    public function __construct(InstituteService $instituteService)
+    public function __construct(AgencyService $agencyService)
     {
-        $this->instituteService = $instituteService;
+        $this->agencyService = $agencyService;
     }
 
     /**
@@ -25,35 +25,35 @@ class InstituteController extends Controller
      */
     public function index()
     {
-        $institutes = InstituteResource::collection($this->instituteService->getAll());
+        $agencies = AgencyResource::collection($this->agencyService->getAll());
 
-        if (count($institutes) == 0) {
-            throw new ModelGetEmptyException('Institutes');
+        if (count($agencies) == 0) {
+            throw new ModelGetEmptyException('Agencies');
         }
 
         return response()->json([
             'status' => 200,
             'message' => 'Success',
-            'data' => $institutes->response()->getData(true)
+            'data' => $agencies->response()->getData(true)
         ], 200);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreInstituteRequest  $request
+     * @param  \App\Http\Requests\StoreAgencyRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreInstituteRequest $request)
+    public function store(StoreAgencyRequest $request)
     {
         $validated = $request->validated();
 
-        $institute = $this->instituteService->create($validated);
+        $agency = $this->agencyService->create($validated);
 
         return response()->json([
             'status' => 200,
             'message' => 'Success',
-            'data' => new InstituteResource($institute)
+            'data' => new AgencyResource($agency)
         ], 200);
     }
 
@@ -65,32 +65,32 @@ class InstituteController extends Controller
      */
     public function show($id)
     {
-        $institute = $this->instituteService->getOne($id);
+        $agency = $this->agencyService->getOne($id);
 
         return response()->json([
             'status' => 200,
             'message' => 'Success',
-            'data' => new InstituteResource($institute)
+            'data' => new AgencyResource($agency)
         ], 200);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateInstituteRequest  $request
+     * @param  \App\Http\Requests\UpdateAgencyRequest  $request
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateInstituteRequest $request, $id)
+    public function update(UpdateAgencyRequest $request, $id)
     {
         $validated = $request->validated();
 
-        $institute = $this->instituteService->update($id, $validated);
+        $agency = $this->agencyService->update($id, $validated);
 
         return response()->json([
             'status' => 200,
             'message' => 'Success',
-            'data' => new InstituteResource($institute)
+            'data' => new AgencyResource($agency)
         ], 200);
     }
 
@@ -102,7 +102,7 @@ class InstituteController extends Controller
      */
     public function destroy($id)
     {
-        $this->instituteService->delete($id);
+        $this->agencyService->delete($id);
 
         return response()->json([
             'status' => 200,

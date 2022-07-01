@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddInstituteIdToClassesTable extends Migration
+class AddAgencyIdToClassesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,7 @@ class AddInstituteIdToClassesTable extends Migration
     public function up()
     {
         Schema::table('classes', function (Blueprint $table) {
-            $table->foreignId('institute_id')->after('id')->default(1)->constrained();
+            $table->foreignId('agency_id')->after('id')->default(1)->constrained();
         });
     }
 
@@ -26,7 +26,7 @@ class AddInstituteIdToClassesTable extends Migration
     public function down()
     {
         Schema::table('classes', function (Blueprint $table) {
-            $table->dropConstrainedForeignId('institute_id');
+            $table->dropConstrainedForeignId('agency_id');
         });
     }
 }

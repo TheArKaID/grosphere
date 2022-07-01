@@ -93,7 +93,7 @@ class LiveClass extends Model
             $builder->orderByDesc('created_at');
         });
 
-        static::addGlobalScope('institute', function (Builder $builder) {
+        static::addGlobalScope('agency', function (Builder $builder) {
             $builder->whereHas('class');
         });
     }

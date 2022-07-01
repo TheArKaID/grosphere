@@ -17,7 +17,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property Class[] $classes
  * @property User[] $users
  */
-class Institute extends Model
+class Agency extends Model
 {
     /**
      * The "type" of the auto-incrementing ID.

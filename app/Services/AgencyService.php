@@ -2,19 +2,19 @@
 
 namespace App\Services;
 
-use App\Models\Institute;
+use App\Models\Agency;
 
-class InstituteService
+class AgencyService
 {
-    private $institute;
+    private $agency;
 
-    public function __construct(Institute $institute)
+    public function __construct(Agency $agency)
     {
-        $this->institute = $institute;
+        $this->agency = $agency;
     }
 
     /**
-     * Get all Institutes
+     * Get all Agencies
      * 
      * @return \Illuminate\Database\Eloquent\Collection
      */
@@ -22,32 +22,32 @@ class InstituteService
     {
         if (request()->has('search')) {
             $search = request()->get('search');
-            $this->institute = $this->search($search);
+            $this->agency = $this->search($search);
         }
         if (request()->has('page') && request()->get('page') == 'all') {
-            return $this->institute->get();
+            return $this->agency->get();
         }
-        return $this->institute->paginate(request('size', 10));
+        return $this->agency->paginate(request('size', 10));
     }
 
     /**
-     * Get One Institute
+     * Get One Agency
      * 
      * @param int $id
      * 
-     * @return Institute
+     * @return Agency
      */
     public function getOne($id)
     {
-        return $this->institute->findOrFail($id);
+        return $this->agency->findOrFail($id);
     }
 
     /**
-     * Create Institute
+     * Create Agency
      * 
      * @param array $data
      * 
-     * @return \App\Models\Institute
+     * @return \App\Models\Agency
      */
     public function create($data)
     {
@@ -56,51 +56,51 @@ class InstituteService
         $data['email'] = $data['email'] ?? "-";
         $data['website'] = $data['website'] ?? "-";
         $data['about'] = $data['about'] ?? "-";
-        return $this->institute->create($data);
+        return $this->agency->create($data);
     }
 
     /**
-     * Update Institute
+     * Update Agency
      * 
      * @param int $id
      * @param array $data
      * 
-     * @return Institute
+     * @return Agency
      */
     public function update($id, $data)
     {
-        $institute = $this->getOne($id);
-        $data['address'] = $data['address'] ?? $institute['address'];
-        $data['phone'] = $data['phone'] ?? $institute['phone'];
-        $data['email'] = $data['email'] ?? $institute['email'];
-        $data['website'] = $data['website'] ?? $institute['website'];
-        $data['about'] = $data['about'] ?? $institute['about'];
-        $institute->update($data);
-        return $institute;
+        $agency = $this->getOne($id);
+        $data['address'] = $data['address'] ?? $agency['address'];
+        $data['phone'] = $data['phone'] ?? $agency['phone'];
+        $data['email'] = $data['email'] ?? $agency['email'];
+        $data['website'] = $data['website'] ?? $agency['website'];
+        $data['about'] = $data['about'] ?? $agency['about'];
+        $agency->update($data);
+        return $agency;
     }
 
     /**
-     * Delete Institute
+     * Delete Agency
      * 
      * @param int $id
      * 
-     * @return \App\Models\Institute
+     * @return \App\Models\Agency
      */
     public function delete($id)
     {
-        $institute = $this->getOne($id);
-        return $institute->delete();
+        $agency = $this->getOne($id);
+        return $agency->delete();
     }
 
     /**
-     * Search in Institute
+     * Search in Agency
      * 
      * @param string $search
-     * @return Institute
+     * @return Agency
      */
     public function search($search)
     {
-        return $this->institute
+        return $this->agency
             ->where('name', 'like', '%' . $search . '%')
             ->orWhere('address', 'like', '%' . $search . '%')
             ->orWhere('email', 'like', '%' . $search . '%')

@@ -114,7 +114,7 @@ class AdminService
         return $this->admin
             ->whereHas('user', function ($query) use ($search) {
                 $query->where('name', 'like', '%' . $search . '%')
-                    ->whereHas('institute', function ($query) use ($search) {
+                    ->whereHas('agency', function ($query) use ($search) {
                         $query->where('name', 'like', '%' . $search . '%')
                             ->orWhere('address', 'like', '%' . $search . '%')
                             ->orWhere('email', 'like', '%' . $search . '%')
