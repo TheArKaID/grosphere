@@ -51,11 +51,6 @@ class AgencyService
      */
     public function create($data)
     {
-        $data['address'] = $data['address'] ?? "-";
-        $data['phone'] = $data['phone'] ?? "-";
-        $data['email'] = $data['email'] ?? "-";
-        $data['website'] = $data['website'] ?? "-";
-        $data['about'] = $data['about'] ?? "-";
         return $this->agency->create($data);
     }
 
@@ -70,6 +65,7 @@ class AgencyService
     public function update($id, $data)
     {
         $agency = $this->getOne($id);
+        $data['key'] = $data['key'] ?? $agency['key'];
         $data['address'] = $data['address'] ?? $agency['address'];
         $data['phone'] = $data['phone'] ?? $agency['phone'];
         $data['email'] = $data['email'] ?? $agency['email'];
