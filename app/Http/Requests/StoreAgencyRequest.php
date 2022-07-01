@@ -25,11 +25,14 @@ class StoreAgencyRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'address' => 'nullable',
-            'phone' => '|nullable|max:50',
+            'key' => 'required|string|max:255|unique:agencies',
+            'phone' => 'nullable|max:50',
             'email' => 'nullable|email|max:255|unique:agencies',
+            'address' => 'nullable',
             'website' => 'nullable|max:255',
             'about' => 'nullable|max:255',
+            'sub_title' => 'nullable|max:255',
+            'color' => 'nullable|max:255',
         ];
     }
 }

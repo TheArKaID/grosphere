@@ -25,11 +25,14 @@ class UpdateAgencyRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'address' => 'nullable',
-            'phone' => '|nullable|max:50',
+            'key' => 'nullable|max:255|unique:agencies,key,' . $this->key,
+            'phone' => 'nullable|max:50',
             'email' => 'nullable|email|max:255|unique:agencies',
             'website' => 'nullable|max:255',
+            'address' => 'nullable',
             'about' => 'nullable|max:255',
+            'sub_title' => 'nullable|max:255',
+            'color' => 'nullable|max:255',
         ];
     }
 }
