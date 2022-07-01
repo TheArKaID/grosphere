@@ -17,20 +17,19 @@ class CreateAgenciesTable extends Migration
         Schema::create('agencies', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('key');
+            $table->string('phone', 50)->nullable();
+            $table->string('email')->nullable();
             $table->text('address')->nullable();
-            $table->string('phone', 50)->default("");
-            $table->string('email')->default("");
-            $table->string('website')->default("");
-            $table->string('about')->default("");
+            $table->string('website')->nullable();
+            $table->text('about')->nullable();
+            $table->string('sub_title')->nullable();
+            $table->string('color')->nullable();
             $table->timestamps();
         });
         DB::table('agencies')->updateOrInsert(['id' => 1], [
             'name' => 'Grosphere X',
-            'address' => '',
-            'phone' => '',
-            'email' => '',
-            'website' => '',
-            'about' => '',
+            'key' => 'grosphere-x',
             'created_at' => now(),
             'updated_at' => now()
         ]);
