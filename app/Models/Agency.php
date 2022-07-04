@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * @property integer $id
@@ -48,5 +49,20 @@ class Agency extends Model
     public function users()
     {
         return $this->hasMany(User::class);
+    }
+
+    /**
+     * Get Agency logo
+     * 
+     * @return string
+     */
+    public function getLogo()
+    {
+        if (Storage::cloud()->exists('agencies/' . $this->id . '/logo.png')) {
+            return Storage::cloud()->url('agencies/' . $this->id . '/logo.png');
+        } else {
+            return null;
+            // return Storage::cloud()->url('agency/logo.png');
+        }
     }
 }
