@@ -59,12 +59,14 @@ class AuthController extends Controller
     {
         $validated = $request->validated();
 
-        if (!$token = auth()->attempt($validated)) {
+        $user = $this->userService->login($validated);
+        if (!$user) {
             return response()->json([
                 'status' => 401,
                 'message' => 'Email or password is wrong'
             ], 401);
         }
+        $token = auth()->login($user);
         return response()->json([
             'status' => 200,
             'message' => 'User Logged In',
