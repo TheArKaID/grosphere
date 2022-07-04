@@ -170,4 +170,18 @@ class StudentService
 
 		return true;
 	}
+
+	/**
+	 * Search some users of student by email
+	 * 
+	 * @param string $email
+	 * 
+	 * @return Student
+	 */
+	public function searchByEmail(string $email)
+	{
+		return $this->student->whereHas('user', function ($query) use ($email) {
+			$query->where('email', '=', $email);
+		})->get();
+	}
 }
