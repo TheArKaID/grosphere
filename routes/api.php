@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\AgencyController as AdminAgencyController;
 use App\Http\Controllers\Api\Admin\AnnouncementController;
 use App\Http\Controllers\Api\Admin\CourseCategoryController;
 use App\Http\Controllers\Api\Admin\CourseWorkController;
@@ -60,6 +61,9 @@ Route::middleware(['auth:api'])->group(function () {
     });
     Route::name('admin.')->middleware(['role:admin'])->prefix('admin')->group(function () {
         Route::resource('users', UserController::class)->except(['edit', 'create']);
+
+        Route::get('agency', [AdminAgencyController::class, 'index']);
+        Route::put('agency', [AdminAgencyController::class, 'update']);
 
         Route::resource('students', StudentController::class)->except(['edit', 'create']);
         Route::prefix('students/{student_id}')->group(function () {
