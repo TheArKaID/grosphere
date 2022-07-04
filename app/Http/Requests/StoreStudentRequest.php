@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 
 class StoreStudentRequest extends FormRequest
@@ -27,7 +28,7 @@ class StoreStudentRequest extends FormRequest
         return [
             'parent_id' => 'numeric|nullable',
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users',
+            'email' => ['required', 'email', Rule::unique('users')->where('agency_id', auth()->user()->agency_id)],
             'password' => ['required', 'confirmed', Password::min(8)->letters()->numbers()->mixedCase()],
             'phone' => 'nullable|string|min:8|max:50',
             'id_number' => 'nullable|unique:students,id_number|string|max:50',
