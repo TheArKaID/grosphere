@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\Admin\StudentController;
 use App\Http\Controllers\Api\Admin\TutorController;
 use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\Front\SearchStudentController;
 use App\Http\Controllers\Api\Student\AskAnswerController as StudentAskAnswerController;
 use App\Http\Controllers\Api\Student\ChapterAssignmentController as StudentChapterAssignmentController;
 use App\Http\Controllers\Api\Student\ChapterMaterialController as StudentChapterMaterialController;
@@ -49,7 +50,9 @@ Route::prefix('auth')->group(function () {
     Route::post('login', [AuthController::class, 'login']);
     Route::post('refresh', [AuthController::class, 'refresh']);
 });
-
+Route::name('front')->prefix('front')->group(function () {
+    Route::post('student/search', [SearchStudentController::class, 'index'])->name('student.search');
+});
 Route::middleware(['auth:api'])->group(function () {
     Route::name('super-admin.')->middleware(['role:super-admin'])->prefix('super-admin')->group(function () {
         Route::resource('agencies', AgencyController::class);
