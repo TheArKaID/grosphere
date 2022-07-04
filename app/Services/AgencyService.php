@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Agency;
+use Illuminate\Support\Facades\Storage;
 
 class AgencyService
 {
@@ -123,11 +124,34 @@ class AgencyService
     public function updateCurrentAgency($data)
     {
         $agency = $this->getCurrentAgency();
+        
         // remove null
         $data = array_filter($data, function ($value) {
             return $value !== null;
         });
+
+        // Update logo
+        if (isset($data['logo'])) {
+            $this->updateLogo($agency->id, $data['logo']);
+        }
         $agency->update($data);
         return $agency;
+    }
+
+    /**
+     * Update logo of current agency
+     * 
+     * @param int $id
+     * @param mixed $file
+     * 
+     * @return mixed
+     */
+    public function updateLogo($id, $file)
+    {
+        return Storage::cloud()->putFileAs(
+            'agencies/' . $id,
+            $file,
+            'logo.png'
+        );
     }
 }

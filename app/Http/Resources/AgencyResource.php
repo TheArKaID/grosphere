@@ -24,6 +24,7 @@ class AgencyResource extends JsonResource
             'email' => $this->email,
             'website' => $this->website,
             'about' => $this->about,
+            'logo' => $this->getLogo(),
         ] : [];
     }
 }
