@@ -102,4 +102,32 @@ class AgencyService
             ->orWhere('email', 'like', '%' . $search . '%')
             ->orWhere('website', 'like', '%' . $search . '%');
     }
+
+    /**
+     * Get Agency of current user
+     * 
+     * @return \App\Models\Agency
+     */
+    public function getCurrentAgency()
+    {
+        return auth()->user()->agency;
+    }
+
+    /**
+     * Update Agency of current user
+     * 
+     * @param array $data
+     * 
+     * @return \App\Models\Agency
+     */
+    public function updateCurrentAgency($data)
+    {
+        $agency = $this->getCurrentAgency();
+        // remove null
+        $data = array_filter($data, function ($value) {
+            return $value !== null;
+        });
+        $agency->update($data);
+        return $agency;
+    }
 }
