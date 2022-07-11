@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\AgencyController as AdminAgencyController;
 use App\Http\Controllers\Api\Admin\AnnouncementController;
 use App\Http\Controllers\Api\Admin\CourseCategoryController;
 use App\Http\Controllers\Api\Admin\CourseWorkController;
@@ -9,6 +10,7 @@ use App\Http\Controllers\Api\Admin\StudentController;
 use App\Http\Controllers\Api\Admin\TutorController;
 use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\Front\SearchStudentController;
 use App\Http\Controllers\Api\Student\AskAnswerController as StudentAskAnswerController;
 use App\Http\Controllers\Api\Student\ChapterAssignmentController as StudentChapterAssignmentController;
 use App\Http\Controllers\Api\Student\ChapterMaterialController as StudentChapterMaterialController;
@@ -16,6 +18,8 @@ use App\Http\Controllers\Api\Student\CourseChapterController as StudentCourseCha
 use App\Http\Controllers\Api\Student\CourseStudentController;
 use App\Http\Controllers\Api\Student\CourseWorkController as StudentCourseWorkController;
 use App\Http\Controllers\Api\Student\TestQuestionController as StudentTestQuestiontController;
+use App\Http\Controllers\Api\Super\AdminController;
+use App\Http\Controllers\Api\Super\AgencyController;
 use App\Http\Controllers\Api\Tutor\AskAnswerController as TutorAskAnswerController;
 use App\Http\Controllers\Api\Tutor\ChapterAssignmentController as TutorChapterAssignmentController;
 use App\Http\Controllers\Api\Tutor\ChapterMaterialController as TutorChapterMaterialController;
@@ -43,14 +47,23 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::prefix('auth')->group(function () {
-    Route::post('register', [AuthController::class, 'register']);
+    // Route::post('register', [AuthController::class, 'register']);
     Route::post('login', [AuthController::class, 'login']);
     Route::post('refresh', [AuthController::class, 'refresh']);
 });
-
+Route::name('front')->prefix('front')->group(function () {
+    Route::post('student/search', [SearchStudentController::class, 'index'])->name('student.search');
+});
 Route::middleware(['auth:api'])->group(function () {
+    Route::name('super-admin.')->middleware(['role:super-admin'])->prefix('super-admin')->group(function () {
+        Route::resource('agencies', AgencyController::class);
+        Route::resource('admins', AdminController::class);
+    });
     Route::name('admin.')->middleware(['role:admin'])->prefix('admin')->group(function () {
         Route::resource('users', UserController::class)->except(['edit', 'create']);
+
+        Route::get('agency', [AdminAgencyController::class, 'index']);
+        Route::put('agency', [AdminAgencyController::class, 'update']);
 
         Route::resource('students', StudentController::class)->except(['edit', 'create']);
         Route::prefix('students/{student_id}')->group(function () {
@@ -165,6 +178,7 @@ Route::middleware(['auth:api'])->group(function () {
                 Route::post('submit', [StudentTestQuestiontController::class, 'submitTest'])->name('submit');
                 // Get Question
                 Route::get('{test_id}', [StudentTestQuestiontController::class, 'getQuestion'])->name('show');
+                Route::get('{test_id}/answer', [StudentTestQuestiontController::class, 'getMyAnswer'])->name('show.answer');
                 // Answer Question
                 Route::post('{test_id}', [StudentTestQuestiontController::class, 'answerQuestion'])->name('answer');
             });

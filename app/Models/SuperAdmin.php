@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property integer $id
@@ -12,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $updated_at
  * @property User $user
  */
-class Admin extends Model
+class SuperAdmin extends Model
 {
     /**
      * The "type" of the auto-incrementing ID.
@@ -31,16 +30,6 @@ class Admin extends Model
      */
     public function user()
     {
-        return $this->belongsTo('App\Models\User');
-    }
-
-    /**
-     * Get the agency that owns the Admin
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function agency(): BelongsTo
-    {
-        return $this->belongsTo(Agency::class);
+        return $this->belongsTo(User::class);
     }
 }

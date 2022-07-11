@@ -30,7 +30,11 @@ class CourseChapterStudentService
         return $this->courseChapter
             ->select('id', 'course_work_id', 'title', 'description', 'order')
             ->with(['courseChapterStudents'])
-            ->where('course_work_id', $courseWorkId)
+            ->whereHas('courseWork', function ($courseWork) use ($courseWorkId) {
+                $courseWork->where('id', $courseWorkId)->whereHas('courseStudents', function ($courseStudents) {
+                    $courseStudents->where('student_id', Auth::user()->detail->id);
+                });
+            })
             ->orderBy('order')
             ->get();
     }

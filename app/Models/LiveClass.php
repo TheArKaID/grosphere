@@ -72,10 +72,6 @@ class LiveClass extends Model
     {
         parent::boot();
 
-        static::addGlobalScope('ancient', function (Builder $builder) {
-            $builder->orderByDesc('created_at');
-        });
-
         static::deleting(function ($liveClass) {
             foreach ($liveClass->liveUsers as $liveUser) {
                 $liveUser->delete();
@@ -83,6 +79,22 @@ class LiveClass extends Model
             if ($liveClass->setting) {
                 $liveClass->setting->delete();
             }
+        });
+    }
+
+    /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
+    protected static function booted()
+    {
+        static::addGlobalScope('orderDesc', function (Builder $builder) {
+            $builder->orderByDesc('created_at');
+        });
+
+        static::addGlobalScope('agency', function (Builder $builder) {
+            $builder->whereHas('class');
         });
     }
 }

@@ -53,24 +53,25 @@ class ChapterTestService
         if ($data['type'] == ChapterTest::$ON_FILE) {
             $data['status'] = 1;
 
-            $fileName = $data['file']->getClientOriginalName();
-            $fileExt = $data['file']->getClientOriginalExtension();
-
-            $slug = Str::slug(pathinfo($fileName, PATHINFO_FILENAME));
-
-            if (Str::wordCount($slug) > 255) {
-                $slug = Str::limit($slug, 255, '');
-            }
-            $test = $this->model->create($data);
-            Storage::cloud()->putFileAs('course_works/' . $data['course_work_id'] . '/chapters/' . $data['course_chapter_id'] . '/tests', $data['file'], $slug . '.' . $fileExt);
-        } else {
-            if ($chapter->chapterTest) {
-                $chapter->chapterTest->update($data);
-                $test = $chapter->chapterTest;
-            } else {
-                $data['status'] = 1;
+            if (isset($data['file'])) {
+                $fileName = $data['file']->getClientOriginalName();
+                $fileExt = $data['file']->getClientOriginalExtension();
+    
+                $slug = Str::slug(pathinfo($fileName, PATHINFO_FILENAME));
+    
+                if (Str::wordCount($slug) > 255) {
+                    $slug = Str::limit($slug, 255, '');
+                }
                 $test = $this->model->create($data);
+                Storage::cloud()->putFileAs('course_works/' . $data['course_work_id'] . '/chapters/' . $data['course_chapter_id'] . '/tests', $data['file'], $slug . '.' . $fileExt);
             }
+        }
+        if ($chapter->chapterTest) {
+            $chapter->chapterTest->update($data);
+            $test = $chapter->chapterTest;
+        } else {
+            $data['status'] = 1;
+            $test = $this->model->create($data);
         }
 
         return $test;
@@ -125,9 +126,9 @@ class ChapterTestService
                         'score' => $studentTest->score,
                         'student_answers' => $studentTest->studentTestAnswers,
                     ];
-                })[0];
+                });
             }
-            array_push($results, $resulkt);
+            array_push($results, count($resulkt) != 0 ? $resulkt[0] : []);
         }
 
         return $results;

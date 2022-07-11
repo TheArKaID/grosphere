@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -82,6 +83,18 @@ class CourseWork extends Model
             foreach ($courseWork->courseStudents as $cs) {
                 $cs->delete();
             }
+        });
+    }
+    
+    /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
+    protected static function booted()
+    {
+        static::addGlobalScope('agency', function (Builder $builder) {
+            $builder->whereHas('class');
         });
     }
 }
