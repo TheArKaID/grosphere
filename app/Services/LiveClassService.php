@@ -95,6 +95,18 @@ class LiveClassService
     }
 
     /**
+     * Get Live Class by id without global scope
+     * 
+     * @param int $id
+     * 
+     * @return LiveClass
+     */
+    public function getLiveClassByIdWithoutGlobalScope($id)
+    {
+        return $this->liveClass->withoutGlobalScope('agency')->findOrFail($id);
+    }
+
+    /**
      * Update Live Class
      * 
      * @param int $id
@@ -243,7 +255,7 @@ class LiveClassService
      */
     public function isLiveClassStarted($liveClassId)
     {
-        $liveClass = $this->getLiveClassById($liveClassId);
+        $liveClass = $this->getLiveClassByIdWithoutGlobalScope($liveClassId);
         $liveClassStartTime = Carbon::parse($liveClass->start_time);
         $liveClassEndTime = Carbon::parse($liveClass->start_time)->addMinutes($liveClass->duration);
         $currentTime = Carbon::now();

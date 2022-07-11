@@ -49,7 +49,9 @@ class LiveUserService
      */
     public function getLiveUserByToken(string $token)
     {
-        return $this->liveUser->where('token', $token)->firstOrFail();
+        return $this->liveUser->where('token', $token)->with(['liveClass' => function ($query) {
+            $query->withoutGlobalScope('agency');
+        }])->firstOrFail();
     }
 
     /**
@@ -103,7 +105,7 @@ class LiveUserService
     {
         $liveUser = $this->liveUser->find($id);
 
-        if(!$liveUser) {
+        if (!$liveUser) {
             return false;
         }
 

@@ -15,13 +15,14 @@ class ValidatedLiveClassResource extends JsonResource
      */
     public function toArray($request)
     {
-        $liveClass = $this->liveClass;
+        $liveClass = $this->liveClass()->withoutGlobalScope('agency')->first();
+        $class = $liveClass->class()->withoutGlobalScope('agency')->first();
         
         $startTime = Carbon::parse($liveClass->start_time);
         $endTime = Carbon::parse($liveClass->start_time)->addMinutes($liveClass->duration);
         return $this->resource ? [
-            'class_name' => $liveClass->class->name,
-            'tutor_name' => $liveClass->class->tutor->user->name,
+            'class_name' => $class->name,
+            'tutor_name' => $class->tutor->user->name,
             'user_name' => $this->user->name,
             'role' => $this->user->roles[0]->name == 'tutor' ? 'Teacher' : 'Student',
             'start_time' => $startTime->toDateTimeString(),
