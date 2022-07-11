@@ -132,9 +132,45 @@ class TakeChapterTestService
         // }
 
         if ($this->isTakenChapterTestActive($courseChapterStudent, $studentId)) {
-            return $this->testQuestion->findOrFail($questionId);
+            $question = $this->testQuestion->findOrFail($questionId);
+            $res = [
+                'id' => $question->id,
+                'chapter_test_id' => $question->chapter_test_id,
+                'type' => $question->type,
+                'question' => $question->question,
+                'answers' => $question->type == TestQuestion::$MULTIPLE_CHOICE ? $question->testAnswers->map(function ($answer) {
+                    return [
+                        'answer' => $answer->answer,
+                        'number' => $answer->number,
+                    ];
+                }) : null
+            ];
+
+            $studentAnswer = $this->getMyAnswer($courseChapterStudent->latestStudentTest->id, $questionId);
+
+            $res['your_answer'] = $studentAnswer ?
+                $studentAnswer->answer
+                : null;
+            if (auth()->user()->hasRole('tutor')) {
+                $res['answer_number'] = $question->answer_number;
+            }
+
+            return $res;
         }
         return 'Cannot access Question. Make sure you\'ve enrolled to the test.';
+    }
+
+    /**
+     * Get my answer to a question
+     * 
+     * @param int $studentTestId
+     * @param int $questionId
+     * 
+     * @return StudentTestAnswer|boolean
+     */
+    public function getMyAnswer($studentTestId, $questionId)
+    {
+        return $this->studentTestAnswer->where('student_test_id', $studentTestId)->where('test_question_id', $questionId)->first();
     }
 
     /**

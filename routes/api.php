@@ -178,6 +178,7 @@ Route::middleware(['auth:api'])->group(function () {
                 Route::post('submit', [StudentTestQuestiontController::class, 'submitTest'])->name('submit');
                 // Get Question
                 Route::get('{test_id}', [StudentTestQuestiontController::class, 'getQuestion'])->name('show');
+                Route::get('{test_id}/answer', [StudentTestQuestiontController::class, 'getMyAnswer'])->name('show.answer');
                 // Answer Question
                 Route::post('{test_id}', [StudentTestQuestiontController::class, 'answerQuestion'])->name('answer');
             });

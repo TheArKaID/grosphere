@@ -28,7 +28,7 @@ class StoreChapterTestRequest extends FormRequest
             'title' => 'required|string|max:255',
             'duration' => 'required|integer',
             'attempt' => 'required|integer|min:1',
-            'file' => 'required_if:type,2|nullable|file|mimes:pdf,doc,docx,zip,rar',
+            'file' => 'nullable|file|mimes:pdf,doc,docx,zip,rar',
             'available_at' => 'nullable|date_format:d-m-Y H:i:s',
             'available_until' => 'nullable|date_format:d-m-Y H:i:s',
         ];

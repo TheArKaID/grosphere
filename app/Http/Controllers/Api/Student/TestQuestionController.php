@@ -87,7 +87,7 @@ class TestQuestionController extends Controller
         return response()->json([
             'status' => 200,
             'message' => 'Success',
-            'data' => new TestQuestionResource($response)
+            'data' => $response
         ]);
     }
 
@@ -144,6 +144,32 @@ class TestQuestionController extends Controller
             'status' => 200,
             'message' => 'Success',
             'data' => new StudentTestResource($studentTest)
+        ]);
+    }
+
+    /**
+     * get My Answer
+     * 
+     * @param  Request  $request
+     * @param int $courseWorkId
+     * @param int $ccourseChapterId
+     * @param int $questionId
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function getMyAnswer(Request $request, $courseWorkId, $courseChapterId, $questionId) {
+        $response = $this->takeChapterTestService->getMyAnswer($courseChapterId, Auth::user()->detail->id, $questionId);
+
+        if (gettype($response) == 'string') {
+            return response()->json([
+                'status' => 400,
+                'message' => $response,
+            ]);
+        }
+        return response()->json([
+            'status' => 200,
+            'message' => 'Success',
+            'data' => $response
         ]);
     }
 }
