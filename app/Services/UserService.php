@@ -133,9 +133,15 @@ class UserService
 	 */
 	public function login($data)
 	{
-		$user = $this->user->where('email', $data['email'])->whereHas('agency', function ($query) {
-			$query->where('key', request()->header('X-Agency-Key', ''));
-		})->first();
+		$user = $this->user->where('email', $data['email']);
+
+		if ($data['X-Agency-Key'] != null) {
+			$user = $user->whereHas('agency', function ($query) {
+				$query->where('key', request()->header('X-Agency-Key', ''));
+			});
+		}
+
+		$user = $user->first();
 
 		if (!$user || !Hash::check($data['password'], $user->password)) {
 			return false;

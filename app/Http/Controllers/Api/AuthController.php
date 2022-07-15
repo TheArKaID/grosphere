@@ -10,7 +10,6 @@ use App\Http\Resources\UserResource;
 use App\Services\StudentService;
 use App\Services\UserService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -58,6 +57,7 @@ class AuthController extends Controller
     public function login(LoginUserRequest $request)
     {
         $validated = $request->validated();
+        $validated['X-Agency-Key'] = $request->header('X-Agency-Key');
 
         $user = $this->userService->login($validated);
         if (!$user) {
