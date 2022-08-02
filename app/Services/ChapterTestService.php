@@ -125,10 +125,11 @@ class ChapterTestService
                         'status' => $studentTest->getStatus(),
                         'score' => $studentTest->score,
                         'student_answers' => $studentTest->studentTestAnswers,
+                        'questions' => $studentTest->courseChapterStudent->courseChapter->chapterTest->testQuestions()->with('testAnswers')->get()
                     ];
                 });
             }
-            array_push($results, count($resulkt) != 0 ? $resulkt[0] : []);
+            array_push($results, $resulkt);
         }
 
         return $results;

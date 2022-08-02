@@ -84,7 +84,11 @@ class StudentTest extends Model
     {
         foreach (Storage::cloud()->allFiles('course_works/' . $this->courseChapterStudent->courseChapter->courseWork->id . '/chapters/' . $this->courseChapterStudent->courseChapter->id . '/tests_answers') as $file) {
             if (pathinfo($file, PATHINFO_FILENAME) == $this->courseChapterStudent->courseStudent->student_id) {
-                return Storage::cloud()->url($file);
+                return [
+                    'file' => Storage::cloud()->url($file),
+                    'shown_filename' => pathinfo($file, PATHINFO_FILENAME),
+                    'extension' => pathinfo($file, PATHINFO_EXTENSION),
+                ];
             }
         }
     }
