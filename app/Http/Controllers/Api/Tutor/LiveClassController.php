@@ -136,7 +136,6 @@ class LiveClassController extends Controller
                 'status' => 200,
                 'message' => 'Tutor joined Live Class',
                 'data' => [
-                    'id' => $liveUser->id,
                     'live_class_name' => $liveClass->class->name,
                     'token' => $liveUser->token,
                     'end_time' => Carbon::parse($liveClass->start_time)->addMinutes($liveClass->duration)->toDateTimeString(),
