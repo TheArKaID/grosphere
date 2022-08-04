@@ -14,7 +14,7 @@ class AdminResource extends JsonResource
      */
     public function toArray($request)
     {
-        parent::wrap('students');
+        parent::wrap('admins');
         return $this->resource ? [
             'id' => $this->id,
             'name' => $this->user->name,

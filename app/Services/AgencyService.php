@@ -44,6 +44,18 @@ class AgencyService
     }
 
     /**
+     * Get Agency Config by Agency Key
+     * 
+     * @param string $agencyKey
+     * 
+     * @return Agency
+     */
+    public function getConfig($agencyKey)
+    {
+        return $this->agency->select('name', 'logo', 'sub_title', 'color')->where('key', $agencyKey)->firstOrFail();
+    }
+
+    /**
      * Create Agency
      * 
      * @param array $data

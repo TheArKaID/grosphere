@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\Admin\StudentController;
 use App\Http\Controllers\Api\Admin\TutorController;
 use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\Front\AgencyController as FrontAgencyController;
 use App\Http\Controllers\Api\Front\SearchStudentController;
 use App\Http\Controllers\Api\Student\AskAnswerController as StudentAskAnswerController;
 use App\Http\Controllers\Api\Student\ChapterAssignmentController as StudentChapterAssignmentController;
@@ -53,6 +54,8 @@ Route::prefix('auth')->group(function () {
 });
 Route::name('front')->prefix('front')->group(function () {
     Route::post('student/search', [SearchStudentController::class, 'index'])->name('student.search');
+
+    Route::get('agency/config', [FrontAgencyController::class, 'config'])->name('agency.config');
 });
 Route::middleware(['auth:api'])->group(function () {
     Route::name('super-admin.')->middleware(['role:super-admin'])->prefix('super-admin')->group(function () {
