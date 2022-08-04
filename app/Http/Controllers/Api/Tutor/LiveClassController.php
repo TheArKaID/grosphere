@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Tutor;
 
 use App\Exceptions\ModelGetEmptyException;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AgoraTutorUploadFileRequest;
 use App\Http\Requests\StoreLiveClassRequest;
 use App\Http\Requests\UpdateLiveClassRequest;
 use App\Http\Resources\LiveClassResource;
@@ -135,6 +136,7 @@ class LiveClassController extends Controller
                 'status' => 200,
                 'message' => 'Tutor joined Live Class',
                 'data' => [
+                    'id' => $liveUser->id,
                     'live_class_name' => $liveClass->class->name,
                     'token' => $liveUser->token,
                     'end_time' => Carbon::parse($liveClass->start_time)->addMinutes($liveClass->duration)->toDateTimeString(),
@@ -178,5 +180,56 @@ class LiveClassController extends Controller
             'message' => 'Live Class validated',
             'data' => new ValidatedLiveClassResource($liveUser),
         ]);
+    }
+
+    /**
+     * Upload file from Agora Tutor
+     * @param  AgoraTutorUploadFileRequest $request
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function agoraUploadFile(AgoraTutorUploadFileRequest $request, $id)
+    {
+        $validated = $request->validated();
+        $validated['id'] = $id;
+        $uploaded = $this->liveUserService->uploadFileFromAgora($validated);
+
+        if (gettype($uploaded) == 'array') {
+            return response()->json([
+                'status' => true,
+                'message' => 'File uploaded successfully',
+                'data' => $uploaded
+            ], 200);
+        }
+        
+        return response()->json([
+            'status' => false,
+            'message' => "Failed to upload file"
+        ], 400);
+    }
+
+    /**
+     * Get File from Agora Tutor
+     * 
+     * @param  int  $id
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function agoraGetFile($id)
+    {
+        $file = $this->liveUserService->getFileFromAgora($id);
+        
+        if (gettype($file) == 'array') {
+            return response()->json([
+                'status' => true,
+                'message' => 'File retrieved successfully',
+                'data' => $file
+            ], 200);
+        }
+        
+        return response()->json([
+            'status' => false,
+            'message' => "No file found"
+        ], 200);
     }
 }

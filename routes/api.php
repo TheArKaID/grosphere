@@ -211,6 +211,7 @@ Route::middleware(['auth:api'])->group(function () {
 
     Route::post('auth/logout', [AuthController::class, 'logout']);
 });
-
+Route::get('tutor/live-classes/agora/file/{id}', [TutorLiveClassController::class, 'agoraGetFile'])->name('tutor.live-classes.upload-file.get');
+Route::post('tutor/live-classes/agora/file/{id}', [TutorLiveClassController::class, 'agoraUploadFile'])->name('tutor.live-classes.upload-file.post');
 Route::post('tutor/live-classes/validate', [TutorLiveClassController::class, 'validateLiveClass'])->name('tutor.live-classes.validate');
 Route::post('user/live-classes/validate', [UserLiveClassController::class, 'validateLiveClass'])->name('user.live-classes.validate');

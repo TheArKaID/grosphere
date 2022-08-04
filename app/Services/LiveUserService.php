@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\LiveUser;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class LiveUserService
@@ -113,4 +114,55 @@ class LiveUserService
             'token' => null
         ]);
     }
+
+    /**
+     * Upload File from Agora
+     * 
+     * @param array $data
+     * 
+     * @return array|bool
+     */
+    public function uploadFileFromAgora(array $data)
+    {
+        $file = $data['file'];
+        $imageName = $file->getClientOriginalName();
+        $slug = Str::slug(pathinfo($imageName, PATHINFO_FILENAME));
+        $extension = $file->getClientOriginalExtension();
+        $res = Storage::cloud()->putFileAs('agora/presentation/' . $data['id'], $file, $slug . '.' . $extension);
+
+        if ($res) {
+            return [
+                'file' => Storage::cloud()->url('agora/presentation/' . $data['id'] . '/' . $slug . '.' . $extension),
+                'shown_filename' => $slug . '.' . $extension,
+                'ext' => $extension
+            ];
+        }
+
+        return false;
+    }
+
+    /**
+     * Get File from Agora. Get All files from a directory
+     * 
+     * @param int $id
+     * 
+     * @return array|bool
+     */
+    public function getFileFromAgora(int $id)
+    {
+        $files = Storage::cloud()->files('agora/presentation/' . $id);
+
+        if ($files) {
+            $files = array_map(function ($file) {
+                return [
+                    'file' => Storage::cloud()->url($file),
+                    'shown_filename' => pathinfo($file, PATHINFO_FILENAME) . '.' . pathinfo($file, PATHINFO_EXTENSION),
+                    'ext' => pathinfo($file, PATHINFO_EXTENSION),
+                ];
+            }, $files);
+            return $files;
+        }
+        return false;
+    }
+    
 }
