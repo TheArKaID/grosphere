@@ -64,7 +64,11 @@ class AgencyService
      */
     public function create($data)
     {
-        return $this->agency->create($data);
+        $agency = $this->agency->create($data);
+        
+        $this->updateLogo($agency->id, $data['logo']);
+
+        return $agency;
     }
 
     /**

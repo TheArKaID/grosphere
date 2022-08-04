@@ -33,6 +33,7 @@ class UpdateAgencyRequest extends FormRequest
             'about' => 'nullable|max:255',
             'sub_title' => 'nullable|max:255',
             'color' => 'nullable|max:255',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ];
     }
 }
