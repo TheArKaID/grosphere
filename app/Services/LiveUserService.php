@@ -134,7 +134,9 @@ class LiveUserService
             return [
                 'file' => Storage::cloud()->url('agora/presentation/' . $data['id'] . '/' . $slug . '.' . $extension),
                 'shown_filename' => $slug . '.' . $extension,
-                'ext' => $extension
+                'ext' => $extension,
+                'size' => round($file->getSize() / 1024, 0),
+                'updated_at' => Carbon::now()->formatLocalized('%d %B %Y')
             ];
         }
 
@@ -158,6 +160,8 @@ class LiveUserService
                     'file' => Storage::cloud()->url($file),
                     'shown_filename' => pathinfo($file, PATHINFO_FILENAME) . '.' . pathinfo($file, PATHINFO_EXTENSION),
                     'ext' => pathinfo($file, PATHINFO_EXTENSION),
+                    'size' => round(Storage::cloud()->size($file) / 1024, 0),
+                    'updated_at' => Carbon::now()->formatLocalized('%d %B %Y')
                 ];
             }, $files);
             return $files;
