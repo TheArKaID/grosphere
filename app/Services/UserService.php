@@ -62,6 +62,17 @@ class UserService
 	}
 
 	/**
+	 * Create admin user
+	 *
+	 * @param array $data
+	 * @return App\Models\User
+	 */
+	public function createAdminUser($data)
+	{
+		return $this->user->create($data);
+	}
+	
+	/**
 	 * Update user
 	 *
 	 * @param int $id

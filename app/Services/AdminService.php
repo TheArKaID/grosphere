@@ -56,7 +56,7 @@ class AdminService
         DB::beginTransaction();
         $data['password'] = bcrypt($data['password']);
 
-        $user = $this->userService->createUser($data);
+        $user = $this->userService->createAdminUser($data);
         $user->assignRole('admin');
         $data['user_id'] = $user->id;
 
