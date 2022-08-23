@@ -19,11 +19,14 @@ class AgencyResource extends JsonResource
         return $this->resource ? [
             'id' => $this->id,
             'name' => $this->name,
+            'key' => $this->key,
             'address' => $this->address,
             'phone' => $this->phone,
             'email' => $this->email,
             'website' => $this->website,
             'about' => $this->about,
+            'sub_title' => $this->sub_title,
+            'color' => $this->color,
             'logo' => $this->getLogo(),
         ] : [];
     }
