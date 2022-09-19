@@ -28,6 +28,7 @@ class AgencyResource extends JsonResource
             'sub_title' => $this->sub_title,
             'color' => $this->color,
             'logo' => $this->getLogo(),
+            'logo_small' => $this->getLogoSmall(),
         ] : [];
     }
 }

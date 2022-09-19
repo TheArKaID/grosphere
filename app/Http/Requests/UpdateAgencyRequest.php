@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateAgencyRequest extends FormRequest
+class  UpdateAgencyRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,15 +25,18 @@ class UpdateAgencyRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'key' => 'nullable|max:255|unique:agencies,key,' . $this->key,
+            // 'key' => ['nullable', 'max:255', Rule::unique('agencies')->ignore($this->id)],
+            'key' => 'nullable|max:255',
             'phone' => 'nullable|max:50',
-            'email' => 'nullable|email|max:255|unique:agencies',
+            // 'email' => ['nullable', 'max:255', Rule::unique('agencies')->ignore($this->id)],
+            'email' => 'nullable|email|max:255',
             'website' => 'nullable|max:255',
             'address' => 'nullable',
             'about' => 'nullable|max:255',
             'sub_title' => 'nullable|max:255',
             'color' => 'nullable|max:255',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'logo_small' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ];
     }
 }

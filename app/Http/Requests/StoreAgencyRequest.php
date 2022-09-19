@@ -34,6 +34,7 @@ class StoreAgencyRequest extends FormRequest
             'sub_title' => 'nullable|max:255',
             'color' => 'nullable|max:255',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'logo_small' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ];
     }
 }

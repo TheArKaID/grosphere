@@ -65,4 +65,19 @@ class Agency extends Model
             // return Storage::cloud()->url('agency/logo.png');
         }
     }
+
+    /**
+     * Get Agency Small Logo
+     * 
+     * @return string
+     */
+    public function getLogoSmall()
+    {
+        if (Storage::cloud()->exists('agencies/' . $this->id . '/logo_small.png')) {
+            return Storage::cloud()->url('agencies/' . $this->id . '/logo_small.png');
+        } else {
+            return null;
+            // return Storage::cloud()->url('agency/logo_small.png');
+        }
+    }
 }

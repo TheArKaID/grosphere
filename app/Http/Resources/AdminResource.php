@@ -25,6 +25,7 @@ class AdminResource extends JsonResource
                 'id' => $this->user->agency->id,
                 'name' => $this->user->agency->name,
                 'website' => $this->user->agency->website,
+                'logo_small' => $this->user->agency->getLogoSmall(),
             ] : [],
             'created_at' => $this->created_at
         ] : [];

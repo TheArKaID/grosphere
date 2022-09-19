@@ -65,8 +65,14 @@ class AgencyService
     public function create($data)
     {
         $agency = $this->agency->create($data);
-        
-        $this->updateLogo($agency->id, $data['logo']);
+
+        // Update logo
+        if (isset($data['logo'])) {
+            $this->updateLogo($agency->id, $data['logo'], 'logo.png');
+        }
+        if (isset($data['logo_small'])) {
+            $this->updateLogo($agency->id, $data['logo_small'], 'logo_small.png');
+        }
 
         return $agency;
     }
@@ -89,6 +95,15 @@ class AgencyService
         $data['website'] = $data['website'] ?? $agency['website'];
         $data['about'] = $data['about'] ?? $agency['about'];
         $agency->update($data);
+
+        // Update logo
+        if (isset($data['logo'])) {
+            $this->updateLogo($agency->id, $data['logo'], 'logo.png');
+        }
+        if (isset($data['logo_small'])) {
+            $this->updateLogo($agency->id, $data['logo_small'], 'logo_small.png');
+        }
+
         return $agency;
     }
 
@@ -140,7 +155,7 @@ class AgencyService
     public function updateCurrentAgency($data)
     {
         $agency = $this->getCurrentAgency();
-        
+
         // remove null
         $data = array_filter($data, function ($value) {
             return $value !== null;
@@ -148,8 +163,12 @@ class AgencyService
 
         // Update logo
         if (isset($data['logo'])) {
-            $this->updateLogo($agency->id, $data['logo']);
+            $this->updateLogo($agency->id, $data['logo'], 'logo.png');
         }
+        if (isset($data['logo_small'])) {
+            $this->updateLogo($agency->id, $data['logo_small'], 'logo_small.png');
+        }
+
         $agency->update($data);
         return $agency;
     }
@@ -159,15 +178,16 @@ class AgencyService
      * 
      * @param int $id
      * @param mixed $file
+     * @param string $filename
      * 
      * @return mixed
      */
-    public function updateLogo($id, $file)
+    public function updateLogo($id, $file, $filename)
     {
         return Storage::cloud()->putFileAs(
             'agencies/' . $id,
             $file,
-            'logo.png'
+            $filename
         );
     }
 }

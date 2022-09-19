@@ -83,6 +83,7 @@ class AgencyController extends Controller
      */
     public function update(UpdateAgencyRequest $request, $id)
     {
+        $request['id'] = $id;
         $validated = $request->validated();
 
         $agency = $this->agencyService->update($id, $validated);
