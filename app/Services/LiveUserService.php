@@ -169,4 +169,17 @@ class LiveUserService
         return false;
     }
     
+    /**
+     * Delete File from Agora
+     * 
+     * @param int $id
+     * @param string $filename
+     * 
+     * @return bool
+     */
+    public function deleteFileFromAgora(int $id, string $filename)
+    {
+        $file = 'agora/presentation/' . $id . '/' . $filename;
+        return Storage::cloud()->delete($file);
+    }
 }

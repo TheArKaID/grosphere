@@ -12,6 +12,7 @@ use App\Http\Resources\ValidatedLiveClassResource;
 use App\Services\LiveClassService;
 use App\Services\LiveUserService;
 use App\Services\TutorService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
 class LiveClassController extends Controller
@@ -230,5 +231,34 @@ class LiveClassController extends Controller
             'status' => false,
             'message' => "No file found"
         ], 200);
+    }
+
+    /**
+     * Delete File from Agora Tutor
+     * 
+     * @param  Request  $request
+     * @param  int  $id
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function agoraDeleteFile(Request $request, $id)
+    {
+        $data = $request->validate([
+            'filename' => 'required|string'
+        ]);
+
+        $deleted = $this->liveUserService->deleteFileFromAgora($id, $data['filename']);
+        
+        if ($deleted) {
+            return response()->json([
+                'status' => true,
+                'message' => 'File deleted successfully'
+            ], 200);
+        }
+        
+        return response()->json([
+            'status' => false,
+            'message' => "Failed to delete file"
+        ], 400);
     }
 }
