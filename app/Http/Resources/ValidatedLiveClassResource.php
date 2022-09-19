@@ -21,7 +21,7 @@ class ValidatedLiveClassResource extends JsonResource
         $startTime = Carbon::parse($liveClass->start_time);
         $endTime = Carbon::parse($liveClass->start_time)->addMinutes($liveClass->duration);
         return $this->resource ? [
-            'id' => $this->id,
+            'id' => $class->id,
             'class_name' => $class->name,
             'tutor_name' => $class->tutor->user->name,
             'user_name' => $this->user->name,
