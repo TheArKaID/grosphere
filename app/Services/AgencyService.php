@@ -52,7 +52,12 @@ class AgencyService
      */
     public function getConfig($agencyKey)
     {
-        return $this->agency->select('name', 'logo', 'sub_title', 'color')->where('key', $agencyKey)->firstOrFail();
+        $agency = $this->agency->select('id', 'name', 'sub_title',  'color', 'about')->where('key', $agencyKey)->firstOrFail();
+
+        $agency->logo = $this->getLogo($agency->id, 'logo.png');
+        $agency->logo_small = $this->getLogo($agency->id, 'logo_small.png');
+
+        return $agency;
     }
 
     /**
@@ -171,6 +176,24 @@ class AgencyService
 
         $agency->update($data);
         return $agency;
+    }
+
+    /**
+     * Get Logo of Agency
+     * 
+     * @param string $agencyId
+     * @param string $filename
+     * 
+     * @return mixed
+     */
+    public function getLogo($agencyId, $filename = 'logo.png')
+    {
+        $path = 'agencies/' . $agencyId . '/' . $filename;
+
+        if (Storage::cloud()->exists($path)) {
+            return Storage::cloud()->url($path);
+        }
+        return null;
     }
 
     /**

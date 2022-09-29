@@ -30,7 +30,7 @@ class AgencyController extends Controller
         
         return response()->json([
             'status' => 200,
-            'message' => 'Student not found',
+            'message' => 'Success',
             'data' => $agency
         ], 200);
     }
