@@ -68,6 +68,7 @@ class LiveClassService
         DB::beginTransaction();
 
         $data['type'] = Classes::$LIVE;
+        $data['agency_id'] = auth()->user()->agency_id;
         $class = $this->classService->createClass($data);
         $data['class_id'] = $class->id;
         $liveClass = $this->liveClass->create($data);
