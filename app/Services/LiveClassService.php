@@ -39,7 +39,7 @@ class LiveClassService
                 case 'today':
                     $this->liveClass = $this->liveClass->whereDate('start_time', Carbon::today());
                     break;
-                case 'cooming-soon':
+                case 'coming-soon':
                     $this->liveClass = $this->liveClass->whereDate('start_time', '>', [Carbon::today()]);
                     break;
                 default:
@@ -189,7 +189,7 @@ class LiveClassService
                 case 'today':
                     $this->liveClass = $this->liveClass->whereDate('start_time', Carbon::today());
                     break;
-                case 'cooming-soon':
+                case 'coming-soon':
                     $this->liveClass = $this->liveClass->whereDate('start_time', '>', [Carbon::today()]);
                     break;
                 default:
