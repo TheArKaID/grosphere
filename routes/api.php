@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\Admin\AgencyController as AdminAgencyController;
 use App\Http\Controllers\Api\Admin\AnnouncementController;
 use App\Http\Controllers\Api\Admin\CourseCategoryController;
 use App\Http\Controllers\Api\Admin\CourseWorkController;
+use App\Http\Controllers\Api\Admin\GroupController;
 use App\Http\Controllers\Api\Admin\LiveClassController;
 use App\Http\Controllers\Api\Admin\ParentController;
 use App\Http\Controllers\Api\Admin\StudentController;
@@ -83,6 +84,8 @@ Route::middleware(['auth:api'])->group(function () {
         Route::prefix('tutors/{tutor_id}')->group(function () {
             Route::put('password', [TutorController::class, 'changePassword'])->name('tutors.change-password');
         });
+
+        Route::ApiResource('groups', GroupController::class);
 
         // Route::resource('classes', ClassController::class)->except(['edit', 'create']);
         Route::resource('live-classes', LiveClassController::class)->except(['edit', 'create']);
