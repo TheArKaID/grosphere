@@ -39,14 +39,10 @@ class LiveClassService
                 case 'today':
                     $this->liveClass = $this->liveClass->whereDate('start_time', Carbon::today());
                     break;
-                case 'this-week':
-                    $this->liveClass = $this->liveClass->whereBetween('start_time', [Carbon::now(), Carbon::now()->addWeek()]);
-                    break;
-                case 'next-week':
-                    $this->liveClass = $this->liveClass->whereBetween('start_time', [Carbon::now()->addWeek(), Carbon::now()->addWeeks(2)]);
+                case 'cooming-soon':
+                    $this->liveClass = $this->liveClass->whereDate('start_time', '>', [Carbon::today()]);
                     break;
                 default:
-                    $this->liveClass = $this->liveClass->whereDate('start_time', Carbon::today());
                     break;
             }
         }

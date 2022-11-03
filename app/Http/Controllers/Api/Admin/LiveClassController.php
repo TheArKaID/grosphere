@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreLiveClassRequest;
 use App\Http\Requests\UpdateLiveClassRequest;
 use App\Http\Resources\LiveClassResource;
-use App\Models\LiveClass;
 use App\Services\LiveClassService;
 
 class LiveClassController extends Controller
@@ -34,7 +33,7 @@ class LiveClassController extends Controller
         return response()->json([
             'status' => 200,
             'message' => 'Success',
-            'data' => $liveClasses->response()->getData(true)
+            'data' => $liveClasses
         ], 200);
     }
 

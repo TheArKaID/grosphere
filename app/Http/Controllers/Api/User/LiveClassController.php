@@ -41,7 +41,7 @@ class LiveClassController extends Controller
         return response()->json([
             'status' => 200,
             'message' => 'Success',
-            'data' => $liveClasses->response()->getData(true)
+            'data' => $liveClasses
         ], 200);
     }
 
@@ -128,7 +128,7 @@ class LiveClassController extends Controller
             ], 400);
         }
 
-        if(!$this->liveUserService->invalidateLiveUserToken($liveUser->id)) {
+        if (!$this->liveUserService->invalidateLiveUserToken($liveUser->id)) {
             return response()->json([
                 'status' => 400,
                 'message' => 'Token is invalid'

@@ -42,7 +42,7 @@ class LiveClassController extends Controller
         return response()->json([
             'status' => 200,
             'message' => 'Success',
-            'data' => $liveClasses->response()->getData(true)
+            'data' => $liveClasses
         ], 200);
     }
 
@@ -201,7 +201,7 @@ class LiveClassController extends Controller
                 'data' => $uploaded
             ], 200);
         }
-        
+
         return response()->json([
             'status' => false,
             'message' => "Failed to upload file"
@@ -218,7 +218,7 @@ class LiveClassController extends Controller
     public function agoraGetFile($id)
     {
         $file = $this->liveUserService->getFileFromAgora($id);
-        
+
         if (gettype($file) == 'array') {
             return response()->json([
                 'status' => true,
@@ -226,7 +226,7 @@ class LiveClassController extends Controller
                 'data' => $file
             ], 200);
         }
-        
+
         return response()->json([
             'status' => false,
             'message' => "No file found"
@@ -248,14 +248,14 @@ class LiveClassController extends Controller
         ]);
 
         $deleted = $this->liveUserService->deleteFileFromAgora($id, $data['filename']);
-        
+
         if ($deleted) {
             return response()->json([
                 'status' => true,
                 'message' => 'File deleted successfully'
             ], 200);
         }
-        
+
         return response()->json([
             'status' => false,
             'message' => "Failed to delete file"
