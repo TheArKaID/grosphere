@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $name
  * @property string $created_at
  * @property string $updated_at
- * @property GroupAccessClassess[] $groupAccessClassesses
+ * @property GroupAccessClass[] $groupAccessClasses
  * @property GroupStudent[] $groupStudents
  */
 class Group extends Model
@@ -29,9 +29,9 @@ class Group extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function groupAccessClassesses()
+    public function groupAccessClasses()
     {
-        return $this->hasMany(GroupAccessClasses::class);
+        return $this->hasMany(GroupAccessClass::class);
     }
 
     /**
@@ -40,5 +40,27 @@ class Group extends Model
     public function groupStudents()
     {
         return $this->hasMany(GroupStudent::class);
+    }
+
+    /**
+     * Boot on delete
+     * 
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($group) {
+            $group->groupAccessClasses()->delete();
+            
+            foreach ($group->groupStudents as $gs) {
+                $gs->delete();
+            }
+
+            foreach ($group->groupAccessClasses as $ga) {
+                $ga->delete();
+            }
+        });
     }
 }
