@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Classes;
+use App\Models\CourseStudent;
 use App\Models\CourseWork;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -211,7 +212,8 @@ class CourseWorkService
         }
         $courseStudent = $this->courseStudentService->create([
             'course_work_id' => $courseWork->id,
-            'student_id' => $studentId
+            'student_id' => $studentId,
+            'type' => CourseStudent::$PERSONAL
         ]);
         return $courseStudent;
     }

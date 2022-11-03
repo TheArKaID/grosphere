@@ -114,14 +114,14 @@ class CourseWorkController extends Controller
     /**
      * Enroll Student to Course Work
      * 
-     * @param  Request  $data
+     * @param  Request  $request
      * @param  int  $courseWorkId
      * 
      * @return \Illuminate\Http\Response
      */
-    public function enrollStudent(Request $data, int $courseWorkId)
+    public function enrollStudent(Request $request, int $courseWorkId)
     {
-        $res = $this->courseWorkService->enrollByCourseWorkIdAndStudentId($courseWorkId, $data['student_id']);
+        $this->courseWorkService->enrollByCourseWorkIdAndStudentId($courseWorkId, $request['student_id']);
 
         return response()->json([
             'status' => 200,
