@@ -180,6 +180,23 @@ class LiveClassService
             $this->liveClass = $this->searchLiveClasses($search);
         }
 
+        if (request()->has('range')) {
+            $range = request()->get('range');
+            switch ($range) {
+                case 'past':
+                    $this->liveClass = $this->liveClass->whereDate('start_time', '<', [Carbon::today()]);
+                    break;
+                case 'today':
+                    $this->liveClass = $this->liveClass->whereDate('start_time', Carbon::today());
+                    break;
+                case 'cooming-soon':
+                    $this->liveClass = $this->liveClass->whereDate('start_time', '>', [Carbon::today()]);
+                    break;
+                default:
+                    break;
+            }
+        }
+
         if (request()->has('page') && request()->get('page') == 'all') {
             return $this->liveClass->get();
         }
