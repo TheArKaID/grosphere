@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property integer $course_work_id
  * @property integer $student_id
  * @property boolean $status
+ * @property integer $type
  * @property string $created_at
  * @property string $updated_at
  * @property CourseWork $courseWork
@@ -17,6 +18,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class CourseStudent extends Model
 {
+    /**
+     * The type of student enrollment
+     */
+    public static $PERSONAL = 1;
+    public static $GROUP = 2;
+
     /**
      * The "type" of the auto-incrementing ID.
      * 
@@ -27,7 +34,7 @@ class CourseStudent extends Model
     /**
      * @var array
      */
-    protected $fillable = ['course_work_id', 'student_id', 'status', 'created_at', 'updated_at'];
+    protected $fillable = ['course_work_id', 'student_id', 'status', 'type', 'created_at', 'updated_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
