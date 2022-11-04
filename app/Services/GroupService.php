@@ -135,4 +135,20 @@ class GroupService
 
         return $group;
     }
+
+    /**
+     * Check if Group has access to Course
+     * 
+     * @param int $groupId
+     * @param int $classId
+     * 
+     * @return bool
+     */
+    public function hasClassAccess($groupId, $classId)
+    {
+        $group = $this->getOne($groupId);
+        $classes = $group->groupAccessClasses()->where('class_id', $classId)->get();
+
+        return $classes->count() > 0;
+    }
 }

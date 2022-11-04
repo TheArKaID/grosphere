@@ -121,11 +121,79 @@ class CourseWorkController extends Controller
      */
     public function enrollStudent(Request $request, int $courseWorkId)
     {
-        $this->courseWorkService->enrollByCourseWorkIdAndStudentId($courseWorkId, $request['student_id']);
+        $enrolled = $this->courseWorkService->enrollByCourseWorkIdAndStudentId($courseWorkId, $request['student_id']);
+
+        if (gettype($enrolled) == 'string') {
+            return response()->json([
+                'status' => 400,
+                'message' => $enrolled
+            ], 400);
+        }
 
         return response()->json([
             'status' => 200,
             'message' => 'Student enrolled to course work'
+        ], 200);
+    }
+
+    /**
+     * Unenroll Student from Course Work
+     * 
+     * @param  Request  $request
+     * @param  int  $courseWorkId
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function unenrollStudent(Request $request, int $courseWorkId)
+    {
+        $unenrolled = $this->courseWorkService->unenrollByCourseWorkIdAndStudentId($courseWorkId, $request['student_id']);
+
+        if (gettype($unenrolled) == 'string') {
+            return response()->json([
+                'status' => 400,
+                'message' => $unenrolled
+            ], 400);
+        }
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Student unenrolled from course work'
+        ], 200);
+    }
+
+    /**
+     * Enroll Group to Course Work
+     * 
+     * @param  Request  $request
+     * @param  int  $courseWorkId
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function enrollGroup(Request $request, int $courseWorkId)
+    {
+        $this->courseWorkService->enrollByCourseWorkIdAndGroupId($courseWorkId, $request['group_id']);
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Group enrolled to course work'
+        ], 200);
+    }
+
+    /**
+     * Unenroll Group from Course Work
+     * 
+     * @param  int  $courseWorkId
+     * @param  int  $groupId
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function unenrollGroup(int $courseWorkId, int $groupId)
+    {
+        $this->courseWorkService->unenrollByCourseWorkIdAndGroupId($courseWorkId, $groupId);
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Group unenrolled from course work'
         ], 200);
     }
 }

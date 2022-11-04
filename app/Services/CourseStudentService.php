@@ -106,6 +106,19 @@ class CourseStudentService
     }
 
     /**
+     * Get All Course Student by course work id and student id
+     * 
+     * @param int $courseWorkId
+     * @param int $studentId
+     * 
+     * @return CourseStudent
+     */
+    public function getAllByCourseWorkIdAndStudentId($courseWorkId, $studentId)
+    {
+        return $this->courseStudent->where('course_work_id', $courseWorkId)->where('student_id', $studentId)->get();
+    }
+
+    /**
      * Update Course Student
      * 
      * @param int $id

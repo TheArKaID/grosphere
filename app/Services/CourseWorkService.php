@@ -10,18 +10,20 @@ use Illuminate\Support\Facades\DB;
 
 class CourseWorkService
 {
-    private $courseWork, $classService, $courseStudentService, $courseChapterService;
+    private $courseWork, $classService, $courseStudentService, $courseChapterService, $groupService;
 
     public function __construct(
         CourseWork $courseWork,
         ClassService $classService,
         CourseStudentService $courseStudentService,
-        CourseChapterService $courseChapterService
+        CourseChapterService $courseChapterService,
+        GroupService $groupService
     ) {
         $this->courseWork = $courseWork;
         $this->classService = $classService;
         $this->courseStudentService = $courseStudentService;
         $this->courseChapterService = $courseChapterService;
+        $this->groupService = $groupService;
     }
 
     /**
@@ -202,13 +204,13 @@ class CourseWorkService
      * @param int $courseWorkId
      * @param int $studentId
      * 
-     * @return CourseWork
+     * @return CourseWork|String
      */
     public function enrollByCourseWorkIdAndStudentId($courseWorkId, $studentId)
     {
         $courseWork = $this->getCourseWorkById($courseWorkId);
         if ($this->courseStudentService->getByCourseWorkIdAndStudentId($courseWork->id, $studentId, false)) {
-            return false;
+            return 'Student already enrolled to this course from Group. Cannot enroll personally';
         }
         $courseStudent = $this->courseStudentService->create([
             'course_work_id' => $courseWork->id,
@@ -216,5 +218,88 @@ class CourseWorkService
             'type' => CourseStudent::$PERSONAL
         ]);
         return $courseStudent;
+    }
+
+    /**
+     * Unenroll Course Work by course work id and student id
+     * 
+     * @param int $courseWorkId
+     * @param int $studentId
+     * 
+     * @return bool|string
+     */
+    public function unenrollByCourseWorkIdAndStudentId($courseWorkId, $studentId)
+    {
+        $courseWork = $this->getCourseWorkById($courseWorkId);
+        $courseStudent = $this->courseStudentService->getByCourseWorkIdAndStudentId($courseWork->id, $studentId, false);
+        if (!$courseStudent) {
+            return 'Student not enrolled to this course';
+        } else if ($courseStudent->type == CourseStudent::$GROUP) {
+            return 'Student enrolled to this course from Group. Cannot unenroll personally';
+        }
+
+        $courseStudent->delete();
+        return true;
+    }
+
+    /**
+     * Enroll Course Work by course work id and group id
+     * 
+     * @param int $courseWorkId
+     * @param int $groupId
+     * 
+     * @return bool
+     */
+    public function enrollByCourseWorkIdAndGroupId($courseWorkId, $groupId)
+    {
+        $courseWork = $this->getCourseWorkById($courseWorkId);
+        $group = $this->groupService->getOne($groupId);
+        if ($this->groupService->hasClassAccess($courseWork->id, $group->id, false)) {
+            return false;
+        }
+
+        $group->classes()->attach($courseWork->class_id);
+
+        $group->students->each(function ($student) use ($courseWork) {
+            $this->courseStudentService->create([
+                'course_work_id' => $courseWork->id,
+                'student_id' => $student->id,
+                'type' => CourseStudent::$GROUP,
+                'status' => 1
+            ]);
+        });
+
+        return true;
+    }
+
+    /**
+     * Unenroll Course Work by course work id and group id
+     * 
+     * @param int $courseWorkId
+     * @param int $groupId
+     * 
+     * @return bool
+     */
+    public function unenrollByCourseWorkIdAndGroupId($courseWorkId, $groupId)
+    {
+        $courseWork = $this->getCourseWorkById($courseWorkId);
+        $group = $this->groupService->getOne($groupId);
+
+        if (!$this->groupService->hasClassAccess($group->id, $courseWork->class_id)) {
+            return false;
+        }
+
+        DB::beginTransaction();
+        $group->students->each(function ($student) use ($courseWork) {
+            $student->courseStudents->each(function ($cs) use ($courseWork) {
+                if ($cs->type == CourseStudent::$GROUP && $cs->course_work_id == $courseWork->id) {
+                    $cs->delete();
+                }
+            });
+        });
+        $group->classes()->detach($courseWork->class_id);
+        DB::commit();
+
+        return true;
     }
 }
