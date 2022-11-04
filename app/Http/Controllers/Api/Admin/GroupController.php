@@ -8,6 +8,7 @@ use App\Http\Requests\StoreGroupRequest;
 use App\Http\Requests\UpdateGroupRequest;
 use App\Http\Resources\GroupResource;
 use App\Services\GroupService;
+use Illuminate\Http\Request;
 
 class GroupController extends Controller
 {
@@ -102,6 +103,44 @@ class GroupController extends Controller
         return response()->json([
             'status' => 200,
             'message' => 'Success'
+        ], 200);
+    }
+
+    /**
+     * Add Student to the Group
+     * 
+     * @param Request $request
+     * @param int $id
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function addStudent(Request $request, int $id)
+    {
+        $group = $this->groupService->addStudent($id, $request->student_ids);
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Success',
+            'data' => new GroupResource($group)
+        ], 200);
+    }
+    
+    /**
+     * Remove Student from the Group
+     * 
+     * @param Request $request
+     * @param int $id
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function removeStudent(Request $request, int $id)
+    {
+        $group = $this->groupService->removeStudent($id, $request->student_ids);
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Success',
+            'data' => new GroupResource($group)
         ], 200);
     }
 }

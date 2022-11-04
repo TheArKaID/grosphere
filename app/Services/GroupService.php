@@ -3,16 +3,17 @@
 namespace App\Services;
 
 use App\Models\Group;
+use App\Models\GroupStudent;
 use Illuminate\Support\Facades\DB;
 
 class GroupService
 {
-    private $group, $userService;
+    private $group, $groupStudent;
 
-    public function __construct(Group $group, UserService $userService)
+    public function __construct(Group $group, GroupStudent $groupStudent)
     {
         $this->group = $group;
-        $this->userService = $userService;
+        $this->groupStudent = $groupStudent;
     }
 
     /**
@@ -101,5 +102,37 @@ class GroupService
     public function search($search)
     {
         return $this->group->where('name', 'like', '%' . $search . '%');
+    }
+
+    /**
+     * Add Student to Group by Creating Group Student
+     * 
+     * @param int $groupId
+     * @param array $studentIds
+     * 
+     * @return \App\Models\Group
+     */
+    public function addStudent($groupId, $studentIds)
+    {
+        $group = $this->getOne($groupId);
+        $group->students()->attach($studentIds);
+
+        return $group;
+    }
+
+    /**
+     * Remove Student from Group by Deleting Group Student
+     * 
+     * @param int $groupId
+     * @param array $studentIds
+     * 
+     * @return \App\Models\Group
+     */
+    public function removeStudent($groupId, $studentIds)
+    {
+        $group = $this->getOne($groupId);
+        $group->students()->detach($studentIds);
+
+        return $group;
     }
 }

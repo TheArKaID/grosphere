@@ -86,6 +86,11 @@ Route::middleware(['auth:api'])->group(function () {
         });
 
         Route::ApiResource('groups', GroupController::class);
+        Route::prefix('groups/{group_id}')->group(function () {
+            Route::post('students', [GroupController::class, 'addStudent'])->name('groups.add-student');
+            Route::delete('students', [GroupController::class, 'removeStudent'])->name('groups.remove-student');
+        });
+
 
         // Route::resource('classes', ClassController::class)->except(['edit', 'create']);
         Route::resource('live-classes', LiveClassController::class)->except(['edit', 'create']);

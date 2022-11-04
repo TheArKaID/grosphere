@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * @property integer $id
@@ -40,6 +41,16 @@ class Group extends Model
     public function groupStudents()
     {
         return $this->hasMany(GroupStudent::class);
+    }
+
+    /**
+     * Get all of the students for the Group
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function students(): BelongsToMany
+    {
+        return $this->belongsToMany(Student::class, GroupStudent::class);
     }
 
     /**
