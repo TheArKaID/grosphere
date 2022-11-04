@@ -84,13 +84,13 @@ class CourseChapterStudent extends Model
     {
         parent::boot();
 
-        static::deleting(function ($courseChapterStudent) {
-            foreach ($courseChapterStudent->studentTests as $studentTest) {
-                $studentTest->delete();
+        static::deleting(function ($ccs) {
+            foreach ($ccs->studentTests as $st) {
+                $st->delete();
             }
 
-            if ($courseChapterStudent->studentAssignment) {
-                $courseChapterStudent->studentAssignment->delete();
+            if ($ccs->studentAssignment) {
+                $ccs->studentAssignment->delete();
             }
         });
     }

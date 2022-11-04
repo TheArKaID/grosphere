@@ -60,4 +60,14 @@ class Student extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    /**
+     * Get all of the courseStudents for the Student
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function courseStudents(): HasMany
+    {
+        return $this->hasMany(CourseStudent::class);
+    }
 }

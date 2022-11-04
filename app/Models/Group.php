@@ -36,6 +36,16 @@ class Group extends Model
     }
 
     /**
+     * Get all of the classes for the Group
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function classes(): BelongsToMany
+    {
+        return $this->belongsToMany(Classes::class, GroupAccessClass::class, 'group_id', 'class_id');
+    }
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function groupStudents()

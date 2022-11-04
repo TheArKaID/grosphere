@@ -61,4 +61,30 @@ class CourseStudent extends Model
     {
         return $this->hasMany(AskAnswer::class);
     }
+
+    /**
+     * Get all of the courseChapterStudent for the CourseStudent
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function courseChapterStudent(): HasMany
+    {
+        return $this->hasMany(CourseChapterStudent::class);
+    }
+
+    /**
+     * Delete on boot
+     * 
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($courseStudent) {
+            $courseStudent->askAnswers->each->delete();
+            
+            $courseStudent->courseChapterStudent->each->delete();
+        });
+    }
 }
