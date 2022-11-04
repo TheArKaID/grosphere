@@ -25,6 +25,13 @@ class GroupResource extends JsonResource
                     'email' => $student->user->email,
                 ];
             }) : [],
+            'classes' => $this->classes ? $this->classes->map(function ($class) {
+                return [
+                    'id' => $class->id,
+                    'name' => $class->name,
+                    'description' => $class->description,
+                ];
+            }) : [],
         ] : [];
     }
 }
