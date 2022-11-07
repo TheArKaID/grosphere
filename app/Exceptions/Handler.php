@@ -48,16 +48,16 @@ class Handler extends ExceptionHandler
             if ($request->is('api/*')) {
                 if ($e->getPrevious() instanceof ModelNotFoundException) {
                     return response()->json([
-                        'status' => 200,
+                        'status' => 400,
                         'message' => 'Failed. ' . explode('\\', $e->getPrevious()->getModel())[2] . ' not found'
-                    ], 200);
+                    ], 400);
                 }
 
                 if ($e->getPrevious() instanceof ModelGetEmptyException) {
                     return response()->json([
-                        'status' => 200,
+                        'status' => 400,
                         'message' => 'Failed. No ' . $e->getPrevious()->getMessage() . ' found'
-                    ], 200);
+                    ], 400);
                 }
                 return response()->json([
                     'status' => 404,
