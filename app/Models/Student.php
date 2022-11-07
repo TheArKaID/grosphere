@@ -70,4 +70,14 @@ class Student extends Model
     {
         return $this->hasMany(CourseStudent::class);
     }
+
+    /**
+     * Get all of the liveClassStudents for the Student
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function liveClassStudents(): HasMany
+    {
+        return $this->hasMany(LiveClassStudent::class);
+    }
 }

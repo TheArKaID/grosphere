@@ -59,6 +59,16 @@ class LiveClass extends Model
     }
 
     /**
+     * Get all of the liveClassStudents for the CourseWork
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function liveClassStudents(): HasMany
+    {
+        return $this->hasMany(LiveClassStudent::class);
+    }
+
+    /**
      * Get the setting associated with the LiveClass
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
