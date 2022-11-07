@@ -87,6 +87,19 @@ class CourseWork extends Model
     }
     
     /**
+     * Scope a query to only show CourseWorks with Personal or Group access
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeAccess($query)
+    {
+        return $query->whereHas('courseStudents', function (Builder $query) {
+            $query->where('student_id', '=', auth()->user()->detail->id);
+        });
+    }
+
+    /**
      * The "booted" method of the model.
      *
      * @return void

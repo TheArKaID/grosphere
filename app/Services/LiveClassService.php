@@ -39,8 +39,12 @@ class LiveClassService
      * 
      * @return Collection
      */
-    public function getAllLiveClasses()
+    public function getAllLiveClasses($limitAccess = false)
     {
+        if ($limitAccess) {
+            $this->liveClass = $this->liveClass->access();
+        }
+
         if (request()->has('search')) {
             $search = request()->get('search');
             $this->liveClass = $this->searchLiveClasses($search);

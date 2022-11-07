@@ -33,8 +33,11 @@ class CourseWorkService
      * 
      * @return Collection
      */
-    public function getAll($tutorId = null)
+    public function getAll($tutorId = null, $limitAccess = false)
     {
+        if ($limitAccess) {
+            $this->courseWork = $this->courseWork->access();
+        }
         if ($tutorId) {
             $this->courseWork = $this->courseWork->whereHas('class', function ($class) use ($tutorId) {
                 $class->where('tutor_id', $tutorId);

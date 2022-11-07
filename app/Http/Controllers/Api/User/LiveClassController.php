@@ -32,7 +32,7 @@ class LiveClassController extends Controller
      */
     public function index()
     {
-        $liveClasses = LiveClassResource::collection($this->liveClassService->getAllLiveClasses());
+        $liveClasses = LiveClassResource::collection($this->liveClassService->getAllLiveClasses(true));
 
         if ($liveClasses->count() == 0) {
             throw new ModelGetEmptyException("Live Class");
