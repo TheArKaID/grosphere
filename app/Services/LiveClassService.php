@@ -8,15 +8,17 @@ use App\Models\LiveClass;
 use App\Models\LiveClassSetting;
 use App\Models\LiveClassStudent;
 use App\Models\Student;
+use App\Models\Tutor;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class LiveClassService
 {
-    private $liveClass, $student, $classService, $liveClassSetting, $liveClassStudent, $groupService;
+    private $liveClass, $tutor, $student, $classService, $liveClassSetting, $liveClassStudent, $groupService;
 
     public function __construct(
         LiveClass $liveClass,
+        Tutor $tutor,
         Student $student,
         ClassService $classService,
         LiveClassSetting $liveClassSetting,
@@ -24,6 +26,7 @@ class LiveClassService
         GroupService $groupService
     ) {
         $this->liveClass = $liveClass;
+        $this->tutor = $tutor;
         $this->student = $student;
         $this->classService = $classService;
         $this->liveClassSetting = $liveClassSetting;
@@ -460,5 +463,26 @@ class LiveClassService
     public function getLiveClassStudentByLiveClassIdAndStudentId($liveClassId, $studentId)
     {
         return $this->liveClassStudent->where('live_class_id', $liveClassId)->where('student_id', $studentId)->first();
+    }
+
+    /**
+     * Switch Live Class Tutor by LiveClassId and TutorId
+     * 
+     * @param int $liveClassId
+     * @param int $tutorId
+     * 
+     * @return bool|string
+     */
+    public function switchTutorByLiveClassIdAndTutorId($liveClassId, $tutorId)
+    {
+        $this->tutor->select('id')->findOrFail($tutorId);
+        
+        $liveClass = $this->getLiveClassById($liveClassId);
+
+        if ($liveClass->class->tutor_id == $tutorId) {
+            return 'Tutor already assigned to this Live Class';
+        }
+        $liveClass->class->update(['tutor_id' => $tutorId]);
+        return true;
     }
 }

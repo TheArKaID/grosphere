@@ -195,4 +195,29 @@ class LiveClassController extends Controller
             'message' => 'Group unenrolled from live class'
         ], 200);
     }
+
+    /**
+     * Switch Live Class Tutor
+     * 
+     * @param  Request  $request
+     * @param  int  $liveClassId
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function switchTutor(Request $request, int $liveClassId)
+    {
+        $switched = $this->liveClassService->switchTutorByLiveClassIdAndTutorId($liveClassId, $request['tutor_id']);
+
+        if (gettype($switched) == 'string') {
+            return response()->json([
+                'status' => 400,
+                'message' => $switched
+            ], 400);
+        }
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Live Class Tutor Switched Successfully'
+        ], 200);
+    }
 }

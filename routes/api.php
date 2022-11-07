@@ -98,6 +98,7 @@ Route::middleware(['auth:api'])->group(function () {
             Route::delete('students/enroll/{student_id}', [LiveClassController::class, 'unenrollStudent'])->name('students.delete-enroll');
             Route::post('groups/enroll', [LiveClassController::class, 'enrollGroup'])->name('groups.enroll');
             Route::delete('groups/enroll/{group_id}', [LiveClassController::class, 'unenrollGroup'])->name('groups.delete-enroll');
+            Route::post('tutor/switch', [LiveClassController::class, 'switchTutor'])->name('tutor.switch');
         });
 
         Route::resource('course-works', CourseWorkController::class)->except(['edit', 'create']);
