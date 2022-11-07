@@ -8,6 +8,7 @@ use App\Http\Requests\StoreLiveClassRequest;
 use App\Http\Requests\UpdateLiveClassRequest;
 use App\Http\Resources\LiveClassResource;
 use App\Services\LiveClassService;
+use Illuminate\Http\Request;
 
 class LiveClassController extends Controller
 {
@@ -106,6 +107,92 @@ class LiveClassController extends Controller
         return response()->json([
             'status' => 200,
             'message' => 'Live Class Deleted Successfully'
+        ], 200);
+    }
+
+    /**
+     * Enroll Student to Live Class
+     * 
+     * @param  Request  $request
+     * @param  int  $liveClassId
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function enrollStudent(Request $request, int $liveClassId)
+    {
+        $enrolled = $this->liveClassService->enrollByLiveClassIdAndStudentId($liveClassId, $request['student_id']);
+
+        if (gettype($enrolled) == 'string') {
+            return response()->json([
+                'status' => 400,
+                'message' => $enrolled
+            ], 400);
+        }
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Student enrolled to live class'
+        ], 200);
+    }
+
+    /**
+     * Unenroll Student from Live Class
+     * 
+     * @param  Request  $request
+     * @param  int  $liveClassId
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function unenrollStudent(Request $request, int $liveClassId)
+    {
+        $unenrolled = $this->liveClassService->unenrollByLiveClassIdAndStudentId($liveClassId, $request['student_id']);
+
+        if (gettype($unenrolled) == 'string') {
+            return response()->json([
+                'status' => 400,
+                'message' => $unenrolled
+            ], 400);
+        }
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Student unenrolled from live class'
+        ], 200);
+    }
+
+    /**
+     * Enroll Group to Live Class
+     * 
+     * @param  Request  $request
+     * @param  int  $liveClassId
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function enrollGroup(Request $request, int $liveClassId)
+    {
+        $this->liveClassService->enrollByLiveClassIdAndGroupId($liveClassId, $request['group_id']);
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Group enrolled to live class'
+        ], 200);
+    }
+
+    /**
+     * Unenroll Group from Live Class
+     * 
+     * @param  int  $liveClassId
+     * @param  int  $groupId
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function unenrollGroup(int $liveClassId, int $groupId)
+    {
+        $this->liveClassService->unenrollByLiveClassIdAndGroupId($liveClassId, $groupId);
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Group unenrolled from live class'
         ], 200);
     }
 }

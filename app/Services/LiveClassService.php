@@ -3,23 +3,32 @@
 namespace App\Services;
 
 use App\Models\Classes;
+use App\Models\CourseStudent;
 use App\Models\LiveClass;
 use App\Models\LiveClassSetting;
+use App\Models\LiveClassStudent;
+use App\Models\Student;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class LiveClassService
 {
-    private $liveClass, $classService, $liveClassSetting;
+    private $liveClass, $student, $classService, $liveClassSetting, $liveClassStudent, $groupService;
 
     public function __construct(
         LiveClass $liveClass,
+        Student $student,
         ClassService $classService,
-        LiveClassSetting $liveClassSetting
+        LiveClassSetting $liveClassSetting,
+        LiveClassStudent $liveClassStudent,
+        GroupService $groupService
     ) {
         $this->liveClass = $liveClass;
+        $this->student = $student;
         $this->classService = $classService;
         $this->liveClassSetting = $liveClassSetting;
+        $this->liveClassStudent = $liveClassStudent;
+        $this->groupService = $groupService;
     }
 
     /**
@@ -309,5 +318,147 @@ class LiveClassService
         $currentTime = Carbon::now();
 
         return $currentTime->lt($liveClassStartTime) ? 'Live Class has not started' : false;
+    }
+    
+    /**
+     * Is Student Exist
+     * 
+     * @param int $studentId
+     * 
+     * @return bool
+     */
+    public function isStudentExist($studentId)
+    {
+        return $this->student->select('id')->findOrFail($studentId);
+    }
+
+    /**
+     * Create LiveClassStudent
+     * 
+     * @param int $liveClassId
+     * @param int $studentId
+     * @param int $type
+     * 
+     * @return LiveClassStudent
+     */
+    public function createLiveClassStudent($liveClassId, $studentId, $type)
+    {
+        $liveClassStudent = $this->liveClassStudent->create([
+            'live_class_id' => $liveClassId,
+            'student_id' => $studentId,
+            'type' => $type
+        ]);
+
+        return $liveClassStudent;
+    }
+
+    /**
+     * Enroll Live Class by live class id and student id
+     * 
+     * @param int $liveClassId
+     * @param int $studentId
+     * 
+     * @return LiveClassStudent|String
+     */
+    public function enrollByLiveClassIdAndStudentId($liveClassId, $studentId)
+    {
+        $this->isStudentExist($studentId);
+        if ($this->getLiveClassStudentByLiveClassIdAndStudentId($liveClassId, $studentId)) {
+            return 'Student already enrolled to this Live CLass. Cannot re-enroll.';
+        }
+        $courseStudent = $this->createLiveClassStudent($liveClassId, $studentId, LiveClassStudent::$PERSONAL);
+        return $courseStudent;
+    }
+    
+    /**
+     * Unenroll Live Class by live class id and student id
+     * 
+     * @param int $liveClassId
+     * @param int $studentId
+     * 
+     * @return bool|string
+     */
+    public function unenrollByLiveClassIdAndStudentId($liveClassId, $studentId)
+    {
+        $liveClassStudent = $this->getLiveClassStudentByLiveClassIdAndStudentId($liveClassId, $studentId);
+        if (!$liveClassStudent) {
+            return 'Student not enrolled to this Live CLass';
+        } else if ($liveClassStudent->type == CourseStudent::$GROUP) {
+            return 'Student enrolled to this Live CLass from Group. Cannot unenroll personally';
+        }
+
+        $liveClassStudent->delete();
+        return true;
+    }
+
+    /**
+     * Enroll Live Class by live class id and group id
+     * 
+     * @param int $liveClassId
+     * @param int $groupId
+     * 
+     * @return bool
+     */
+    public function enrollByLiveClassIdAndGroupId($liveClassId, $groupId)
+    {
+        $liveClass = $this->getLiveClassById($liveClassId);
+        $group = $this->groupService->getOne($groupId);
+        if ($this->groupService->hasClassAccess($group->id, $liveClass->class_id)) {
+            return false;
+        }
+
+        DB::beginTransaction();
+        $group->classes()->attach($liveClass->class_id);
+
+        $group->students->each(function ($student) use ($liveClass) {
+            $this->isStudentExist($student->id);
+            $this->createLiveClassStudent($liveClass->id, $student->id, LiveClassStudent::$GROUP);
+        });
+
+        DB::commit();
+        return true;
+    }
+
+    /**
+     * Unenroll Live Class by live class id and group id
+     * 
+     * @param int $liveClassId
+     * @param int $groupId
+     * 
+     * @return bool
+     */
+    public function unenrollByLiveClassIdAndGroupId($liveClassId, $groupId)
+    {
+        $liveClass = $this->getLiveClassById($liveClassId);
+        $group = $this->groupService->getOne($groupId);
+
+        if (!$this->groupService->hasClassAccess($group->id, $liveClass->class_id)) {
+            return false;
+        }
+        DB::beginTransaction();
+        $group->students->each(function ($student) use ($liveClass) {
+            $student->liveClassStudents->each(function ($lcs) use ($liveClass) {
+                if ($lcs->type == LiveClassStudent::$GROUP && $lcs->live_class_id == $liveClass->id) {
+                    $lcs->delete();
+                }
+            });
+        });
+        $group->classes()->detach($liveClass->class_id);
+        DB::commit();
+
+        return true;
+    }
+
+    /**
+     * Get Live Class Student by LiveClassId and StudentId
+     * 
+     * @param int $liveClassId
+     * @param int $studentId
+     * 
+     * @return LiveClassStudent
+     */
+    public function getLiveClassStudentByLiveClassIdAndStudentId($liveClassId, $studentId)
+    {
+        return $this->liveClassStudent->where('live_class_id', $liveClassId)->where('student_id', $studentId)->first();
     }
 }

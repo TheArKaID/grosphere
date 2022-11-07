@@ -17,6 +17,12 @@ use Illuminate\Database\Eloquent\Model;
 class LiveClassStudent extends Model
 {
     /**
+     * The type of student enrollment
+     */
+    public static $PERSONAL = 1;
+    public static $GROUP = 2;
+
+    /**
      * The "type" of the auto-incrementing ID.
      * 
      * @var string

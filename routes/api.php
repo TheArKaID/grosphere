@@ -91,9 +91,15 @@ Route::middleware(['auth:api'])->group(function () {
             Route::delete('students', [GroupController::class, 'removeStudent'])->name('groups.remove-student');
         });
 
-
         // Route::resource('classes', ClassController::class)->except(['edit', 'create']);
         Route::resource('live-classes', LiveClassController::class)->except(['edit', 'create']);
+        Route::name('live-classes.')->prefix('live-classes/{live_class_id}')->group(function () {
+            Route::post('students/enroll', [LiveClassController::class, 'enrollStudent'])->name('students.enroll');
+            Route::delete('students/enroll/{student_id}', [LiveClassController::class, 'unenrollStudent'])->name('students.delete-enroll');
+            Route::post('groups/enroll', [LiveClassController::class, 'enrollGroup'])->name('groups.enroll');
+            Route::delete('groups/enroll/{group_id}', [LiveClassController::class, 'unenrollGroup'])->name('groups.delete-enroll');
+        });
+
         Route::resource('course-works', CourseWorkController::class)->except(['edit', 'create']);
         Route::name('course-works.')->prefix('course-works/{course_work_id}')->group(function () {
             Route::post('students/enroll', [CourseWorkController::class, 'enrollStudent'])->name('students.enroll');
