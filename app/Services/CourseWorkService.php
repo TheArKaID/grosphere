@@ -210,7 +210,7 @@ class CourseWorkService
     {
         $courseWork = $this->getCourseWorkById($courseWorkId);
         if ($this->courseStudentService->getByCourseWorkIdAndStudentId($courseWork->id, $studentId, false)) {
-            return 'Student already enrolled to this course from Group. Cannot enroll personally';
+            return 'Student already enrolled to this course. Cannot re-enroll.';
         }
         $courseStudent = $this->courseStudentService->create([
             'course_work_id' => $courseWork->id,
@@ -254,10 +254,11 @@ class CourseWorkService
     {
         $courseWork = $this->getCourseWorkById($courseWorkId);
         $group = $this->groupService->getOne($groupId);
-        if ($this->groupService->hasClassAccess($courseWork->id, $group->id, false)) {
+        if ($this->groupService->hasClassAccess($group->id, $courseWork->class_id)) {
             return false;
         }
 
+        DB::beginTransaction();
         $group->classes()->attach($courseWork->class_id);
 
         $group->students->each(function ($student) use ($courseWork) {
@@ -268,6 +269,7 @@ class CourseWorkService
                 'status' => 1
             ]);
         });
+        DB::commit();
 
         return true;
     }
