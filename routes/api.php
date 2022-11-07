@@ -19,6 +19,7 @@ use App\Http\Controllers\Api\Student\ChapterMaterialController as StudentChapter
 use App\Http\Controllers\Api\Student\CourseChapterController as StudentCourseChapterController;
 use App\Http\Controllers\Api\Student\CourseStudentController;
 use App\Http\Controllers\Api\Student\CourseWorkController as StudentCourseWorkController;
+use App\Http\Controllers\Api\Student\LiveClassController as StudentLiveClassController;
 use App\Http\Controllers\Api\Student\TestQuestionController as StudentTestQuestiontController;
 use App\Http\Controllers\Api\Super\AdminController;
 use App\Http\Controllers\Api\Super\AgencyController;
@@ -177,6 +178,9 @@ Route::middleware(['auth:api'])->group(function () {
             Route::post('{course_student_id}', [StudentAskAnswerController::class, 'store'])->name('store');
         });
 
+        Route::name('live-classes.')->prefix('live-classes/{live_class_id}')->group(function () {
+            Route::post('enroll', [StudentLiveClassController::class, 'enroll'])->name('enroll');
+        });
         Route::apiResource('course-works', StudentCourseWorkController::class)->only(['index', 'show']);
         Route::name('course-works.')->prefix('course-works/{course_work_id}')->group(function () {
             Route::post('enroll', [StudentCourseWorkController::class, 'enroll'])->name('enroll');

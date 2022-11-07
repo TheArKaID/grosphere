@@ -69,6 +69,19 @@ class LiveClassService
     }
 
     /**
+     * Gell all live classes by student
+     * 
+     * @return Collection
+     */
+    public function getAllStudentLiveClasses()
+    {
+        $student = $this->student->find(request()->get('student_id'));
+        $liveClasses = $student->liveClasses()->access()->get();
+        return $liveClasses;
+        
+    }
+
+    /**
      * Cretae Live Class
      * 
      * @param array $data
@@ -370,6 +383,7 @@ class LiveClassService
     public function enrollByLiveClassIdAndStudentId($liveClassId, $studentId)
     {
         $this->isStudentExist($studentId);
+        $this->getLiveClassById($liveClassId);
         if ($this->getLiveClassStudentByLiveClassIdAndStudentId($liveClassId, $studentId)) {
             return 'Student already enrolled to this Live CLass. Cannot re-enroll.';
         }
