@@ -143,4 +143,76 @@ class GroupController extends Controller
             'data' => new GroupResource($group)
         ], 200);
     }
+    
+    /**
+     * Enroll this group to Live Class
+     * 
+     * @param int $groupId
+     * @param int $liveClassId
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function enrollLiveClass(int $groupId, int $liveClassId)
+    {
+        $this->groupService->addLiveClassAccess($groupId, $liveClassId);
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Group has been enrolled to Live Class'
+        ], 200);
+    }
+
+    /**
+     * Unenroll this group to Live Class
+     * 
+     * @param int $groupId
+     * @param int $liveClassId
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function unenrollLiveClass(int $groupId, int $liveClassId)
+    {
+        $this->groupService->removeLiveClassAccess($groupId, $liveClassId);
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Group has been unenrolled to Live Class'
+        ], 200);
+    }
+    
+    /**
+     * Enroll this group to Course Work
+     * 
+     * @param int $groupId
+     * @param int $courseWorkId
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function enrollCourseWork(int $groupId, int $courseWorkId)
+    {
+        $this->groupService->addCourseWorkAccess($groupId, $courseWorkId);
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Group has been enrolled to Course Work'
+        ], 200);
+    }
+
+    /**
+     * Unenroll this group to Course Work
+     * 
+     * @param int $groupId
+     * @param int $courseWorkId
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function unenrollCourseWork(int $groupId, int $courseWorkId)
+    {
+        $this->groupService->removeCourseWorkAccess($groupId, $courseWorkId);
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Group has been unenrolled to Course Work'
+        ], 200);
+    }
 }

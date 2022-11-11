@@ -90,6 +90,10 @@ Route::middleware(['auth:api'])->group(function () {
         Route::prefix('groups/{group_id}')->group(function () {
             Route::post('students', [GroupController::class, 'addStudent'])->name('groups.add-student');
             Route::delete('students', [GroupController::class, 'removeStudent'])->name('groups.remove-student');
+            Route::post('live-classes/{live_class_id}/enroll', [GroupController::class, 'enrollLiveClass'])->name('live-classes.enroll');
+            Route::delete('live-classes/{live_class_id}/enroll', [GroupController::class, 'unenrollLiveClass'])->name('live-classes.delete-enroll');
+            Route::post('course-works/{course_work_id}/enroll', [GroupController::class, 'enrollCourseWork'])->name('course-works.enroll');
+            Route::delete('course-works/{course_work_id}/enroll', [GroupController::class, 'unenrollCourseWork'])->name('course-works.delete-enroll');
         });
 
         // Route::resource('classes', ClassController::class)->except(['edit', 'create']);
