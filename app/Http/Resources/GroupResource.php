@@ -15,6 +15,31 @@ class GroupResource extends JsonResource
     public function toArray($request)
     {
         parent::wrap('groups');
+        $array = [];
+        if ($this->classes) {
+            $array['courseWorks'] = $this->classes->filter(function ($class) {
+                return $class->courseWork;
+            })->map(function ($class) {
+                return [
+                    'id' => $class->id,
+                    'name' => $class->name,
+                    'description' => $class->description,
+                    'thumbnail' => $class->thumbnail ? asset('storage/class/thumbnail/' . $class->thumbnail) : asset('storage/class/thumbnail/default.png'),
+                    'tutor' => $class->tutor->user->name
+                ];
+            })->toArray();
+            $array['liveClasses'] = $this->classes->filter(function ($class) {
+                return $class->liveClass;
+            })->map(function ($class) {
+                return [
+                    'id' => $class->id,
+                    'name' => $class->name,
+                    'description' => $class->description,
+                    'thumbnail' => $class->thumbnail ? asset('storage/class/thumbnail/' . $class->thumbnail) : asset('storage/class/thumbnail/default.png'),
+                    'tutor' => $class->tutor->user->name
+                ];
+            })->toArray();
+        }
         return $this->resource ? [
             'id' => $this->id,
             'name' => $this->name,
@@ -25,13 +50,8 @@ class GroupResource extends JsonResource
                     'email' => $student->user->email,
                 ];
             }) : [],
-            'classes' => $this->classes ? $this->classes->map(function ($class) {
-                return [
-                    'id' => $class->id,
-                    'name' => $class->name,
-                    'description' => $class->description,
-                ];
-            }) : [],
+            'courseWorks' => $array['courseWorks'],
+            'liveClasses' => $array['liveClasses'],
         ] : [];
     }
 }

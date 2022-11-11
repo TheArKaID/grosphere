@@ -69,39 +69,19 @@ class Classes extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
-    public function courseWorks()
+    public function courseWork()
     {
-        return $this->hasMany(CourseWork::class, 'class_id');
+        return $this->hasOne(CourseWork::class, 'class_id');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
-    public function liveClasses()
+    public function liveClass()
     {
-        return $this->hasMany(LiveClass::class, 'class_id');
-    }
-
-    /**
-     * delete course works and live classes on delete classes
-     * 
-     * @return void
-     */
-    public static function boot()
-    {
-        parent::boot();
-
-        static::deleting(function ($classes) {
-            foreach ($classes->courseWorks as $courseWork) {
-                $courseWork->delete();
-            }
-
-            foreach ($classes->liveClasses as $liveClass) {
-                $liveClass->delete();
-            }
-        });
+        return $this->hasOne(LiveClass::class, 'class_id');
     }
 
     /**
