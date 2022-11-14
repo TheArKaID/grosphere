@@ -119,6 +119,13 @@ class GroupController extends Controller
     {
         $group = $this->groupService->addStudent($id, $request->student_ids);
 
+        if (gettype($group) == 'string') {
+            return response()->json([
+                'status' => 400,
+                'message' => $group
+            ], 400);
+        }
+
         return response()->json([
             'status' => 200,
             'message' => 'Success',

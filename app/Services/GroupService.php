@@ -130,11 +130,16 @@ class GroupService
      * @param int $groupId
      * @param array $studentIds
      * 
-     * @return \App\Models\Group
+     * @return Group|string
      */
     public function addStudent($groupId, $studentIds)
     {
         $group = $this->getOne($groupId);
+        $groupStudent = $this->groupStudent->whereIn('student_id', $studentIds)->where('group_id', $groupId)->count();
+        if ($groupStudent > 0) {
+            return 'Student already in group';
+        }
+        
         $group->students()->attach($studentIds);
 
         return $group;
@@ -146,7 +151,7 @@ class GroupService
      * @param int $groupId
      * @param array $studentIds
      * 
-     * @return \App\Models\Group
+     * @return Group
      */
     public function removeStudent($groupId, $studentIds)
     {
@@ -195,7 +200,7 @@ class GroupService
      * @param int $groupId
      * @param int $liveClassId
      * 
-     * @return \App\Models\Group
+     * @return Group
      */
     public function addLiveClassAccess($groupId, $liveClassId)
     {
@@ -224,7 +229,7 @@ class GroupService
      * @param int $groupId
      * @param int $liveClassId
      * 
-     * @return \App\Models\Group
+     * @return Group
      */
     public function removeLiveClassAccess($groupId, $liveClassId)
     {
