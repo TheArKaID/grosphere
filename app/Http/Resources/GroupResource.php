@@ -21,7 +21,7 @@ class GroupResource extends JsonResource
                 return $class->courseWork;
             })->map(function ($class) {
                 return [
-                    'id' => $class->id,
+                    'id' => $class->courseWork->id,
                     'name' => $class->name,
                     'description' => $class->description,
                     'thumbnail' => $class->thumbnail ? asset('storage/class/thumbnail/' . $class->thumbnail) : asset('storage/class/thumbnail/default.png'),
@@ -32,7 +32,7 @@ class GroupResource extends JsonResource
                 return $class->liveClass;
             })->map(function ($class) {
                 return [
-                    'id' => $class->id,
+                    'id' => $class->liveClass->id,
                     'name' => $class->name,
                     'description' => $class->description,
                     'thumbnail' => $class->thumbnail ? asset('storage/class/thumbnail/' . $class->thumbnail) : asset('storage/class/thumbnail/default.png'),
