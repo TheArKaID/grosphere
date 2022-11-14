@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreGroupRequest;
 use App\Http\Requests\UpdateGroupRequest;
 use App\Http\Resources\GroupResource;
+use App\Http\Resources\LiveClassResource;
 use App\Services\GroupService;
 use Illuminate\Http\Request;
 
@@ -145,6 +146,28 @@ class GroupController extends Controller
     }
     
     /**
+     * Show all Live Classes of the Group
+     * 
+     * @param int $id
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function liveClasses(int $id)
+    {
+        $liveClasses = LiveClassResource::collection($this->groupService->getLiveClasses($id));
+
+        if ($liveClasses->count() == 0) {
+            throw new ModelGetEmptyException("Live Classes of Group");
+        }
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Success',
+            'data' => $liveClasses
+        ], 200);
+    }
+
+    /**
      * Enroll this group to Live Class
      * 
      * @param int $groupId
@@ -180,6 +203,28 @@ class GroupController extends Controller
         ], 200);
     }
     
+    /**
+     * Show all Live Classes of the Group
+     * 
+     * @param int $id
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function courseWorks(int $id)
+    {
+        $courseWorks = LiveClassResource::collection($this->groupService->getCourseWorks($id));
+
+        if ($courseWorks->count() == 0) {
+            throw new ModelGetEmptyException("Course Works of Group");
+        }
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Success',
+            'data' => $courseWorks
+        ], 200);
+    }
+
     /**
      * Enroll this group to Course Work
      * 

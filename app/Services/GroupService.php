@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Classes;
 use App\Models\CourseStudent;
 use App\Models\CourseWork;
 use App\Models\Group;
@@ -172,6 +173,23 @@ class GroupService
     }
 
     /**
+     * Get Live Classes by Group
+     * 
+     * @param int $groupId
+     * 
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getLiveClasses($groupId)
+    {
+        $group = $this->getOne($groupId);
+        $classes = $group->classes()->where('type', Classes::$LIVE)->get();
+
+        return $classes->map(function ($class) {
+            return $class->liveClass;
+        });
+    }
+
+    /**
      * Add Live Class Access to Group
      * 
      * @param int $groupId
@@ -262,6 +280,23 @@ class GroupService
         return $liveClassStudent;
     }
     
+    /**
+     * Get Course Works by Group
+     * 
+     * @param int $groupId
+     * 
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getCourseWorks($groupId)
+    {
+        $group = $this->getOne($groupId);
+        $courseWorks = $group->classes()->where('type', Classes::$COURSE)->get();
+
+        return $courseWorks->map(function ($courseWork) {
+            return $courseWork->courseWork;
+        });
+    }
+
     /**
      * Add Course Work Access to Group
      * 
