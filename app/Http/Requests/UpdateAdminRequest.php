@@ -25,7 +25,6 @@ class UpdateAdminRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'agency_id' => 'required|exists:agencies,id',
             'phone' => 'nullable|string|min:8|max:50'
         ];
     }

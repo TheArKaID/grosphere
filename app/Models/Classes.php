@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * @property integer $id
  * @property integer $tutor_id
- * @property integer $agency_id
  * @property string $name
  * @property string $description
  * @property string $thumbnail
@@ -48,7 +47,7 @@ class Classes extends Model
     /**
      * @var array
      */
-    protected $fillable = ['tutor_id', 'agency_id', 'name', 'description', 'thumbnail', 'type', 'deleted_at', 'created_at', 'updated_at'];
+    protected $fillable = ['tutor_id', 'name', 'description', 'thumbnail', 'type', 'deleted_at', 'created_at', 'updated_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -56,16 +55,6 @@ class Classes extends Model
     public function tutor()
     {
         return $this->belongsTo(Tutor::class);
-    }
-
-    /**
-     * Get the agency that owns the Classes
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function agency(): BelongsTo
-    {
-        return $this->belongsTo(Agency::class);
     }
 
     /**
@@ -82,17 +71,5 @@ class Classes extends Model
     public function liveClass()
     {
         return $this->hasOne(LiveClass::class, 'class_id');
-    }
-
-    /**
-     * The "booted" method of the model.
-     *
-     * @return void
-     */
-    protected static function booted()
-    {
-        static::addGlobalScope('agency', function (Builder $builder) {
-            $builder->where('agency_id', '=', auth()->user()->agency_id);
-        });
     }
 }

@@ -18,10 +18,7 @@ class StudentFrontSearchResource extends JsonResource
         return $this->resource ? [
             'id' => $this->id,
             'name' => $this->user->name,
-            'email' => $this->user->email,
-            'agency' => $this->user->agency->name,
-            'website' => $this->user->agency->website,
-            'logo' => $this->user->agency->getLogo()
+            'email' => $this->user->email
         ] : [];
     }
 }

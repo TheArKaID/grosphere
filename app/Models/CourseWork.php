@@ -98,16 +98,4 @@ class CourseWork extends Model
             $query->where('student_id', '=', auth()->user()->detail->id);
         });
     }
-
-    /**
-     * The "booted" method of the model.
-     *
-     * @return void
-     */
-    protected static function booted()
-    {
-        static::addGlobalScope('agency', function (Builder $builder) {
-            $builder->whereHas('class');
-        });
-    }
 }

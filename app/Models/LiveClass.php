@@ -115,9 +115,5 @@ class LiveClass extends Model
         static::addGlobalScope('orderDesc', function (Builder $builder) {
             $builder->orderByDesc('created_at');
         });
-
-        static::addGlobalScope('agency', function (Builder $builder) {
-            $builder->whereHas('class');
-        });
     }
 }

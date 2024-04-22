@@ -57,7 +57,6 @@ class AuthController extends Controller
     public function login(LoginUserRequest $request)
     {
         $validated = $request->validated();
-        $validated['X-Agency-Key'] = $request->header('X-Agency-Key');
 
         $user = $this->userService->login($validated);
         if (!$user) {

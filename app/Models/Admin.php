@@ -33,14 +33,4 @@ class Admin extends Model
     {
         return $this->belongsTo('App\Models\User');
     }
-
-    /**
-     * Get the agency that owns the Admin
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function agency(): BelongsTo
-    {
-        return $this->belongsTo(Agency::class);
-    }
 }
