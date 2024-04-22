@@ -19,7 +19,6 @@ use App\Http\Controllers\Api\Student\CourseStudentController;
 use App\Http\Controllers\Api\Student\CourseWorkController as StudentCourseWorkController;
 use App\Http\Controllers\Api\Student\LiveClassController as StudentLiveClassController;
 use App\Http\Controllers\Api\Student\TestQuestionController as StudentTestQuestiontController;
-use App\Http\Controllers\Api\Super\AdminController;
 use App\Http\Controllers\Api\Tutor\AskAnswerController as TutorAskAnswerController;
 use App\Http\Controllers\Api\Tutor\ChapterAssignmentController as TutorChapterAssignmentController;
 use App\Http\Controllers\Api\Tutor\ChapterMaterialController as TutorChapterMaterialController;
@@ -55,9 +54,6 @@ Route::name('front')->prefix('front')->group(function () {
     Route::post('student/search', [SearchStudentController::class, 'index'])->name('student.search');
 });
 Route::middleware(['auth:api'])->group(function () {
-    Route::name('super-admin.')->middleware(['role:super-admin'])->prefix('super-admin')->group(function () {
-        Route::resource('admins', AdminController::class);
-    });
     Route::name('admin.')->middleware(['role:admin'])->prefix('admin')->group(function () {
         Route::resource('users', UserController::class)->except(['edit', 'create']);
 
