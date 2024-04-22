@@ -14,7 +14,6 @@ use Spatie\Permission\Traits\HasRoles;
 
 /**
  * @property integer $id
- * @property integer $agency_id
  * @property string $name
  * @property string $email
  * @property string $phone
@@ -43,7 +42,7 @@ class User extends Authenticatable implements JWTSubject
     /**
      * @var array
      */
-    protected $fillable = ['agency_id', 'name', 'email', 'phone', 'email_verified_at', 'password', 'status', 'remember_token', 'created_at', 'updated_at'];
+    protected $fillable = ['name', 'email', 'phone', 'email_verified_at', 'password', 'status', 'remember_token', 'created_at', 'updated_at'];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -54,16 +53,6 @@ class User extends Authenticatable implements JWTSubject
         'password',
         'remember_token',
     ];
-
-    /**
-     * Get the agency that owns the User
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function agency(): BelongsTo
-    {
-        return $this->belongsTo(Agency::class);
-    }
     
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -123,9 +112,6 @@ class User extends Authenticatable implements JWTSubject
         $detail = null;
 
         switch ($this->roles()->first()->name) {
-            case 'super-admin':
-                $detail = $this->hasOne(SuperAdmin::class);
-                break;
             case 'admin':
                 $detail = $this->hasOne(Admin::class);
                 break;
@@ -156,12 +142,6 @@ class User extends Authenticatable implements JWTSubject
         $detail = null;
 
         switch ($this->roles()->first()->name) {
-            case 'super-admin':
-                $detail = [
-                    'id' => $this->detail->id,
-                    'email' => $this->email ?? ''
-                ];
-                break;
             case 'admin':
                 $detail = [
                     'id' => $this->detail->id,

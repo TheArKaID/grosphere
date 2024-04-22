@@ -93,7 +93,6 @@ class LiveClassService
         DB::beginTransaction();
 
         $data['type'] = Classes::$LIVE;
-        $data['agency_id'] = auth()->user()->agency_id;
         $class = $this->classService->createClass($data);
         $data['class_id'] = $class->id;
         $liveClass = $this->liveClass->create($data);
@@ -118,18 +117,6 @@ class LiveClassService
     public function getLiveClassById($id)
     {
         return $this->liveClass->findOrFail($id);
-    }
-
-    /**
-     * Get Live Class by id without global scope
-     * 
-     * @param int $id
-     * 
-     * @return LiveClass
-     */
-    public function getLiveClassByIdWithoutGlobalScope($id)
-    {
-        return $this->liveClass->withoutGlobalScope('agency')->findOrFail($id);
     }
 
     /**
@@ -298,7 +285,7 @@ class LiveClassService
      */
     public function isLiveClassStarted($liveClassId)
     {
-        $liveClass = $this->getLiveClassByIdWithoutGlobalScope($liveClassId);
+        $liveClass = $this->getLiveClassById($liveClassId);
         $liveClassStartTime = Carbon::parse($liveClass->start_time);
         $liveClassEndTime = Carbon::parse($liveClass->start_time)->addMinutes($liveClass->duration);
         $currentTime = Carbon::now();

@@ -57,7 +57,6 @@ class UserService
 	 */
 	public function createUser($data)
 	{
-		$data['agency_id'] = auth()->user()->agency_id;
 		return $this->user->create($data);
 	}
 
@@ -82,7 +81,6 @@ class UserService
 	public function updateUser($id, $data)
 	{
 		$user = $this->user->findOrFail($id);
-		$user->agency_id = $data['agency_id'] ?? $user->agency_id;
 		$user->name = $data['name'] ?? $user->name;
 		$user->email = $data['email'] ?? $user->email;
 		$user->phone = $data['phone'] ?? $user->phone;
@@ -145,12 +143,6 @@ class UserService
 	public function login($data)
 	{
 		$user = $this->user->where('email', $data['email']);
-
-		if ($data['X-Agency-Key'] != null) {
-			$user = $user->whereHas('agency', function ($query) {
-				$query->where('key', request()->header('X-Agency-Key', ''));
-			});
-		}
 
 		$user = $user->first();
 

@@ -31,6 +31,8 @@ class LiveClassControllerTest extends TestCase
             'description' => $this->faker->text,
             'start_time' => $this->faker->dateTimeBetween('-10 minutes')->format('d-m-Y H:i:s'),
             'duration' => $this->faker->numberBetween(30, 60),
+            'mic_on' => '1',
+            'cam_on' => '1'
             // 'thumbnail' => $this->faker->image(storage_path('app/public/live_classes'), 400, 400, 'cats', false)
         ];
 
@@ -59,6 +61,8 @@ class LiveClassControllerTest extends TestCase
             "description" => $this->faker->text,
             "start_time" => $this->faker->dateTimeBetween('-10 minutes')->format('d-m-Y H:i:s'),
             "duration" => $this->faker->numberBetween(30, 60),
+            'mic_on' => '1',
+            'cam_on' => '1'
             // "thumbnail" => $this->faker->image(storage_path('app/public/live_classes'), 400, 400, 'cats', false)
         ];
 

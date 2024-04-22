@@ -15,8 +15,8 @@ class ValidatedLiveClassResource extends JsonResource
      */
     public function toArray($request)
     {
-        $liveClass = $this->liveClass()->withoutGlobalScope('agency')->first();
-        $class = $liveClass->class()->withoutGlobalScope('agency')->first();
+        $liveClass = $this->liveClass()->first();
+        $class = $liveClass->class()->first();
         
         $startTime = Carbon::parse($liveClass->start_time);
         $endTime = Carbon::parse($liveClass->start_time)->addMinutes($liveClass->duration);

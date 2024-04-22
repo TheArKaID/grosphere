@@ -113,13 +113,7 @@ class AdminService
     {
         return $this->admin
             ->whereHas('user', function ($query) use ($search) {
-                $query->where('name', 'like', '%' . $search . '%')
-                    ->whereHas('agency', function ($query) use ($search) {
-                        $query->where('name', 'like', '%' . $search . '%')
-                            ->orWhere('address', 'like', '%' . $search . '%')
-                            ->orWhere('email', 'like', '%' . $search . '%')
-                            ->orWhere('website', 'like', '%' . $search . '%');
-                    });
+                $query->where('name', 'like', '%' . $search . '%');
             });
     }
 }

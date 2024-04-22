@@ -12,7 +12,7 @@ class LiveClassControllerTest extends TestCase
 {
     use WithFaker;
 
-    private static $liveClassId, $tokenJoin, $roomJoin;
+    private static $liveClassId, $tokenJoin;
 
     /**
      * Test create live class as tutor
@@ -31,6 +31,8 @@ class LiveClassControllerTest extends TestCase
             'description' => $this->faker->text,
             'start_time' => $this->faker->dateTimeBetween('-10 minutes')->format('d-m-Y H:i:s'),
             'duration' => $this->faker->numberBetween(30, 60),
+            'mic_on' => '1',
+            'cam_on' => '1'
             // 'thumbnail' => $this->faker->image(storage_path('app/public/live_classes'), 400, 400, 'cats', false)
         ];
 
@@ -89,6 +91,8 @@ class LiveClassControllerTest extends TestCase
             "description" => $this->faker->text,
             "start_time" => $this->faker->dateTimeBetween('-10 minutes')->format('d-m-Y H:i:s'),
             "duration" => $this->faker->numberBetween(30, 60),
+            'mic_on' => '1',
+            'cam_on' => '1'
             // "thumbnail" => $this->faker->image(storage_path('app/public/live_classes'), 400, 400, 'cats', false)
         ];
 
@@ -115,7 +119,6 @@ class LiveClassControllerTest extends TestCase
         $data = json_decode($response->getContent());
 
         self::$tokenJoin = $data->data->token;
-        self::$roomJoin = $data->data->room;
 
         $response->assertJson([
             'status' => 200,
@@ -150,8 +153,7 @@ class LiveClassControllerTest extends TestCase
         auth()->login(Tutor::first()->user);
 
         $response = $this->post(route('user.live-classes.validate', self::$liveClassId), [
-            'token' => self::$tokenJoin,
-            'room' => self::$roomJoin
+            'token' => self::$tokenJoin
         ]);
 
         $response->assertJson([

@@ -18,15 +18,8 @@ class AdminResource extends JsonResource
         return $this->resource ? [
             'id' => $this->id,
             'name' => $this->user->name,
-            'agency_id' => $this->agency_id,
             'email' => $this->user->email,
             'phone' => $this->user->phone,
-            'agency' => $this->user->agency ? [
-                'id' => $this->user->agency->id,
-                'name' => $this->user->agency->name,
-                'website' => $this->user->agency->website,
-                'logo_small' => $this->user->agency->getLogoSmall(),
-            ] : [],
             'created_at' => $this->created_at
         ] : [];
     }
