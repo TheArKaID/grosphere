@@ -18,7 +18,7 @@ class AnnouncementControllerTest extends TestCase
      */
     public function testAddAnnouncement()
     {
-        auth()->login((User::find(1)));
+        auth()->login(User::find(1));
         $announcement = [
             'name' => $this->faker->name,
             'message' => $this->faker->text,
