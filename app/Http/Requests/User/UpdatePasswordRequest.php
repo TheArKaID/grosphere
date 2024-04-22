@@ -29,7 +29,7 @@ class UpdatePasswordRequest extends FormRequest
             'new_password' => ['required', 'confirmed', Password::min(8)->letters()->numbers()->mixedCase()],
             'old_password' => ['required', 'min:8', function ($attribute, $value, $fail) {
                 if (!Hash::check($value, auth()->user()->password)) {
-                    $fail('Old Password didn\'t match');
+                    $fail('old_password', 'Old Password didn\'t match');
                 }
             }]
         ];
