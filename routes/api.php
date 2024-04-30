@@ -10,7 +10,6 @@ use App\Http\Controllers\Api\Front\SearchStudentController;
 use App\Http\Controllers\Api\Student\CourseStudentController;
 use App\Http\Controllers\Api\User\AgendaController;
 use App\Http\Controllers\Api\User\AnnouncementController as UserAnnouncementController;
-use App\Http\Controllers\Api\User\LiveClassController as UserLiveClassController;
 use App\Http\Controllers\Api\User\ProfileController as UserProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -72,11 +71,7 @@ Route::middleware(['auth:api'])->group(function () {
     });
 
     Route::name('user.')->middleware(['role:admin|tutor|student|parent'])->prefix('user')->group(function () {
-        Route::resource('live-classes', UserLiveClassController::class)->only('index', 'show');
-        Route::prefix('live-classes/{live_class_id}')->group(function () {
-            Route::post('join', [UserLiveClassController::class, 'join'])->name('live-classes.join');
-            Route::post('leave', [UserLiveClassController::class, 'leave'])->name('live-classes.leave');
-        });
+
         
         Route::get('announcements', [UserAnnouncementController::class, 'index'])->name('announcements.index');
         Route::get('announcements/{announcement_id}', [UserAnnouncementController::class, 'show'])->name('announcements.show');
