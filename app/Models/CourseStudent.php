@@ -34,7 +34,7 @@ class CourseStudent extends Model
     /**
      * @var array
      */
-    protected $fillable = ['course_work_id', 'student_id', 'status', 'type', 'created_at', 'updated_at'];
+    protected $fillable = ['course_work_id', 'student_id', 'subscription_id',  'status', 'type', 'created_at', 'updated_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -52,24 +52,32 @@ class CourseStudent extends Model
         return $this->belongsTo(Student::class);
     }
 
-    /**
-     * Get all of the askAnswers for the CourseStudent
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function askAnswers(): HasMany
-    {
-        return $this->hasMany(AskAnswer::class);
-    }
+    // /**
+    //  * Get all of the askAnswers for the CourseStudent
+    //  *
+    //  * @return \Illuminate\Database\Eloquent\Relations\HasMany
+    //  */
+    // public function askAnswers(): HasMany
+    // {
+    //     return $this->hasMany(AskAnswer::class);
+    // }
+
+    // /**
+    //  * Get all of the courseChapterStudent for the CourseStudent
+    //  *
+    //  * @return \Illuminate\Database\Eloquent\Relations\HasMany
+    //  */
+    // public function courseChapterStudent(): HasMany
+    // {
+    //     return $this->hasMany(CourseChapterStudent::class);
+    // }
 
     /**
-     * Get all of the courseChapterStudent for the CourseStudent
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function courseChapterStudent(): HasMany
+    public function subscription()
     {
-        return $this->hasMany(CourseChapterStudent::class);
+        return $this->belongsTo('App\Models\Subscription');
     }
 
     /**
