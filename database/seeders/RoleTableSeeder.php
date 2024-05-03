@@ -21,8 +21,8 @@ class RoleTableSeeder extends Seeder
         ]);
         
         Role::create([
-            'name' => 'tutor',
-            'readable_name' => 'Tutor',
+            'name' => 'teacher',
+            'readable_name' => 'Teacher',
             'guard_name' => 'api'
         ]);
         
@@ -33,8 +33,8 @@ class RoleTableSeeder extends Seeder
         ]);
         
         Role::create([
-            'name' => 'parent',
-            'readable_name' => 'Parent',
+            'name' => 'guardian',
+            'readable_name' => 'Guardian',
             'guard_name' => 'api'
         ]);
     }
