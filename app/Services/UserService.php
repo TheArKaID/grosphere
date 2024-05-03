@@ -9,16 +9,18 @@ use Illuminate\Support\Facades\Storage;
 
 class UserService
 {
-	private $user, $liveClassService, $liveUserService;
+	private $user, 
+	// $liveClassService,
+	$liveUserService;
 
 	public function __construct(
 		User $user,
-		LiveClassService $liveClassService,
-		LiveUserService $liveUserService
+		// LiveClassService $liveClassService,
+		// LiveUserService $liveUserService
 	) {
 		$this->user = $user;
-		$this->liveClassService = $liveClassService;
-		$this->liveUserService = $liveUserService;
+		// $this->liveClassService = $liveClassService;
+		// $this->liveUserService = $liveUserService;
 	}
 
 	/**
@@ -180,44 +182,44 @@ class UserService
 		return $user;
 	}
 
-	/**
-	 * User Join Live Class
-	 * 
-	 * @param int $id
-	 * 
-	 * @return LiveUser
-	 */
-	public function userJoinLiveClass($id)
-	{
-		if (($status = $this->liveClassService->isLiveClassStarted($id)) !== true) {
-			return $status;
-		}
+	// /**
+	//  * User Join Live Class
+	//  * 
+	//  * @param int $id
+	//  * 
+	//  * @return LiveUser
+	//  */
+	// public function userJoinLiveClass($id)
+	// {
+	// 	if (($status = $this->liveClassService->isLiveClassStarted($id)) !== true) {
+	// 		return $status;
+	// 	}
 
-		$userId = auth()->user()->id;
-		$data = [
-			'user_id' => $userId,
-			'live_class_id' => $id
-		];
+	// 	$userId = auth()->user()->id;
+	// 	$data = [
+	// 		'user_id' => $userId,
+	// 		'live_class_id' => $id
+	// 	];
 
-		return $this->liveUserService->joinOrRejoinLiveUser($data);
-	}
+	// 	return $this->liveUserService->joinOrRejoinLiveUser($data);
+	// }
 
-	/**
-	 * User leave Live Class
-	 * 
-	 * @param int $id
-	 * 
-	 * @return bool
-	 */
-	public function userLeaveLiveClass($id)
-	{
-		$liveClass = $this->liveClassService->getLiveClassById($id);
-		$userId = auth()->user()->id;
-		$data = [
-			'user_id' => $userId,
-			'live_class_id' => $liveClass->id
-		];
+	// /**
+	//  * User leave Live Class
+	//  * 
+	//  * @param int $id
+	//  * 
+	//  * @return bool
+	//  */
+	// public function userLeaveLiveClass($id)
+	// {
+	// 	$liveClass = $this->liveClassService->getLiveClassById($id);
+	// 	$userId = auth()->user()->id;
+	// 	$data = [
+	// 		'user_id' => $userId,
+	// 		'live_class_id' => $liveClass->id
+	// 	];
 
-		return $this->liveUserService->leaveLiveUser($data);
-	}
+	// 	return $this->liveUserService->leaveLiveUser($data);
+	// }
 }

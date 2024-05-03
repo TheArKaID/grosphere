@@ -7,16 +7,18 @@ use Illuminate\Support\Facades\DB;
 
 class TutorService
 {
-    private $tutor, $userService, $liveClassService;
+    private $tutor, $userService
+    // , $liveClassService
+    ;
 
     public function __construct(
         Tutor $tutor,
         UserService $userService,
-        LiveClassService $liveClassService
+        // LiveClassService $liveClassService
     ) {
         $this->tutor = $tutor;
         $this->userService = $userService;
-        $this->liveClassService = $liveClassService;
+        // $this->liveClassService = $liveClassService;
     }
 
     /**
@@ -148,25 +150,25 @@ class TutorService
         return true;
     }
 
-    /**
-     * Tutor Join Live Class
-     * 
-     * @param int $liveClassId
-     * 
-     * @return LiveUser|string
-     */
-    public function joinLiveClass($liveClassId)
-    {
-        $status = $this->liveClassService->isTutorLiveClassNotStarted($liveClassId);
-        if (gettype($status) == 'string') {
-            return $status;
-        }
-        $status = $this->liveClassService->isTutorLiveClassNotEnded($liveClassId);
-        if (gettype($status) == 'string') {
-            return $status;
-        }
-        return $this->userService->userJoinLiveClass($liveClassId);
-    }
+    // /**
+    //  * Tutor Join Live Class
+    //  * 
+    //  * @param int $liveClassId
+    //  * 
+    //  * @return LiveUser|string
+    //  */
+    // public function joinLiveClass($liveClassId)
+    // {
+    //     $status = $this->liveClassService->isTutorLiveClassNotStarted($liveClassId);
+    //     if (gettype($status) == 'string') {
+    //         return $status;
+    //     }
+    //     $status = $this->liveClassService->isTutorLiveClassNotEnded($liveClassId);
+    //     if (gettype($status) == 'string') {
+    //         return $status;
+    //     }
+    //     return $this->userService->userJoinLiveClass($liveClassId);
+    // }
 
     /**
      * Tutor leave Live Class
