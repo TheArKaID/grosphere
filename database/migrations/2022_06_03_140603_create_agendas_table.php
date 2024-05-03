@@ -17,7 +17,7 @@ class CreateAgendasTable extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained();
             $table->text('detail');
-            $table->date('date');
+            $table->dateTime('date');
             $table->timestamps();
         });
     }

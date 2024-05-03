@@ -16,8 +16,7 @@ class CreateStudentsTable extends Migration
         Schema::create('students', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained();
-            $table->foreignId('parent_id')->nullable()->constrained();
-            $table->string('id_number', 50)->unique();
+            $table->foreignId('guardian_id')->nullable()->constrained();
             $table->date('birth_date');
             $table->string('birth_place', 100);
             $table->tinyInteger('gender');
@@ -33,6 +32,6 @@ class CreateStudentsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('student');
+        Schema::dropIfExists('students');
     }
 }

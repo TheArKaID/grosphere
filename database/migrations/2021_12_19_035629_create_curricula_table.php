@@ -11,10 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('classes', function (Blueprint $table) {
-            $table->date('start_date')->default(now());
-            $table->time('start_time')->default(now());
-            $table->integer('total_session')->default(0);
+        Schema::create('curricula', function (Blueprint $table) {
+            $table->id();
+            $table->string('subject');
+            $table->integer('grade');
+            $table->integer('term');
+            $table->timestamps();
         });
     }
 
@@ -23,8 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('classes', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('curricula');
     }
 };
