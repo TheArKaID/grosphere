@@ -39,13 +39,13 @@ class Tutor extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function classes()
+    public function classSessions()
     {
-        return $this->hasMany(Classes::class);
+        return $this->hasMany(ClassSession::class);
     }
 
     /**
-     * Delete classes on delete tutor
+     * Delete classSessions on delete tutor
      * 
      * @return void
      */
@@ -54,7 +54,7 @@ class Tutor extends Model
         parent::boot();
 
         static::deleting(function ($tutor) {
-            foreach ($tutor->classes as $class) {
+            foreach ($tutor->classSessions as $class) {
                 $class->delete();
             }
         });

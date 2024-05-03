@@ -24,7 +24,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property string $created_at
  * @property string $updated_at
  * @property Admin[] $admins
- * @property Parent[] $parents
+ * @property Guardian[] $guardians
  * @property Student[] $students
  * @property Tutor[] $tutors
  */
@@ -54,13 +54,13 @@ class User extends Authenticatable implements JWTSubject
         'remember_token',
     ];
     
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function liveUsers(): HasMany
-    {
-        return $this->hasMany(LiveUser::class);
-    }
+    // /**
+    //  * @return \Illuminate\Database\Eloquent\Relations\HasMany
+    //  */
+    // public function liveUsers(): HasMany
+    // {
+    //     return $this->hasMany(LiveUser::class);
+    // }
 
     /**
      * Get all of the announcementUsers for the User
@@ -116,7 +116,7 @@ class User extends Authenticatable implements JWTSubject
                 $detail = $this->hasOne(Admin::class);
                 break;
             case 'parent':
-                $detail = $this->hasOne(Parent::class);
+                $detail = $this->hasOne(Guardian::class);
                 break;
             case 'student':
                 $detail = $this->hasOne(Student::class);
