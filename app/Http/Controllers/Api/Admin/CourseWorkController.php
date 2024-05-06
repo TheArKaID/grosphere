@@ -7,6 +7,7 @@ use App\Http\Requests\StoreCourseWorkRequest;
 use App\Http\Requests\UpdateCourseWorkRequest;
 use App\Models\CourseWork;
 use App\Services\CourseWorkService;
+use Illuminate\Http\Request;
 
 class CourseWorkController extends Controller
 {
@@ -79,6 +80,49 @@ class CourseWorkController extends Controller
         return response()->json([
             'status' => 200,
             'message' => 'CourseWork Deleted Successfully'
+        ], 200);
+    }
+
+    /**
+     * Add Teachers to CourseWork
+     * 
+     * @param CourseWork $courseWork
+     * @param Request $request
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function addTeachers(CourseWork $courseWork, Request $request)
+    {
+        $request->validate([
+            'teachers' => 'required|array',
+            'teachers.*' => 'exists:teachers,id'
+        ]);
+        $courseWork = $this->courseWorkService->addTeachers($courseWork, $request->teachers);
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Teachers Added Successfully'
+        ], 200);
+    }
+
+    /**
+     * Remove Teacher from CourseWork
+     * 
+     * @param CourseWork $courseWork
+     * @param Request $request
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function removeTeacher(CourseWork $courseWork, Request $request)
+    {
+        $request->validate([
+            'teacher_id' => 'required|exists:teachers,id'
+        ]);
+        $courseWork = $this->courseWorkService->removeTeacher($courseWork, $request->teacher_id);
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Teacher Disabled Successfully'
         ], 200);
     }
 }

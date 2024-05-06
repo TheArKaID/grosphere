@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\CourseTeacher;
 use App\Models\CourseWork;
 use Illuminate\Support\Facades\DB;
 
@@ -52,7 +53,17 @@ class CourseWorkService
      */
     public function create($data)
     {
-        return $this->courseWork->create($data);
+        DB::beginTransaction();
+        $courseWork = $this->courseWork->create($data);
+
+        if (isset($data['teacher_id'])) {
+            $courseTeacher = new CourseTeacher();
+            $courseTeacher->course_work_id = $courseWork->id;
+            $courseTeacher->teacher_id = $data['teacher_id'];
+            $courseTeacher->save();
+        }
+        DB::commit();
+        return $courseWork;
     }
 
     /**
@@ -93,5 +104,43 @@ class CourseWorkService
         return $this->courseWork->where('subject', 'like', '%' . $search . '%')
         ->orWhere('grade', 'like', '%' . $search . '%')
         ->orWhere('term', 'like', '%' . $search . '%');
+    }
+
+    /**
+     * Add many teachers to CourseWork
+     * 
+     * @param CourseWork $courseWork
+     * @param array $teachers
+     * 
+     * @return CourseWork
+     */
+    public function addTeachers(CourseWork $courseWork, $teachers)
+    {
+        DB::beginTransaction();
+        foreach ($teachers as $teacher) {
+            $courseTeacher = new CourseTeacher();
+            $courseTeacher->course_work_id = $courseWork->id;
+            $courseTeacher->teacher_id = $teacher;
+            $courseTeacher->save();
+        }
+        DB::commit();
+        return $courseWork;
+    }
+
+    /**
+     * Remove Teacher from CourseWork
+     * 
+     * @param CourseWork $courseWork
+     * @param int $teacherId
+     * 
+     * @return CourseWork
+     */
+    public function removeTeacher(CourseWork $courseWork, $teacherId)
+    {
+        $courseTeacher = CourseTeacher::where('course_work_id', $courseWork->id)
+        ->where('teacher_id', $teacherId)
+        ->first();
+        $courseTeacher->status = 0;
+        return $courseWork;
     }
 }

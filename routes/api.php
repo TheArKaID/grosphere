@@ -58,6 +58,10 @@ Route::middleware(['auth:api'])->group(function () {
 
         Route::apiResource('curricula', CurriculumController::class);
         Route::apiResource('course-works', CourseWorkController::class);
+        Route::prefix('course-works/{course_work_id}')->group(function () {
+            Route::post('teacher', [CourseWorkController::class, 'addTeachers'])->name('course-works.add-teacher');
+            Route::delete('teacher/{teacher_id}', [CourseWorkController::class, 'removeTeacher'])->name('course-works.remove-teacher');
+        });
     });
 
     Route::name('tutor.')->middleware(['role:tutor'])->prefix('tutor')->group(function () {

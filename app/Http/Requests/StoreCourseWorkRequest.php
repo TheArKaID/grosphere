@@ -27,6 +27,8 @@ class StoreCourseWorkRequest extends FormRequest
             'grade' => 'required|numeric',
             'term' => 'required|numeric',
             'quota' => 'required|numeric',
+
+            'teacher_id' => 'nullable|exists:teachers,id',
         ];
     }
 }
