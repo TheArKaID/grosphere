@@ -7,7 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @property integer $id
  * @property integer $curriculum_id
- * @property integer $duration
+ * @property string $subject
+ * @property integer $grade
+ * @property integer $term
+ * @property integer $quota
  * @property string $created_at
  * @property string $updated_at
  * @property ClassSession[] $classSessions
@@ -21,7 +24,7 @@ class CourseWork extends Model
     /**
      * @var array
      */
-    protected $fillable = ['curriculum_id', 'duration', 'created_at', 'updated_at'];
+    protected $fillable = ['curriculum_id', 'subject', 'grade', 'term', 'quota', 'created_at', 'updated_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

@@ -16,7 +16,10 @@ class CreateCourseWorksTable extends Migration
         Schema::create('course_works', function (Blueprint $table) {
             $table->id();
             $table->foreignId('curriculum_id')->nullable()->constrained();
-            $table->integer('duration');
+            $table->string('subject');
+            $table->integer('grade');
+            $table->integer('term');
+            $table->integer('quota');
             $table->timestamps();
         });
     }

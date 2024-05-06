@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Admin\AnnouncementController;
+use App\Http\Controllers\Api\Admin\CourseWorkController;
 use App\Http\Controllers\Api\Admin\CurriculumController;
 use App\Http\Controllers\Api\Admin\ParentController;
 use App\Http\Controllers\Api\Admin\StudentController;
@@ -56,6 +57,7 @@ Route::middleware(['auth:api'])->group(function () {
         Route::resource('announcements', AnnouncementController::class)->except(['edit', 'create']);
 
         Route::apiResource('curricula', CurriculumController::class);
+        Route::apiResource('course-works', CourseWorkController::class);
     });
 
     Route::name('tutor.')->middleware(['role:tutor'])->prefix('tutor')->group(function () {
