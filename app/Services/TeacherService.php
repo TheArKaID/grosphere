@@ -229,7 +229,7 @@ class TeacherService
     {
         $data['teacher_id'] = $teacherId;
         
-        if (isset($data['content_type'])) {
+        if (!isset($data['content_type'])) {
             $data['content_type'] = request()->file('content')->getMimeType();
         }
 

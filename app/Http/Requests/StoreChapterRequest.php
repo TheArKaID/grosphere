@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\ContentMustBeFileOrString;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreChapterRequest extends FormRequest
@@ -22,10 +23,9 @@ class StoreChapterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'curriculum_id' => 'required|exists:curricula,id',
-            'name' => 'required|string',
+            'name' => 'nullable|string|max:255',
             'description' => 'nullable|string',
-            'content' => 'required'
+            'content' => ['required', new ContentMustBeFileOrString],
         ];
     }
 }

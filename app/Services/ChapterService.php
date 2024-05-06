@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Chapter;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class ChapterService
 {
@@ -54,7 +55,19 @@ class ChapterService
     public function create(int $curriculum_id, array $data)
     {
         $data['curriculum_id'] = $curriculum_id;
-        $data['content_type'] = $this->getContentType($data['content']);
+        
+        if (!isset($data['content_type'])) {
+            $data['content_type'] = $this->getContentType($data['content']);
+        }
+
+        if(request()->hasFile('content')) {
+            $data['content'] = request()->file('content')->store('teacher_files');
+            $data['file_path'] = request()->file('content')->getPath();
+            $data['file_name'] = request()->file('content')->getClientOriginalName();
+            $data['file_extension'] = request()->file('content')->getClientOriginalExtension();
+            $data['file_size'] = request()->file('content')->getSize();
+        }
+
         return $this->chapter->create($data);
     }
 
@@ -68,6 +81,19 @@ class ChapterService
      */
     public function update(Chapter $chapter, $data)
     {
+        if (!isset($data['content_type'])) {
+            $data['content_type'] = $this->getContentType($data['content']);
+        }
+
+        if(request()->hasFile('content')) {
+            Storage::delete($chapter->file_path);
+            $data['content'] = request()->file('content')->store('teacher_files');
+            $data['file_path'] = request()->file('content')->getPath();
+            $data['file_name'] = request()->file('content')->getClientOriginalName();
+            $data['file_extension'] = request()->file('content')->getClientOriginalExtension();
+            $data['file_size'] = request()->file('content')->getSize();
+        }
+
         $chapter->update($data);
         return $chapter;
     }
@@ -93,7 +119,7 @@ class ChapterService
      */
     public function search($search)
     {
-        return $this->chapter->where('title', 'like', '%' . $search . '%')
+        return $this->chapter->where('name', 'like', '%' . $search . '%')
         ->orWhere('description', 'like', '%' . $search . '%')
         ->orWhere('content', 'like', '%' . $search . '%');
     }

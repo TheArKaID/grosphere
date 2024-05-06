@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
+use App\Exceptions\ModelGetEmptyException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreChapterRequest;
 use App\Http\Requests\UpdateChapterRequest;
+use App\Http\Resources\ChapterResource;
 use App\Models\Chapter;
 use App\Models\Curriculum;
 use App\Services\ChapterService;
@@ -24,10 +26,16 @@ class ChapterController extends Controller
      */
     public function index(Curriculum $curriculum)
     {
+        $chapters = ChapterResource::collection($this->chapterService->getAll($curriculum->id));
+
+        if ($chapters->count() == 0) {
+            throw new ModelGetEmptyException("Chapter");
+        }
+
         return response()->json([
             'status' => 200,
             'message' => 'Success',
-            'data' => $this->chapterService->getAll($curriculum->id)
+            'data' => $chapters->response()->getData(true)
         ], 200);
     }
 
@@ -36,7 +44,9 @@ class ChapterController extends Controller
      */
     public function store(StoreChapterRequest $request, Curriculum $curriculum)
     {
-        $chapter = $this->chapterService->create($curriculum->id, $request->validated());
+        $data = $request->validated();
+        $chapter = new ChapterResource($this->chapterService->create($curriculum->id, $data));
+
         return response()->json([
             'status' => 201,
             'message' => 'Chapter created',

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\ContentMustBeFileOrString;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreTeacherFileRequest extends FormRequest
@@ -23,7 +24,7 @@ class StoreTeacherFileRequest extends FormRequest
     {
         return [
             'name' => 'nullable|string|max:255',
-            'content' => 'required|file|mimes:pdf,mp4,mov,jpg,jpeg,png|max:204800',
+            'content' => ['required', new ContentMustBeFileOrString],
             'content_type' => 'required|string|max:255'
         ];
     }

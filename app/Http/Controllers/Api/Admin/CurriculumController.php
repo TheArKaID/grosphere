@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
+use App\Exceptions\ModelGetEmptyException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCurriculumRequest;
 use App\Http\Requests\UpdateCurriculumRequest;
+use App\Http\Resources\CurriculumResource;
 use App\Models\Curriculum;
 use App\Services\CurriculumService;
 
@@ -23,10 +25,16 @@ class CurriculumController extends Controller
      */
     public function index()
     {
+        $curriculums = CurriculumResource::collection($this->curriculumService->getAll());
+        
+        if ($curriculums->count() == 0) {
+            throw new ModelGetEmptyException("Curriculum");
+        }
+
         return response()->json([
             'status' => 200,
             'message' => 'Success',
-            'data' => $this->curriculumService->getAll()
+            'data' => $curriculums->response()->getData(true)
         ], 200);
     }
 

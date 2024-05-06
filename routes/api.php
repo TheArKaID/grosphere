@@ -62,11 +62,11 @@ Route::middleware(['auth:api'])->group(function () {
         Route::apiResource('curricula', CurriculumController::class);
         Route::prefix('curricula')->group(function () {
             // Api Resource Chapter
-            Route::apiResource('{curriculum_id}/chapters', ChapterController::class);
+            Route::apiResource('{curriculum}/chapters', ChapterController::class);
         });
 
         Route::apiResource('course-works', CourseWorkController::class);
-        Route::prefix('course-works/{course_work_id}')->group(function () {
+        Route::prefix('course-works/{course_work}')->group(function () {
             Route::post('teacher', [CourseWorkController::class, 'addTeachers'])->name('course-works.add-teacher');
             Route::delete('teacher/{teacher_id}', [CourseWorkController::class, 'removeTeacher'])->name('course-works.remove-teacher');
         });

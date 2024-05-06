@@ -18,6 +18,10 @@ return new class extends Migration
             $table->text('description')->nullable()->default(null);
             $table->mediumText('content');
             $table->string('content_type');
+            $table->string('file_path')->nullable()->default(null);
+            $table->string('file_name')->nullable()->default(null);
+            $table->string('file_extension')->nullable()->default(null);
+            $table->string('file_size')->nullable()->default(null);
             $table->timestamps();
         });
     }
