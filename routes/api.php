@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\Admin\AnnouncementController;
 use App\Http\Controllers\Api\Admin\ChapterController;
+use App\Http\Controllers\Api\Admin\ClassSessionController;
 use App\Http\Controllers\Api\Admin\CourseWorkController;
 use App\Http\Controllers\Api\Admin\CurriculumController;
 use App\Http\Controllers\Api\Admin\ParentController;
@@ -69,6 +70,8 @@ Route::middleware(['auth:api'])->group(function () {
             Route::post('teacher', [CourseWorkController::class, 'addTeachers'])->name('course-works.add-teacher');
             Route::delete('teacher/{teacher_id}', [CourseWorkController::class, 'removeTeacher'])->name('course-works.remove-teacher');
         });
+        
+        Route::apiResource('class-sessions', ClassSessionController::class);
     });
 
     Route::name('teacher.')->middleware(['role:teacher'])->prefix('teacher')->group(function () {

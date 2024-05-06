@@ -8,12 +8,14 @@ use Illuminate\Database\Eloquent\Model;
  * @property integer $id
  * @property integer $course_work_id
  * @property integer $teacher_id
- * @property string $name
+ * @property string $title
  * @property string $description
- * @property string $thumbnail
- * @property boolean $type
+ * @property string $date
+ * @property string $time
+ * @property integer $quota
  * @property string $created_at
  * @property string $updated_at
+ * @property ClassMaterial[] $classMaterials
  * @property CourseWork $courseWork
  * @property Teacher $teacher
  * @property StudentClass[] $studentClasses
@@ -21,14 +23,17 @@ use Illuminate\Database\Eloquent\Model;
 class ClassSession extends Model
 {
     /**
-     * Table name
-     */
-    protected $table = 'class_sessions';
-
-    /**
      * @var array
      */
-    protected $fillable = ['course_work_id', 'teacher_id', 'name', 'description', 'thumbnail', 'type', 'created_at', 'updated_at'];
+    protected $fillable = ['course_work_id', 'teacher_id', 'title', 'description', 'date', 'time', 'quota', 'created_at', 'updated_at'];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function classMaterials()
+    {
+        return $this->hasMany(ClassMaterial::class);
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

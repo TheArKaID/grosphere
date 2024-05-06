@@ -20,6 +20,7 @@ class CreateCourseWorksTable extends Migration
             $table->integer('grade');
             $table->integer('term');
             $table->integer('quota');
+            $table->string('thumbnail')->nullable();
             $table->timestamps();
         });
     }

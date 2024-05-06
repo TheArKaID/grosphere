@@ -15,12 +15,13 @@ return new class extends Migration
     {
         Schema::create('class_sessions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('course_work_id')->constrained();
+            $table->foreignId('course_work_id')->nullable()->default(null)->constrained();
             $table->foreignId('teacher_id')->constrained();
-            $table->string('name');
+            $table->string('title');
             $table->string('description')->default('');
-            $table->string('thumbnail')->nullable();
-            $table->tinyInteger('type');
+            $table->date('date');
+            $table->time('time');
+            $table->integer('quota');
             $table->timestamps();
         });
     }
