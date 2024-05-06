@@ -4,7 +4,9 @@ namespace App\Services;
 
 use App\Models\CourseTeacher;
 use App\Models\CourseWork;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class CourseWorkService
 {
@@ -62,6 +64,12 @@ class CourseWorkService
             $courseTeacher->teacher_id = $data['teacher_id'];
             $courseTeacher->save();
         }
+
+        $thumbnailName = $courseWork->id . '.' . $data['thumbnail']->extension();
+        $data['thumbnail']->storeAs('course_works', $thumbnailName);
+        $courseWork->thumbnail = $thumbnailName;
+        $courseWork->save();
+
         DB::commit();
         return $courseWork;
     }
@@ -76,6 +84,12 @@ class CourseWorkService
      */
     public function update(CourseWork $courseWork, $data)
     {
+        if (isset($data['thumbnail'])) {
+            Storage::delete('course_works/' . $courseWork->thumbnail);
+            $thumbnailName = $courseWork->id . '.' . $data['thumbnail']->extension();
+            $data['thumbnail']->storeAs('course_works', $thumbnailName);
+            $data['thumbnail'] = $thumbnailName;
+        }
         $courseWork->update($data);
         return $courseWork;
     }

@@ -26,6 +26,7 @@ class UpdateCourseWorkRequest extends FormRequest
             'grade' => 'required|numeric',
             'term' => 'required|numeric',
             'quota' => 'required|numeric',
+            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ];
     }
 }
