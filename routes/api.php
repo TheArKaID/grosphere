@@ -6,7 +6,7 @@ use App\Http\Controllers\Api\Admin\CourseWorkController;
 use App\Http\Controllers\Api\Admin\CurriculumController;
 use App\Http\Controllers\Api\Admin\ParentController;
 use App\Http\Controllers\Api\Admin\StudentController;
-use App\Http\Controllers\Api\Admin\TutorController;
+use App\Http\Controllers\Api\Admin\TeacherController;
 use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\Front\SearchStudentController;
@@ -50,9 +50,9 @@ Route::middleware(['auth:api'])->group(function () {
             Route::put('password', [ParentController::class, 'changePassword'])->name('parents.change-password');
         });
 
-        Route::resource('tutors', TutorController::class)->except(['edit', 'create']);
-        Route::prefix('tutors/{tutor_id}')->group(function () {
-            Route::put('password', [TutorController::class, 'changePassword'])->name('tutors.change-password');
+        Route::resource('teachers', TeacherController::class)->except(['edit', 'create']);
+        Route::prefix('teachers/{teacher_id}')->group(function () {
+            Route::put('password', [TeacherController::class, 'changePassword'])->name('teachers.change-password');
         });
 
         // Route::resource('announcements', AnnouncementController::class)->except(['edit', 'create']);
@@ -70,10 +70,10 @@ Route::middleware(['auth:api'])->group(function () {
         });
     });
 
-    Route::name('tutor.')->middleware(['role:tutor'])->prefix('tutor')->group(function () {
-        // Route::get('/', [TutorProfileController::class, 'index'])->name('index');
-        // Route::put('/', [TutorProfileController::class, 'update'])->name('update');
-        // Route::put('password', [TutorProfileController::class, 'changePassword'])->name('change-password');
+    Route::name('teacher.')->middleware(['role:teacher'])->prefix('teacher')->group(function () {
+        // Route::get('/', [TeacherProfileController::class, 'index'])->name('index');
+        // Route::put('/', [TeacherProfileController::class, 'update'])->name('update');
+        // Route::put('password', [TeacherProfileController::class, 'changePassword'])->name('change-password');
     });
 
     Route::name('student.')->middleware(['role:student'])->prefix('student')->group(function () {
@@ -85,7 +85,7 @@ Route::middleware(['auth:api'])->group(function () {
         Route::apiResource('course-students', CourseStudentController::class)->only(['index', 'show']);
     });
 
-    Route::name('user.')->middleware(['role:admin|tutor|student|parent'])->prefix('user')->group(function () {
+    Route::name('user.')->middleware(['role:admin|teacher|student|parent'])->prefix('user')->group(function () {
 
         
         // Route::get('announcements', [UserAnnouncementController::class, 'index'])->name('announcements.index');

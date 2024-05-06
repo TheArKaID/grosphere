@@ -2,61 +2,61 @@
 
 namespace App\Services;
 
-use App\Models\Tutor;
+use App\Models\Teacher;
 use Illuminate\Support\Facades\DB;
 
-class TutorService
+class TeacherService
 {
-    private $tutor, $userService
+    private $teacher, $userService
     // , $liveClassService
     ;
 
     public function __construct(
-        Tutor $tutor,
+        Teacher $teacher,
         UserService $userService,
         // LiveClassService $liveClassService
     ) {
-        $this->tutor = $tutor;
+        $this->teacher = $teacher;
         $this->userService = $userService;
         // $this->liveClassService = $liveClassService;
     }
 
     /**
-     * Get All Tutor
+     * Get All Teacher
      * 
-     * @return Tutor
+     * @return Teacher
      */
     public function getAll()
     {
         if (request()->has('search')) {
-            $this->tutor = $this->tutor->whereHas('user', function ($query) {
+            $this->teacher = $this->teacher->whereHas('user', function ($query) {
                 $query->where('name', 'like', '%' . request()->get('search') . '%')
                     ->orWhere('email', 'like', '%' . request()->get('search') . '%')
                     ->orWhere('phone', 'like', '%' . request()->get('search') . '%');
             });
         }
         if (request()->has('page') && request()->get('page') == 'all') {
-            return $this->tutor->get();
+            return $this->teacher->get();
         }
-        return $this->tutor->paginate(request('size', 10));
+        return $this->teacher->paginate(request('size', 10));
     }
 
     /**
      * Get Parent By Id
      * 
      * @param int $id
-     * @return Tutor
+     * @return Teacher
      */
     public function getById(int $id)
     {
-        return $this->tutor->findOrFail($id);
+        return $this->teacher->findOrFail($id);
     }
 
     /**
-     * Create Tutor
+     * Create Teacher
      * 
      * @param array $data
-     * @return Tutor
+     * @return Teacher
      */
     public function create(array $data)
     {
@@ -66,38 +66,38 @@ class TutorService
 
         $user = $this->userService->createUser($data);
         $data['user_id'] = $user->id;
-        $tutor = $this->tutor->create($data);
+        $teacher = $this->teacher->create($data);
 
-        $user->assignRole('tutor');
+        $user->assignRole('teacher');
 
         DB::commit();
 
-        return $tutor;
+        return $teacher;
     }
 
     /**
-     * Update Tutor
+     * Update Teacher
      * 
      * @param int $id
      * @param array $data
-     * @return Tutor
+     * @return Teacher
      */
     public function update(int $id, array $data)
     {
         DB::beginTransaction();
 
-        $tutor = $this->getById($id);
+        $teacher = $this->getById($id);
 
-        $tutor->update($data);
-        $tutor->user->update($data);
+        $teacher->update($data);
+        $teacher->user->update($data);
 
         DB::commit();
 
-        return $tutor;
+        return $teacher;
     }
 
     /**
-     * Delete Tutor
+     * Delete Teacher
      * 
      * @param int $id
      * @return bool
@@ -106,10 +106,10 @@ class TutorService
     {
         DB::beginTransaction();
 
-        $tutor = $this->getById($id);
+        $teacher = $this->getById($id);
 
-        $tutor->delete();
-        $this->userService->deleteUser($tutor->user_id);
+        $teacher->delete();
+        $this->userService->deleteUser($teacher->user_id);
 
         DB::commit();
 
@@ -117,7 +117,7 @@ class TutorService
     }
 
     /**
-     * Change Tutor Password
+     * Change Teacher Password
      * 
      * @param int $id
      * @param string $password
@@ -126,32 +126,32 @@ class TutorService
      */
     public function changePassword(int $id, string $password)
     {
-        $tutor = $this->getById($id);
+        $teacher = $this->getById($id);
 
-        $this->userService->changePassword($tutor->user_id, $password);
+        $this->userService->changePassword($teacher->user_id, $password);
 
         return true;
     }
 
     /**
-     * Change Tutor's password By Tutor
+     * Change Teacher's password By Teacher
      * 
      * @param int $id
      * @param array $data
      * 
      * @return bool
      */
-    public function changePasswordByTutor(int $id, array $data)
+    public function changePasswordByTeacher(int $id, array $data)
     {
-        $tutor = $this->getById($id);
+        $teacher = $this->getById($id);
 
-        $this->userService->changePassword($tutor->user_id, $data['new_password']);
+        $this->userService->changePassword($teacher->user_id, $data['new_password']);
 
         return true;
     }
 
     // /**
-    //  * Tutor Join Live Class
+    //  * Teacher Join Live Class
     //  * 
     //  * @param int $liveClassId
     //  * 
@@ -159,11 +159,11 @@ class TutorService
     //  */
     // public function joinLiveClass($liveClassId)
     // {
-    //     $status = $this->liveClassService->isTutorLiveClassNotStarted($liveClassId);
+    //     $status = $this->liveClassService->isTeacherLiveClassNotStarted($liveClassId);
     //     if (gettype($status) == 'string') {
     //         return $status;
     //     }
-    //     $status = $this->liveClassService->isTutorLiveClassNotEnded($liveClassId);
+    //     $status = $this->liveClassService->isTeacherLiveClassNotEnded($liveClassId);
     //     if (gettype($status) == 'string') {
     //         return $status;
     //     }
@@ -171,7 +171,7 @@ class TutorService
     // }
 
     /**
-     * Tutor leave Live Class
+     * Teacher leave Live Class
      * 
      * @param int $id
      * 
@@ -187,6 +187,6 @@ class TutorService
         //     'live_class_id' => $liveClass->id
         // ];
 
-        // return $this->liveUserService->leaveLiveTutor($data);
+        // return $this->liveUserService->leaveLiveTeacher($data);
     }
 }

@@ -26,7 +26,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property Admin[] $admins
  * @property Guardian[] $guardians
  * @property Student[] $students
- * @property Tutor[] $tutors
+ * @property Teacher[] $teachers
  */
 class User extends Authenticatable implements JWTSubject
 {
@@ -121,8 +121,8 @@ class User extends Authenticatable implements JWTSubject
             case 'student':
                 $detail = $this->hasOne(Student::class);
                 break;
-            case 'tutor':
-                $detail = $this->hasOne(Tutor::class);
+            case 'teacher':
+                $detail = $this->hasOne(Teacher::class);
                 break;
             default:
                 $detail = $this->hasOne(Student::class);
@@ -166,7 +166,7 @@ class User extends Authenticatable implements JWTSubject
                     'phone' => $this->phone ?? 0
                 ];
                 break;
-            case 'tutor':
+            case 'teacher':
                 $detail = [
                     'id' => $this->detail->id,
                     'phone' => $this->phone ?? 0
