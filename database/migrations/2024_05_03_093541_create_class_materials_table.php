@@ -14,10 +14,7 @@ return new class extends Migration
         Schema::create('class_materials', function (Blueprint $table) {
             $table->id();
             $table->foreignId('class_session_id')->constrained('class_sessions')->cascadeOnDelete();
-            $table->foreignId('teacher_file_id')->nullable();
-            $table->string('name')->nullable()->default(null);
-            $table->mediumText('content')->nullable()->default(null);
-            $table->string('content_type')->nullable()->default(null);
+            $table->foreignId('teacher_file_id')->nullable()->constrained('teacher_files')->nullOnDelete();
             $table->timestamps();
         });
     }

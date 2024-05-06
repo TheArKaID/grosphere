@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\Front\SearchStudentController;
 use App\Http\Controllers\Api\Student\CourseStudentController;
+use App\Http\Controllers\Api\Teacher\TeacherFileController;
 use App\Http\Controllers\Api\User\AgendaController;
 use App\Http\Controllers\Api\User\AnnouncementController as UserAnnouncementController;
 use App\Http\Controllers\Api\User\ProfileController as UserProfileController;
@@ -50,7 +51,7 @@ Route::middleware(['auth:api'])->group(function () {
             Route::put('password', [ParentController::class, 'changePassword'])->name('parents.change-password');
         });
 
-        Route::resource('teachers', TeacherController::class)->except(['edit', 'create']);
+        Route::apiResource('teachers', TeacherController::class);
         Route::prefix('teachers/{teacher_id}')->group(function () {
             Route::put('password', [TeacherController::class, 'changePassword'])->name('teachers.change-password');
         });
@@ -74,6 +75,8 @@ Route::middleware(['auth:api'])->group(function () {
         // Route::get('/', [TeacherProfileController::class, 'index'])->name('index');
         // Route::put('/', [TeacherProfileController::class, 'update'])->name('update');
         // Route::put('password', [TeacherProfileController::class, 'changePassword'])->name('change-password');
+
+        Route::apiResource('teacher-files', TeacherFileController::class);
     });
 
     Route::name('student.')->middleware(['role:student'])->prefix('student')->group(function () {

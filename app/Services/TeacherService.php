@@ -3,16 +3,19 @@
 namespace App\Services;
 
 use App\Models\Teacher;
+use App\Models\TeacherFile;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class TeacherService
 {
-    private $teacher, $userService
+    private $teacher, $userService, $teacherFile
     // , $liveClassService
     ;
 
     public function __construct(
         Teacher $teacher,
+        TeacherFile $teacherFile,
         UserService $userService,
         // LiveClassService $liveClassService
     ) {
@@ -188,5 +191,95 @@ class TeacherService
         // ];
 
         // return $this->liveUserService->leaveLiveTeacher($data);
+    }
+
+    /**
+     * Get All Teacher File
+     * 
+     * @param int $teacherId
+     * 
+     * @return TeacherFile
+     */
+    public function getAllTeacherFile(int $teacherId)
+    {
+        return $this->teacherFile->where('teacher_id', $teacherId)->get();
+    }
+
+    /**
+     * Get Teacher File By Id
+     * 
+     * @param int $id
+     * 
+     * @return TeacherFile
+     */
+    public function getTeacherFileById(int $id)
+    {
+        return $this->teacherFile->findOrFail($id);
+    }
+
+    /**
+     * Create Teacher File
+     * 
+     * @param int $teacherId
+     * @param array $data
+     * 
+     * @return TeacherFile
+     */
+    public function createTeacherFile(int $teacherId, array $data)
+    {
+        $data['teacher_id'] = $teacherId;
+        
+        if (isset($data['content_type'])) {
+            $data['content_type'] = request()->file('content')->getMimeType();
+        }
+
+        $data['content'] = request()->file('content')->store('teacher_files');
+        $data['file_name'] = request()->file('content')->getClientOriginalName();
+        $data['file_extension'] = request()->file('content')->getClientOriginalExtension();
+        $data['file_size'] = request()->file('content')->getSize();
+
+        return $this->teacherFile->create($data);
+    }
+
+    /**
+     * Update Teacher File
+     * 
+     * @param TeacherFile $teacherFile
+     * @param array $data
+     * 
+     * @return TeacherFile
+     */
+    public function updateTeacherFile(TeacherFile $teacherFile, array $data)
+    {
+        if (request()->hasFile('content')) {
+            Storage::delete($teacherFile->content);
+            $data['content'] = request()->file('content')->store('teacher_files');
+            if (isset($data['content_type'])) {
+                $data['content_type'] = request()->file('content')->getMimeType();
+            }
+            $data['file_name'] = request()->file('content')->getClientOriginalName();
+            $data['file_extension'] = request()->file('content')->getClientOriginalExtension();
+            $data['file_size'] = request()->file('content')->getSize();
+        }
+
+        $teacherFile->update($data);
+
+        return $teacherFile;
+    }
+
+    /**
+     * Delete Teacher File
+     * 
+     * @param TeacherFile $teacherFile
+     * 
+     * @return bool
+     */
+    public function deleteTeacherFile(TeacherFile $teacherFile)
+    {
+        Storage::delete($teacherFile->content);
+
+        $teacherFile->delete();
+
+        return true;
     }
 }
