@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Admin\AnnouncementController;
+use App\Http\Controllers\Api\Admin\ChapterController;
 use App\Http\Controllers\Api\Admin\CourseWorkController;
 use App\Http\Controllers\Api\Admin\CurriculumController;
 use App\Http\Controllers\Api\Admin\ParentController;
@@ -54,9 +55,14 @@ Route::middleware(['auth:api'])->group(function () {
             Route::put('password', [TutorController::class, 'changePassword'])->name('tutors.change-password');
         });
 
-        Route::resource('announcements', AnnouncementController::class)->except(['edit', 'create']);
+        // Route::resource('announcements', AnnouncementController::class)->except(['edit', 'create']);
 
         Route::apiResource('curricula', CurriculumController::class);
+        Route::prefix('curricula')->group(function () {
+            // Api Resource Chapter
+            Route::apiResource('{curriculum_id}/chapters', ChapterController::class);
+        });
+
         Route::apiResource('course-works', CourseWorkController::class);
         Route::prefix('course-works/{course_work_id}')->group(function () {
             Route::post('teacher', [CourseWorkController::class, 'addTeachers'])->name('course-works.add-teacher');
@@ -82,8 +88,8 @@ Route::middleware(['auth:api'])->group(function () {
     Route::name('user.')->middleware(['role:admin|tutor|student|parent'])->prefix('user')->group(function () {
 
         
-        Route::get('announcements', [UserAnnouncementController::class, 'index'])->name('announcements.index');
-        Route::get('announcements/{announcement_id}', [UserAnnouncementController::class, 'show'])->name('announcements.show');
+        // Route::get('announcements', [UserAnnouncementController::class, 'index'])->name('announcements.index');
+        // Route::get('announcements/{announcement_id}', [UserAnnouncementController::class, 'show'])->name('announcements.show');
 
         Route::apiResource('agendas', AgendaController::class)->except(['update', 'show']);
         Route::get('calendars', [AgendaController::class, 'calendar'])->name('agendas.calendar');
