@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $address
  * @property string $created_at
  * @property string $updated_at
- * @property Parent $parent
+ * @property Guardian[] $guardians
  * @property User $user
  */
 class Student extends Model
@@ -55,14 +55,6 @@ class Student extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function parent()
-    {
-        return $this->belongsTo(Guardian::class);
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -85,4 +77,14 @@ class Student extends Model
     // {
     //     return $this->hasMany(LiveClassStudent::class);
     // }
+
+    /**
+     * Get all of the guardians for the Student
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function guardians(): HasMany
+    {
+        return $this->hasMany(GuardianStudent::class);
+    }
 }

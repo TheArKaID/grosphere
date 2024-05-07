@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $created_at
  * @property string $updated_at
  * @property User $user
- * @property Student[] $students
+ * @property GuardianStudent[] $students
  */
 class Guardian extends Model
 {
@@ -38,6 +38,6 @@ class Guardian extends Model
      */
     public function students()
     {
-        return $this->hasMany(Student::class);
+        return $this->hasMany(GuardianStudent::class);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Guardian;
 use App\Models\Parents;
 use Illuminate\Support\Facades\DB;
 
@@ -124,19 +125,14 @@ class ParentService
     /**
      * Add Child
      * 
-     * @param int $id
+     * @param Guardian $guardian
      * @param int $child_id
      * 
      * @return bool
      */
-    public function addChild(int $id, int $child_id)
+    public function addChild(Guardian $guardian, int $child_id)
     {
-        $student = $this->studentService->getById($child_id);
-        $parent = $this->getById($id);
-
-        $this->studentService->updateParentId($student->id, $parent->id);
-
-        return true;
+        return $guardian->students()->attach($child_id);
     }
 
     /**

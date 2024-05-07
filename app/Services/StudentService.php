@@ -120,18 +120,17 @@ class StudentService
 	}
 
 	/**
-	 * Update parent_id
+	 * Update guardian_id
 	 * 
 	 * @param int $id
-	 * @param int $parent_id
+	 * @param int $guardian_id
 	 * 
 	 * @return Student
 	 */
-	public function updateParentId(int $id, int $parent_id)
+	public function updateParentId(int $id, int $guardian_id)
 	{
 		$student = $this->getById($id);
-		$student->parent_id = $parent_id;
-		$student->save();
+		$student->guardians()->sync($guardian_id);
 
 		return $student;
 	}

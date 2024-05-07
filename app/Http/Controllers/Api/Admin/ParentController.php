@@ -8,6 +8,7 @@ use App\Http\Requests\StoreParentRequest;
 use App\Http\Requests\UpdateParentRequest;
 use App\Http\Requests\UpdatePasswordRequest;
 use App\Http\Resources\ParentResource;
+use App\Models\Guardian;
 use App\Services\ParentService;
 use Illuminate\Http\Request;
 
@@ -114,17 +115,17 @@ class ParentController extends Controller
      * Add a child to a parent
      * 
      * @param Request $request
-     * @param int $parent_id
+     * @param Guardian $guardian
      * 
      * @return \Illuminate\Http\Response
      */
-    public function addChild(Request $request, $parent_id)
+    public function addChild(Request $request, $guardian)
     {
         $validated = $request->validate([
             'child_id' => 'required|integer'
         ]);
 
-        $this->parentService->addChild($parent_id, $validated['child_id']);
+        $this->parentService->addChild($guardian, $validated['child_id']);
 
         return response()->json([
             'status' => 200,

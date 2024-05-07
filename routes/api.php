@@ -47,7 +47,7 @@ Route::middleware(['auth:api'])->group(function () {
         });
 
         Route::resource('guardians', ParentController::class)->except(['edit', 'create']);
-        Route::prefix('guardians/{parent_id}')->group(function () {
+        Route::prefix('guardians/{guardian}')->group(function () {
             Route::post('child', [ParentController::class, 'addChild'])->name('guardians.add-child');
             Route::put('password', [ParentController::class, 'changePassword'])->name('guardians.change-password');
         });
