@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Admin\AnnouncementController;
+use App\Http\Controllers\Api\Admin\AttendanceController;
 use App\Http\Controllers\Api\Admin\ChapterController;
 use App\Http\Controllers\Api\Admin\ClassSessionController;
 use App\Http\Controllers\Api\Admin\CourseWorkController;
@@ -73,6 +74,8 @@ Route::middleware(['auth:api'])->group(function () {
         });
         
         Route::apiResource('class-sessions', ClassSessionController::class);
+
+        Route::post('attendances', [AttendanceController::class, 'store'])->name('attendances.store');
     });
 
     Route::name('teacher.')->middleware(['role:teacher'])->prefix('teacher')->group(function () {
