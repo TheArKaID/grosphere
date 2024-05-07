@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 /**
  * @property integer $id
  * @property integer $user_id
- * @property integer $guardian_id
  * @property string $birth_date
  * @property string $birth_place
  * @property string $gender
@@ -33,7 +32,7 @@ class Student extends Model
     /**
      * @var array
      */
-    protected $fillable = ['user_id', 'guardian_id', 'birth_date', 'birth_place', 'gender', 'address', 'created_at', 'updated_at'];
+    protected $fillable = ['user_id', 'birth_date', 'birth_place', 'gender', 'address', 'created_at', 'updated_at'];
 
     /**
      * The attributes that should be cast.

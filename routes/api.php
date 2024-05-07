@@ -48,7 +48,8 @@ Route::middleware(['auth:api'])->group(function () {
 
         Route::resource('guardians', ParentController::class)->except(['edit', 'create']);
         Route::prefix('guardians/{guardian}')->group(function () {
-            Route::post('child', [ParentController::class, 'addChild'])->name('guardians.add-child');
+            Route::post('student', [ParentController::class, 'addChild'])->name('guardians.add-student');
+            Route::delete('student/{student}', [ParentController::class, 'removeStudent'])->name('guardians.remove-student');
             Route::put('password', [ParentController::class, 'changePassword'])->name('guardians.change-password');
         });
 

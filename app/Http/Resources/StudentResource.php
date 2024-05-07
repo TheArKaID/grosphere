@@ -19,7 +19,6 @@ class StudentResource extends JsonResource
         return $this->resource ? [
             'id' => $this->id,
             'user_id' => $this->user_id,
-            'guardian_id' => $this->guardian_id,
             'name' => $this->user->name,
             'email' => $this->user->email,
             'phone' => $this->user->phone,
@@ -28,7 +27,7 @@ class StudentResource extends JsonResource
             'birth_place' => $this->birth_place,
             'address' => $this->address,
             'status' => $this->user->status,
-            'guardian' => $this->guardian ?? [],
+            'guardians' => $this->guardians ?? [],
             'created_at' => $this->created_at
         ] : [];
     }

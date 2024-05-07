@@ -85,7 +85,6 @@ class StudentService
 
 		$student = $this->student->findOrFail($id);
 		$student->user_id = $data['user_id'] ?? $student->user_id;
-		$student->guardian_id = $data['guardian_id'] ?? $student->guardian_id;
 		$student->birth_date = $data['birth_date'] ?? $student->birth_date;
 		$student->birth_place = $data['birth_place'] ?? $student->birth_place;
 		$student->address = $data['address'] ?? $student->address;
