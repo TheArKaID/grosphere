@@ -122,16 +122,38 @@ class GuardianService
     }
 
     /**
-     * Add Child
+     * Add Student
      * 
      * @param Guardian $guardian
-     * @param int $child_id
+     * @param array $children
      * 
      * @return bool
      */
-    public function addChild(Guardian $guardian, int $child_id)
+    public function addStudent(Guardian $guardian, array $children)
     {
-        return $guardian->students()->attach($child_id);
+        foreach ($children as $key => $child) {
+            $student = $this->studentService->getById($child);
+            $guardian->students()->firstOrCreate([
+                'student_id' => $student->id
+            ]);
+        }
+
+        return true;
+    }
+
+    /**
+     * Remove Student
+     * 
+     * @param Guardian $guardian
+     * @param int $studentId
+     * 
+     * @return bool
+     */
+    public function removeStudent(Guardian $guardian, int $studentId)
+    {
+        $guardian->students()->where('student_id', $studentId)->delete();
+
+        return true;
     }
 
     /**

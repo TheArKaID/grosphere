@@ -25,7 +25,7 @@ class GuardianStudent extends Model
      */
     public function guardian()
     {
-        return $this->belongsTo('App\Models\Guardian');
+        return $this->belongsTo(Guardian::class);
     }
 
     /**
@@ -33,6 +33,6 @@ class GuardianStudent extends Model
      */
     public function student()
     {
-        return $this->belongsTo('App\Models\Student');
+        return $this->belongsTo(Student::class);
     }
 }

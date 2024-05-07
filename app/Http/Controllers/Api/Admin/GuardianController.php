@@ -9,6 +9,7 @@ use App\Http\Requests\UpdateGuardianRequest;
 use App\Http\Requests\UpdatePasswordRequest;
 use App\Http\Resources\GuardianResource;
 use App\Models\Guardian;
+use App\Models\Student;
 use App\Services\GuardianService;
 use Illuminate\Http\Request;
 
@@ -112,24 +113,44 @@ class GuardianController extends Controller
     }
 
     /**
-     * Add a child to a guardian
+     * Add a student to a guardian
      * 
      * @param Request $request
      * @param Guardian $guardian
      * 
      * @return \Illuminate\Http\Response
      */
-    public function addChild(Request $request, $guardian)
+    public function addStudent(Request $request, Guardian $guardian)
     {
         $validated = $request->validate([
-            'child_id' => 'required|integer'
+            'students' => 'required|array',
+            'students.*' => 'required|integer|exists:students,id'
         ]);
 
-        $this->guardianService->addChild($guardian, $validated['child_id']);
+        $this->guardianService->addStudent($guardian, $validated['students']);
 
         return response()->json([
             'status' => 200,
-            'message' => 'Child Added Successfully'
+            'message' => 'Student Added Successfully'
+        ], 200);
+    }
+
+    /**
+     * Remove a Student from a guardian
+     * 
+     * @param Request $request
+     * @param Guardian $guardian
+     * @param Student $student
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function removeStudent(Request $request, Guardian $guardian, Student $student)
+    {
+        $this->guardianService->removeStudent($guardian, $student->id);
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Student Removed Successfully'
         ], 200);
     }
 
