@@ -21,6 +21,7 @@ class TeacherResource extends JsonResource
             'name' => $this->user->name,
             'email' => $this->user->email,
             'phone' => $this->user->phone,
+            'courseTeachers' => $this->whenLoaded('courseTeachers') ? CourseTeacherResource::collection($this->courseTeachers) : [],
             'status' => $this->user->status,
             'created_at' => $this->created_at
         ] : [];

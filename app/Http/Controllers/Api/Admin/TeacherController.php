@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreTeacherRequest;
 use App\Http\Requests\UpdatePasswordRequest;
 use App\Http\Requests\UpdateTeacherRequest;
+use App\Http\Resources\TeacherCollection;
 use App\Http\Resources\TeacherResource;
 use App\Models\Teacher;
 use App\Services\TeacherService;
@@ -28,7 +29,7 @@ class TeacherController extends Controller
      */
     public function index()
     {
-        $teachers = TeacherResource::collection($this->teacherService->getAll());
+        $teachers = new TeacherCollection($this->teacherService->getAll());
 
         if ($teachers->count() == 0) {
             throw new ModelGetEmptyException("Teacher");

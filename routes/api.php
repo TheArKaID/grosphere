@@ -79,7 +79,7 @@ Route::middleware(['auth:api'])->group(function () {
         // Route::put('/', [TeacherProfileController::class, 'update'])->name('update');
         // Route::put('password', [TeacherProfileController::class, 'changePassword'])->name('change-password');
 
-        Route::apiResource('teacher-files', TeacherFileController::class);
+        Route::apiResource('storage-files', TeacherFileController::class);
     });
 
     Route::name('student.')->middleware(['role:student'])->prefix('student')->group(function () {
