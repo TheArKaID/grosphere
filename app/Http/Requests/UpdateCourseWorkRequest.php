@@ -22,10 +22,10 @@ class UpdateCourseWorkRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'subject' => 'required|string|max:255',
-            'grade' => 'required|numeric',
-            'term' => 'required|numeric',
-            'quota' => 'required|numeric',
+            'subject' => 'nullable|string|max:255',
+            'grade' => 'nullable|numeric',
+            'term' => 'nullable|numeric',
+            'quota' => 'nullable|numeric',
             'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ];
     }

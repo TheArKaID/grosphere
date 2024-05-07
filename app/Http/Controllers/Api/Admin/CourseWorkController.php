@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
+use App\Exceptions\ModelGetEmptyException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCourseWorkRequest;
 use App\Http\Requests\UpdateCourseWorkRequest;
+use App\Http\Resources\CourseWorkResource;
 use App\Models\CourseWork;
 use App\Services\CourseWorkService;
 use Illuminate\Http\Request;
@@ -23,10 +25,16 @@ class CourseWorkController extends Controller
      */
     public function index()
     {
+        $courseWork = CourseWorkResource::collection($this->courseWorkService->getAll());
+
+        if ($courseWork->count() == 0) {
+            throw new ModelGetEmptyException("CourseWork");
+        }
+
         return response()->json([
             'status' => 200,
             'message' => 'Success',
-            'data' => $this->courseWorkService->getAll()
+            'data' => $courseWork->response()->getData(true)
         ], 200);
     }
 
@@ -52,7 +60,7 @@ class CourseWorkController extends Controller
         return response()->json([
             'status' => 200,
             'message' => 'Success',
-            'data' => $courseWork
+            'data' => new CourseWorkResource($courseWork)
         ], 200);
     }
 

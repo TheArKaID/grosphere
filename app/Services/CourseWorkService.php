@@ -66,8 +66,8 @@ class CourseWorkService
         }
 
         $thumbnailName = $courseWork->id . '.' . $data['thumbnail']->extension();
-        $data['thumbnail']->storeAs('course_works', $thumbnailName);
-        $courseWork->thumbnail = $thumbnailName;
+        $data['thumbnail']->storeAs('course-works', $thumbnailName, 's3');
+        $courseWork->thumbnail = $data['thumbnail']->storeAs('course-works', $thumbnailName, 's3');
         $courseWork->save();
 
         DB::commit();
