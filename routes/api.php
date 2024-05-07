@@ -5,7 +5,7 @@ use App\Http\Controllers\Api\Admin\ChapterController;
 use App\Http\Controllers\Api\Admin\ClassSessionController;
 use App\Http\Controllers\Api\Admin\CourseWorkController;
 use App\Http\Controllers\Api\Admin\CurriculumController;
-use App\Http\Controllers\Api\Admin\ParentController;
+use App\Http\Controllers\Api\Admin\GuardianController;
 use App\Http\Controllers\Api\Admin\StudentController;
 use App\Http\Controllers\Api\Admin\TeacherController;
 use App\Http\Controllers\Api\Admin\UserController;
@@ -46,11 +46,11 @@ Route::middleware(['auth:api'])->group(function () {
             Route::put('password', [StudentController::class, 'changePassword'])->name('students.change-password');
         });
 
-        Route::resource('guardians', ParentController::class)->except(['edit', 'create']);
+        Route::resource('guardians', GuardianController::class)->except(['edit', 'create']);
         Route::prefix('guardians/{guardian}')->group(function () {
-            Route::post('student', [ParentController::class, 'addChild'])->name('guardians.add-student');
-            Route::delete('student/{student}', [ParentController::class, 'removeStudent'])->name('guardians.remove-student');
-            Route::put('password', [ParentController::class, 'changePassword'])->name('guardians.change-password');
+            Route::post('student', [GuardianController::class, 'addChild'])->name('guardians.add-student');
+            Route::delete('student/{student}', [GuardianController::class, 'removeStudent'])->name('guardians.remove-student');
+            Route::put('password', [GuardianController::class, 'changePassword'])->name('guardians.change-password');
         });
 
         Route::apiResource('teachers', TeacherController::class);

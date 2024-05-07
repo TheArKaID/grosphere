@@ -45,7 +45,7 @@ class TeacherService
     }
 
     /**
-     * Get Parent By Id
+     * Get Teacher By Id
      * 
      * @param int $id
      * @return Teacher

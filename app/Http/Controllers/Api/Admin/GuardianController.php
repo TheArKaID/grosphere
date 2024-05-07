@@ -4,21 +4,21 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Exceptions\ModelGetEmptyException;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreParentRequest;
-use App\Http\Requests\UpdateParentRequest;
+use App\Http\Requests\StoreGuardianRequest;
+use App\Http\Requests\UpdateGuardianRequest;
 use App\Http\Requests\UpdatePasswordRequest;
-use App\Http\Resources\ParentResource;
+use App\Http\Resources\GuardianResource;
 use App\Models\Guardian;
-use App\Services\ParentService;
+use App\Services\GuardianService;
 use Illuminate\Http\Request;
 
-class ParentController extends Controller
+class GuardianController extends Controller
 {
-    private $parentService;
+    private $guardianService;
 
-    public function __construct(ParentService $parentService)
+    public function __construct(GuardianService $guardianService)
     {
-        $this->parentService = $parentService;
+        $this->guardianService = $guardianService;
     }
 
     /**
@@ -28,16 +28,16 @@ class ParentController extends Controller
      */
     public function index()
     {
-        $parents = ParentResource::collection($this->parentService->getAll());
+        $guardians = GuardianResource::collection($this->guardianService->getAll());
 
-        if ($parents->count() == 0) {
-            throw new ModelGetEmptyException("Parent");
+        if ($guardians->count() == 0) {
+            throw new ModelGetEmptyException("Guardian");
         }
 
         return response()->json([
             'status' => 200,
             'message' => 'Success',
-            'data' => $parents->response()->getData(true)
+            'data' => $guardians->response()->getData(true)
         ], 200);
     }
 
@@ -47,15 +47,15 @@ class ParentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreParentRequest $request)
+    public function store(StoreGuardianRequest $request)
     {
         $validated = $request->validated();
-        $parent = new ParentResource($this->parentService->create($validated));
+        $guardian = new GuardianResource($this->guardianService->create($validated));
 
         return response()->json([
             'status' => 200,
-            'message' => 'Parent Created Successfully',
-            'data' => $parent
+            'message' => 'Guardian Created Successfully',
+            'data' => $guardian
         ], 200);
     }
 
@@ -67,12 +67,12 @@ class ParentController extends Controller
      */
     public function show($id)
     {
-        $parent = $this->parentService->getById($id);
+        $guardian = $this->guardianService->getById($id);
 
         return response()->json([
             'status' => 200,
             'message' => 'Success',
-            'data' => new ParentResource($parent)
+            'data' => new GuardianResource($guardian)
         ], 200);
     }
 
@@ -83,15 +83,15 @@ class ParentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateParentRequest $request, $id)
+    public function update(UpdateGuardianRequest $request, $id)
     {
         $validated = $request->validated();
-        $parent = new ParentResource($this->parentService->update($id, $validated));
+        $guardian = new GuardianResource($this->guardianService->update($id, $validated));
 
         return response()->json([
             'status' => 200,
-            'message' => 'Parent Updated Successfully',
-            'data' => $parent
+            'message' => 'Guardian Updated Successfully',
+            'data' => $guardian
         ], 200);
     }
 
@@ -103,16 +103,16 @@ class ParentController extends Controller
      */
     public function destroy($id)
     {
-        $this->parentService->delete($id);
+        $this->guardianService->delete($id);
 
         return response()->json([
             'status' => 200,
-            'message' => 'Parent Deleted Successfully',
+            'message' => 'Guardian Deleted Successfully',
         ], 200);
     }
 
     /**
-     * Add a child to a parent
+     * Add a child to a guardian
      * 
      * @param Request $request
      * @param Guardian $guardian
@@ -125,7 +125,7 @@ class ParentController extends Controller
             'child_id' => 'required|integer'
         ]);
 
-        $this->parentService->addChild($guardian, $validated['child_id']);
+        $this->guardianService->addChild($guardian, $validated['child_id']);
 
         return response()->json([
             'status' => 200,
@@ -134,22 +134,22 @@ class ParentController extends Controller
     }
 
     /**
-     * Change Parent Password
+     * Change Guardian Password
      * 
      * @param App\Http\Requests\UpdatePasswordRequest $request
-     * @param int $parent_id
+     * @param int $guardian_id
      * 
      * @return \Illuminate\Http\Response
      */
-    public function changePassword(UpdatePasswordRequest $request, $parent_id)
+    public function changePassword(UpdatePasswordRequest $request, $guardian_id)
     {
         $validated = $request->validated();
 
-        $this->parentService->changePassword($parent_id, $validated['password']);
+        $this->guardianService->changePassword($guardian_id, $validated['password']);
 
         return response()->json([
             'status' => 200,
-            'message' => 'Parent Password Changed Successfully'
+            'message' => 'Guardian Password Changed Successfully'
         ], 200);
     }
 }

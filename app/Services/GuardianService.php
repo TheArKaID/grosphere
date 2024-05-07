@@ -3,15 +3,14 @@
 namespace App\Services;
 
 use App\Models\Guardian;
-use App\Models\Parents;
 use Illuminate\Support\Facades\DB;
 
-class ParentService
+class GuardianService
 {
     private $parents, $userService, $studentService;
 
     public function __construct(
-        Parents $parents,
+        Guardian $parents,
         UserService $userService,
         StudentService $studentService
     ) {
@@ -21,9 +20,9 @@ class ParentService
     }
 
     /**
-     * Get All Parents
+     * Get All Guardian
      * 
-     * @return Parents
+     * @return Guardian
      */
     public function getAll()
     {
@@ -41,10 +40,10 @@ class ParentService
     }
 
     /**
-     * Get Parent By Id
+     * Get Guardian By Id
      * 
      * @param int $id
-     * @return Parents
+     * @return Guardian
      */
     public function getById(int $id)
     {
@@ -52,10 +51,10 @@ class ParentService
     }
 
     /**
-     * Create Parents
+     * Create Guardian
      * 
      * @param array $data
-     * @return Parents
+     * @return Guardian
      */
     public function create(array $data)
     {
@@ -75,11 +74,11 @@ class ParentService
     }
 
     /**
-     * Update Parents
+     * Update Guardian
      * 
      * @param int $id
      * @param array $data
-     * @return Parents
+     * @return Guardian
      */
     public function update(int $id, array $data)
     {
@@ -96,7 +95,7 @@ class ParentService
     }
 
     /**
-     * Delete Parents
+     * Delete Guardian
      * 
      * @param int $id
      * @return bool
@@ -136,7 +135,7 @@ class ParentService
     }
 
     /**
-     * Change Parent Password
+     * Change Guardian Password
      * 
      * @param int $id
      * @param string $password
