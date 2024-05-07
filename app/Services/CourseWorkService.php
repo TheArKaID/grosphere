@@ -132,6 +132,9 @@ class CourseWorkService
     {
         DB::beginTransaction();
         foreach ($teachers as $teacher) {
+            if ($courseWork->courseTeachers()->where('teacher_id', $teacher)->exists()) {
+                continue;
+            }
             $courseTeacher = new CourseTeacher();
             $courseTeacher->course_work_id = $courseWork->id;
             $courseTeacher->teacher_id = $teacher;
