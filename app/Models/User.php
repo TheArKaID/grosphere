@@ -115,7 +115,7 @@ class User extends Authenticatable implements JWTSubject
             case 'admin':
                 $detail = $this->hasOne(Admin::class);
                 break;
-            case 'parent':
+            case 'guardian':
                 $detail = $this->hasOne(Guardian::class);
                 break;
             case 'student':
@@ -148,7 +148,7 @@ class User extends Authenticatable implements JWTSubject
                     'phone' => $this->phone ?? 0
                 ];
                 break;
-            case 'parent':
+            case 'guardian':
                 $detail = [
                     'id' => $this->detail->id,
                     'address' => $this->detail->address,

@@ -7,14 +7,14 @@ use Illuminate\Support\Facades\DB;
 
 class GuardianService
 {
-    private $parents, $userService, $studentService;
+    private $guardians, $userService, $studentService;
 
     public function __construct(
-        Guardian $parents,
+        Guardian $guardians,
         UserService $userService,
         StudentService $studentService
     ) {
-        $this->parents = $parents;
+        $this->guardians = $guardians;
         $this->userService = $userService;
         $this->studentService = $studentService;
     }
@@ -27,16 +27,16 @@ class GuardianService
     public function getAll()
     {
         if (request()->has('search')) {
-            $this->parents = $this->parents->whereHas('user', function ($query) {
+            $this->guardians = $this->guardians->whereHas('user', function ($query) {
                 $query->where('name', 'like', '%' . request()->get('search') . '%')
                     ->orWhere('email', 'like', '%' . request()->get('search') . '%')
                     ->orWhere('phone', 'like', '%' . request()->get('search') . '%');
             });
         }
         if (request()->has('page') && request()->get('page') == 'all') {
-            return $this->parents->get();
+            return $this->guardians->get();
         }
-        return $this->parents->paginate(request('size', 10));
+        return $this->guardians->paginate(request('size', 10));
     }
 
     /**
@@ -47,7 +47,7 @@ class GuardianService
      */
     public function getById(int $id)
     {
-        return $this->parents->findOrFail($id);
+        return $this->guardians->findOrFail($id);
     }
 
     /**
@@ -64,13 +64,13 @@ class GuardianService
 
         $user = $this->userService->createUser($data);
         $data['user_id'] = $user->id;
-        $parent = $this->parents->create($data);
+        $guardian = $this->guardians->create($data);
 
-        $user->assignRole('parent');
+        $user->assignRole('guardian');
 
         DB::commit();
 
-        return $parent;
+        return $guardian;
     }
 
     /**
@@ -84,14 +84,14 @@ class GuardianService
     {
         DB::beginTransaction();
 
-        $parent = $this->getById($id);
+        $guardian = $this->getById($id);
 
-        $parent->update($data);
-        $parent->user->update($data);
+        $guardian->update($data);
+        $guardian->user->update($data);
 
         DB::commit();
 
-        return $parent;
+        return $guardian;
     }
 
     /**
@@ -104,17 +104,17 @@ class GuardianService
     {
         DB::beginTransaction();
 
-        $parent = $this->getById($id);
+        $guardian = $this->getById($id);
 
-        if ($parent->students) {
-            foreach ($parent->students as $key => $student) {
+        if ($guardian->students) {
+            foreach ($guardian->students as $key => $student) {
                 $student->guardian_id = null;
                 $student->save();
             }
         }
 
-        $parent->delete();
-        $this->userService->deleteUser($parent->user_id);
+        $guardian->delete();
+        $this->userService->deleteUser($guardian->user_id);
 
         DB::commit();
 
@@ -144,9 +144,9 @@ class GuardianService
      */
     public function changePassword(int $id, string $password)
     {
-        $parent = $this->getById($id);
+        $guardian = $this->getById($id);
 
-        $this->userService->changePassword($parent->user->id, $password);
+        $this->userService->changePassword($guardian->user->id, $password);
 
         return true;
     }

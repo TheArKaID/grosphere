@@ -46,7 +46,7 @@ Route::middleware(['auth:api'])->group(function () {
             Route::put('password', [StudentController::class, 'changePassword'])->name('students.change-password');
         });
 
-        Route::resource('guardians', GuardianController::class)->except(['edit', 'create']);
+        Route::apiResource('guardians', GuardianController::class);
         Route::prefix('guardians/{guardian}')->group(function () {
             Route::post('student', [GuardianController::class, 'addChild'])->name('guardians.add-student');
             Route::delete('student/{student}', [GuardianController::class, 'removeStudent'])->name('guardians.remove-student');
@@ -92,7 +92,7 @@ Route::middleware(['auth:api'])->group(function () {
         Route::apiResource('course-students', CourseStudentController::class)->only(['index', 'show']);
     });
 
-    Route::name('user.')->middleware(['role:admin|teacher|student|parent'])->prefix('user')->group(function () {
+    Route::name('user.')->middleware(['role:admin|teacher|student|guardian'])->prefix('user')->group(function () {
 
         
         // Route::get('announcements', [UserAnnouncementController::class, 'index'])->name('announcements.index');
