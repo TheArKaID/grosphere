@@ -41,15 +41,15 @@ Route::middleware(['auth:api'])->group(function () {
     Route::name('admin.')->middleware(['role:admin'])->prefix('admin')->group(function () {
         Route::resource('users', UserController::class)->except(['edit', 'create']);
 
-        Route::resource('students', StudentController::class)->except(['edit', 'create']);
+        Route::apiResource('students', StudentController::class);
         Route::prefix('students/{student_id}')->group(function () {
             Route::put('password', [StudentController::class, 'changePassword'])->name('students.change-password');
         });
 
-        Route::resource('parents', ParentController::class)->except(['edit', 'create']);
-        Route::prefix('parents/{parent_id}')->group(function () {
-            Route::post('child', [ParentController::class, 'addChild'])->name('parents.add-child');
-            Route::put('password', [ParentController::class, 'changePassword'])->name('parents.change-password');
+        Route::resource('guardians', ParentController::class)->except(['edit', 'create']);
+        Route::prefix('guardians/{parent_id}')->group(function () {
+            Route::post('child', [ParentController::class, 'addChild'])->name('guardians.add-child');
+            Route::put('password', [ParentController::class, 'changePassword'])->name('guardians.change-password');
         });
 
         Route::apiResource('teachers', TeacherController::class);

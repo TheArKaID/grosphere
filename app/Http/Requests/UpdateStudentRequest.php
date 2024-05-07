@@ -24,14 +24,13 @@ class UpdateStudentRequest extends FormRequest
     public function rules()
     {
         return [
+            'guardian_id' => 'numeric|nullable|exists:guardians,id',
             'name' => 'string|max:255',
             'birth_date' => 'date_format:d-m-Y',
             'birth_place' => 'string|max:255',
             'gender' => 'numeric|between:0,1',
             'address' => 'string',
             'phone' => 'nullable|string|min:8|max:50',
-            'id_number' => 'nullable|string|max:50',
-            'parent_id' => 'numeric|nullable|exists:parents,id',
             'email' => 'nullable|email',
         ];
     }

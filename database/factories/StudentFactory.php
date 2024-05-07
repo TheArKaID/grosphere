@@ -16,7 +16,6 @@ class StudentFactory extends Factory
         return [
             'user_id' => 0,
             'parent_id' => null,
-            'id_number' => $this->faker->unique()->randomNumber(6),
             'birth_date' => $this->faker->date('d-m-Y'),
             'birth_place' => $this->faker->city,
             'address' => $this->faker->address,

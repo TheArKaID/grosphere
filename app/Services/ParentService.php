@@ -108,7 +108,7 @@ class ParentService
 
         if ($parent->students) {
             foreach ($parent->students as $key => $student) {
-                $student->parent_id = null;
+                $student->guardian_id = null;
                 $student->save();
             }
         }

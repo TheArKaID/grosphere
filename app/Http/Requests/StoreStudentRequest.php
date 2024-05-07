@@ -26,16 +26,15 @@ class StoreStudentRequest extends FormRequest
     public function rules()
     {
         return [
-            'parent_id' => 'numeric|nullable',
+            'guardian_id' => 'nullable|exists:guardians,id',
             'name' => 'required|string|max:255',
             'email' => ['required', 'email', 'unique:users,email'],
             'password' => ['required', 'confirmed', Password::min(8)->letters()->numbers()->mixedCase()],
             'phone' => 'nullable|string|min:8|max:50',
-            'id_number' => 'nullable|unique:students,id_number|string|max:50',
-            'birth_date' => 'required|date_format:d-m-Y',
-            'birth_place' => 'required|string|max:100',
-            'gender' => 'required|numeric|between:0,1',
-            'address' => 'required'
+            'birth_date' => 'nullable|date_format:d-m-Y',
+            'birth_place' => 'nullable|string|max:100',
+            'gender' => 'nullable|string|between:M,F',
+            'address' => 'nullable|string'
         ];
     }
 }

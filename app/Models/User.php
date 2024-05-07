@@ -158,7 +158,6 @@ class User extends Authenticatable implements JWTSubject
             case 'student':
                 $detail = [
                     'id' => $this->detail->id,
-                    'id_number' => $this->detail->id_number,
                     'birth_place' => $this->detail->birth_place,
                     'birth_date' => $this->detail->birth_date,
                     'gender' => $this->detail->gender,
