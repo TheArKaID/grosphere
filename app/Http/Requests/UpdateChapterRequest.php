@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\ContentMustBeFileOrString;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateChapterRequest extends FormRequest
@@ -22,9 +23,10 @@ class UpdateChapterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string',
+            'name' => 'nullable|string',
             'description' => 'nullable|string',
-            'content' => 'required|string'
+            'content_type' => 'required|string|max:255',
+            'content' => ['required', new ContentMustBeFileOrString],
         ];
     }
 }

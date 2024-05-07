@@ -25,6 +25,7 @@ class StoreChapterRequest extends FormRequest
         return [
             'name' => 'nullable|string|max:255',
             'description' => 'nullable|string',
+            'content_type' => 'nullable|string|max:255',
             'content' => ['required', new ContentMustBeFileOrString],
         ];
     }

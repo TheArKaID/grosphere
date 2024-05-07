@@ -61,8 +61,8 @@ class ChapterService
         }
 
         if(request()->hasFile('content')) {
-            $data['content'] = request()->file('content')->store('teacher_files');
-            $data['file_path'] = request()->file('content')->getPath();
+            $data['file_path'] = request()->file('content')->store('primary/' . $curriculum_id, 's3');
+            $data['content'] = Storage::disk('s3')->url($data['file_path']);
             $data['file_name'] = request()->file('content')->getClientOriginalName();
             $data['file_extension'] = request()->file('content')->getClientOriginalExtension();
             $data['file_size'] = request()->file('content')->getSize();
@@ -81,14 +81,14 @@ class ChapterService
      */
     public function update(Chapter $chapter, $data)
     {
-        if (!isset($data['content_type'])) {
-            $data['content_type'] = $this->getContentType($data['content']);
-        }
-
         if(request()->hasFile('content')) {
-            Storage::delete($chapter->file_path);
-            $data['content'] = request()->file('content')->store('teacher_files');
-            $data['file_path'] = request()->file('content')->getPath();
+            if (!isset($data['content_type'])) {
+                $data['content_type'] = $this->getContentType($data['content']);
+            }
+    
+            Storage::disk('s3')->delete($chapter->file_path);
+            $data['file_path'] = request()->file('content')->store('primary/' . $chapter->curriculum_id, 's3');
+            $data['content'] = Storage::disk('s3')->url($data['file_path']);
             $data['file_name'] = request()->file('content')->getClientOriginalName();
             $data['file_extension'] = request()->file('content')->getClientOriginalExtension();
             $data['file_size'] = request()->file('content')->getSize();
@@ -107,6 +107,9 @@ class ChapterService
      */
     public function delete(Chapter $chapter)
     {
+        // Delete file
+        if ($chapter->file_path)
+            Storage::disk('s3')->delete($chapter->file_path);
         $chapter->delete();
         return $chapter;
     }

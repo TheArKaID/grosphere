@@ -233,7 +233,8 @@ class TeacherService
             $data['content_type'] = request()->file('content')->getMimeType();
         }
 
-        $data['content'] = request()->file('content')->store('teacher_files');
+        $data['file_path'] = request()->file('content')->store('teachers/' . $teacherId, 's3');
+        $data['content'] = Storage::disk('s3')->url($data['file_path']);
         $data['file_name'] = request()->file('content')->getClientOriginalName();
         $data['file_extension'] = request()->file('content')->getClientOriginalExtension();
         $data['file_size'] = request()->file('content')->getSize();
@@ -252,11 +253,12 @@ class TeacherService
     public function updateTeacherFile(TeacherFile $teacherFile, array $data)
     {
         if (request()->hasFile('content')) {
-            Storage::delete($teacherFile->content);
-            $data['content'] = request()->file('content')->store('teacher_files');
+            Storage::delete($teacherFile->file_path);
+            $data['file_path'] = request()->file('content')->store('teachers/' . $teacherFile->teacher_id, 's3');
             if (isset($data['content_type'])) {
                 $data['content_type'] = request()->file('content')->getMimeType();
             }
+            $data['content'] = Storage::disk('s3')->url($data['file_path']);
             $data['file_name'] = request()->file('content')->getClientOriginalName();
             $data['file_extension'] = request()->file('content')->getClientOriginalExtension();
             $data['file_size'] = request()->file('content')->getSize();
