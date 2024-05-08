@@ -76,6 +76,8 @@ Route::middleware(['auth:api'])->group(function () {
         Route::apiResource('class-sessions', ClassSessionController::class);
 
         Route::post('attendances', [AttendanceController::class, 'store'])->name('attendances.store');
+        Route::get('attendances', [AttendanceController::class, 'index'])->name('attendances.index');
+        Route::get('attendances/{attendance}', [AttendanceController::class, 'show'])->name('attendances.index');
     });
 
     Route::name('teacher.')->middleware(['role:teacher'])->prefix('teacher')->group(function () {

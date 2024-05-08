@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 /**
@@ -23,7 +24,7 @@ class Attendance extends Model
      * @var array
      */
     protected $fillable = ['student_id', 'guardian', 'temperature', 'remark', 'type', 'proof', 'created_at', 'updated_at'];
-
+    protected $appends = ['out'];
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -35,5 +36,22 @@ class Attendance extends Model
     public function getProofAttribute($value)
     {
         return $value ? Storage::disk('s3')->url($value) : null;
+    }
+
+    /**
+     * Add "out" attribute to the model.
+     * 
+     * @param string $value
+     * 
+     * @return void
+     */
+    public function getOutAttribute()
+    {
+        return DB::table('attendances')
+            ->select('id', 'student_id', 'type', 'created_at')
+            ->where('student_id', $this->student_id)
+            ->where('type', 'out')
+            ->whereDate('created_at', $this->created_at)
+            ->first()?->created_at;
     }
 }

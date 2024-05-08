@@ -15,6 +15,33 @@ class AttendanceService
         $this->attendance = $attendance;
     }
 
+    /**
+     * Get All Student attendance pair, in and out.
+     * 
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    function all() : \Illuminate\Database\Eloquent\Collection
+    {
+        return $this->attendance->with('student')->get();
+    }
+
+    /**
+     * Pair all attendances in and out for everyday.
+     * 
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    function pair()
+    {
+        return $this->attendance->whereType('in')->paginate(10);
+    }
+
+    /**
+     * Create a new attendance record.
+     * 
+     * @param array $data
+     * 
+     * @return Attendance
+     */
     function create(array $data) : Attendance
     {
 
@@ -67,5 +94,28 @@ class AttendanceService
             return 'Student has not checked in';
         }
         return true;
+    }
+
+    /**
+     * Get the attendance record by in id.
+     * 
+     * @param integer $id
+     * 
+     * @return array
+     */
+    function find(int $id) : array
+    {
+        $in = $this->attendance->where('type', 'in')->findOrFail($id)
+        ->setHidden(['out']);
+
+        $out = $this->attendance->where('student_id', $in->student_id)
+            ->where('type', 'out')
+            ->whereDate('created_at', $in->created_at)
+            ->first()?->setHidden(['out']);
+
+        return [
+            'in' => $in,
+            'out' => $out
+        ];
     }
 }

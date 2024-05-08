@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
+use App\Exceptions\ModelGetEmptyException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreAttendanceRequest;
 use App\Http\Requests\UpdateAttendanceRequest;
+use App\Http\Resources\AttendanceResource;
 use App\Models\Attendance;
 use App\Services\AttendanceService;
 
@@ -22,7 +24,17 @@ class AttendanceController extends Controller
      */
     public function index()
     {
-        //
+        $attendances = AttendanceResource::collection($this->attendanceService->pair());
+
+        if ($attendances->count() == 0) {
+            throw new ModelGetEmptyException("Attendance");
+        }
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'All attendance',
+            'data' => $attendances->response()->getData(true)
+        ], 201);
     }
 
     /**
@@ -40,9 +52,13 @@ class AttendanceController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Attendance $attendance)
+    public function show(int $attendance)
     {
-        //
+        return response()->json([
+            'status' => 200,
+            'message' => 'Attendance detail',
+            'data' => $this->attendanceService->find($attendance)
+        ], 200);
     }
 
     /**
