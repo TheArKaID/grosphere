@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('guardian');
             $table->string('temperature');
             $table->text('remark')->nullable()->default(null);
+            $table->enum('type', ['in', 'out']);
             $table->string('proof');
             $table->timestamps();
         });
