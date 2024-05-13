@@ -54,4 +54,18 @@ class DashboardController extends Controller
             'data' => $this->dashboardService->paymentOverdues()
         ], 200);
     }
+
+    /**
+     * Return Attendances Data
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function attendances()
+    {
+        return response()->json([
+            'status' => 200,
+            'message' => 'All Attendances Data',
+            'data' => $this->dashboardService->attendances()
+        ], 200);
+    }
 }

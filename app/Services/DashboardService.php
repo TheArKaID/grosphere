@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Agenda;
+use Illuminate\Support\Carbon;
 
 class DashboardService
 {
@@ -61,5 +62,26 @@ class DashboardService
     public function paymentOverdues()
     {
         return [];
+    }
+
+    /**
+     * Attendances Data
+     * 
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function attendances()
+    {
+        $attendanceService = app()->make(AttendanceService::class);
+
+        return $attendanceService->pair()->map(function ($attendance) {
+            return [
+                'id' => $attendance->id,
+                'student_id' => $attendance->student_id,
+                'student' => $attendance->student->user->name,
+                'guardian' => $attendance->guardian,
+                'in' => Carbon::make($attendance->created_at)->format('Y-m-d H:i:s'),
+                'out' => $attendance->out
+            ];
+        });
     }
 }
