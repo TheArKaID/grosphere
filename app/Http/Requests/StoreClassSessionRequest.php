@@ -26,7 +26,7 @@ class StoreClassSessionRequest extends FormRequest
             'teacher_id' => 'required|exists:teachers,id',
             'title' => 'required|string',
             'description' => 'nullable|string',
-            'date' => 'required|date',
+            'date' => 'required|date|date_format:Y-m-d',
             'time' => 'required|date_format:H:i',
             'quota' => 'required|integer',
 

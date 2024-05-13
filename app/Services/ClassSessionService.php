@@ -58,6 +58,8 @@ class ClassSessionService
                 unset($data['total_session']);
                 $classSessions = [];
                 for ($i = 0; $i < $totalSession; $i++) {
+                    // For each session, the date will be the next week
+                    $data['date'] = date('Y-m-d', strtotime('+' . $i . ' week'));
                     $classSessions[] = $this->classSession->create($data);
                 }
                 return $classSessions;
@@ -106,5 +108,17 @@ class ClassSessionService
         ->orWhere('description', 'like', '%' . $search . '%')
         ->orWhere('date', 'like', '%' . $search . '%')
         ->orWhere('time', 'like', '%' . $search . '%');
+    }
+
+    /**
+     * Get all Class Session in a month 
+     * 
+     * @param string $date
+     * 
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function filterByDate($date)
+    {
+        return $this->classSession->whereMonth('date', date('m', strtotime($date)))->get();
     }
 }

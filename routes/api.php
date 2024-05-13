@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\Admin\ChapterController;
 use App\Http\Controllers\Api\Admin\ClassSessionController;
 use App\Http\Controllers\Api\Admin\CourseWorkController;
 use App\Http\Controllers\Api\Admin\CurriculumController;
+use App\Http\Controllers\Api\Admin\DashboardController;
 use App\Http\Controllers\Api\Admin\GuardianController;
 use App\Http\Controllers\Api\Admin\StudentController;
 use App\Http\Controllers\Api\Admin\TeacherController;
@@ -40,6 +41,12 @@ Route::name('front')->prefix('front')->group(function () {
 });
 Route::middleware(['auth:api'])->group(function () {
     Route::name('admin.')->middleware(['role:admin'])->prefix('admin')->group(function () {
+        Route::prefix('dashboard')->group(function () {
+            Route::get('users', [DashboardController::class, 'users']);
+            Route::get('calendars', [DashboardController::class, 'calendars']);
+            Route::get('payment-overdues', [DashboardController::class, 'paymentOverdues']);
+        });
+
         Route::resource('users', UserController::class)->except(['edit', 'create']);
 
         Route::apiResource('students', StudentController::class);

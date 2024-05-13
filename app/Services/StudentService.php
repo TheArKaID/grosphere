@@ -38,6 +38,16 @@ class StudentService
 		return $this->student->paginate(request('size', 10));
 	}
 
+    /**
+     * Count Students
+     * 
+     * @return int
+     */
+    public function count()
+    {
+        return $this->student->count();
+    }
+
 	/**
 	 * Get Student by id
 	 * 

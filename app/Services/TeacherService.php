@@ -45,6 +45,16 @@ class TeacherService
     }
 
     /**
+     * Count Teachers
+     * 
+     * @return int
+     */
+    public function count()
+    {
+        return $this->teacher->count();
+    }
+
+    /**
      * Get Teacher By Id
      * 
      * @param int $id

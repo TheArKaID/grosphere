@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('course_work_id')->nullable()->default(null)->constrained();
             $table->foreignId('teacher_id')->constrained();
             $table->string('title');
-            $table->string('description')->default('');
+            $table->string('description')->nullable()->default(null);
             $table->date('date');
             $table->time('time');
             $table->integer('quota');

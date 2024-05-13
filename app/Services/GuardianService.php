@@ -40,6 +40,16 @@ class GuardianService
     }
 
     /**
+     * Count Guardians
+     * 
+     * @return int
+     */
+    public function count()
+    {
+        return $this->guardians->count();
+    }
+
+    /**
      * Get Guardian By Id
      * 
      * @param int $id
