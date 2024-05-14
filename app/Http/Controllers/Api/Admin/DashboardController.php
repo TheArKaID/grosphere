@@ -34,10 +34,19 @@ class DashboardController extends Controller
      */
     public function calendars()
     {
+        $data = $this->dashboardService->nationalHoliday(request('date', null));
+
+        if (gettype($data) === 'string') {
+            return response()->json([
+                'status' => 500,
+                'message' => $data
+            ], 500);
+        }
+
         return response()->json([
             'status' => 200,
             'message' => 'All Calendar Data',
-            'data' => $this->dashboardService->calendars(request('date', null))
+            'data' => $data
         ], 200);
     }
 
