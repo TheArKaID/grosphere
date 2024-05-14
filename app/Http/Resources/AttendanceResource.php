@@ -25,6 +25,7 @@ class AttendanceResource extends JsonResource
             'remark' => $this->remark,
             'type' => $this->type,
             'proof' => $this->proof,
+            'verificator' => $this->admin?->user?->name,
             'created_at' => Carbon::parse($this->created_at)->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::parse($this->updated_at)->format('Y-m-d H:i:s'),
             'student' => new StudentResource($this->student),

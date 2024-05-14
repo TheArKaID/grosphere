@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Attendance;
+use Doctrine\DBAL\Query;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
@@ -33,7 +34,32 @@ class AttendanceService
      */
     function pair()
     {
-        return $this->attendance->whereType('in')->paginate(10);
+        $attendance = $this->attendance;
+        if ($search = request()->get('search', false)) {
+            $attendance = $attendance
+            ->orWhere(function ($query) use ($search) {
+                $query->whereHas('student', function ($query) use ($search) {
+                    $query->whereHas('user', function ($query) use ($search) {
+                        $query->where('name', 'like', "%$search%");
+                    });
+                });
+            })
+            ->orWhere(function ($query)  use ($search) {
+                $query->whereHas('admin', function ($query) use ($search) {
+                    $query->whereHas('user', function ($query) use ($search) {
+                        $query->where('name', 'like', "%$search%");
+                    });
+                });
+            })
+            ;
+        }
+        if($date = request()->get('date', false)) {
+            $attendance = $attendance->whereDate('created_at', $date);
+        }
+        if (request()->has('page') && request()->get('page') == 'all') {
+            return $attendance->get();
+        }
+        return $attendance->whereType('in')->paginate(request('size', 10));
     }
 
     /**

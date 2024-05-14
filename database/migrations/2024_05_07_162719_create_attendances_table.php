@@ -19,6 +19,7 @@ return new class extends Migration
             $table->text('remark')->nullable()->default(null);
             $table->enum('type', ['in', 'out']);
             $table->string('proof');
+            $table->foreignId('admin_id')->default(null)->nullable()->constrained()->nullOnDelete();
             $table->timestamps();
         });
     }

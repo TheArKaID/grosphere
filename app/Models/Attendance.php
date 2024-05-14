@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
@@ -14,6 +15,7 @@ use Illuminate\Support\Facades\Storage;
  * @property string $remark
  * @property string $type
  * @property string $proof
+ * @property string $admin_id
  * @property string $created_at
  * @property string $updated_at
  * @property Student $student
@@ -23,8 +25,10 @@ class Attendance extends Model
     /**
      * @var array
      */
-    protected $fillable = ['student_id', 'guardian', 'temperature', 'remark', 'type', 'proof', 'created_at', 'updated_at'];
+    protected $fillable = ['student_id', 'guardian', 'temperature', 'remark', 'type', 'proof', 'admin_id', 'created_at', 'updated_at'];
+
     protected $appends = ['out'];
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -53,5 +57,15 @@ class Attendance extends Model
             ->where('type', 'out')
             ->whereDate('created_at', $this->created_at)
             ->first()?->created_at;
+    }
+
+    /**
+     * Get the admin that owns the Attendance
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function admin(): BelongsTo
+    {
+        return $this->belongsTo(Admin::class);
     }
 }
