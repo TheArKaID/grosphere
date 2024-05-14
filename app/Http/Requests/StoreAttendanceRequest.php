@@ -27,7 +27,7 @@ class StoreAttendanceRequest extends FormRequest
             'temperature' => 'required|string|max:255',
             'remark' => 'required|string|max:25500',
             'type' => 'required|string|in:in,out',
-            'proof' => 'required|file|mimes:jpg,jpeg,png|max:20480',
+            'proof' => 'required|string',
         ];
     }
 }

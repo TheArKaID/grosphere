@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Attendance;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 
 class AttendanceService
@@ -52,10 +53,17 @@ class AttendanceService
         }
         DB::beginTransaction();
 
+        $proof = $data['proof'];
+        $fileName = 'attendances/' . $data['student_id'] . '_' . now()->format('Y-m-d') . '_' . $data['type'] . '.' . explode('/', explode(':', substr($proof, 0, strpos($proof, ';')))[1])[1];
+
+        $data['proof'] = '';
         $attendance = $this->attendance->create($data);
 
-        $fileName = $attendance->id . '.' . $data['proof']->getClientOriginalExtension();
-        $data['proof'] = $data['proof']->storeAs('attendances', $fileName, 's3');
+        // Proof is image base64 encoded
+        // Decode to image and store to s3
+        $data['proof'] = base64_decode(substr($proof, strpos($proof, ",")+1));
+        Storage::disk('s3')->put($fileName, $data['proof']);
+        $data['proof'] = $fileName;
         $attendance->proof = $data['proof'];
         $attendance->save();
         DB::commit();
