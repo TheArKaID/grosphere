@@ -27,7 +27,12 @@ class StudentResource extends JsonResource
             'birth_place' => $this->birth_place,
             'address' => $this->address,
             'status' => $this->user->status,
-            'guardians' => $this->guardians ?? [],
+            'guardians' => $this->guardians->map(function ($guardian) {
+                return GuardianResource::make($guardian->guardian);
+            }),
+            'courseStudents' => CourseStudentResource::collection($this->whenLoaded('courseStudents')),
+            // 'studentClasses' => CourseStudentResource::collection($this->whenLoaded('studentClasses')),
+            'subscriptions' => SubscriptionResource::collection($this->whenLoaded('subscriptions')),
             'created_at' => $this->created_at
         ] : [];
     }

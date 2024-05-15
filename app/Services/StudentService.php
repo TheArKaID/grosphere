@@ -191,4 +191,18 @@ class StudentService
 			$query->where('email', '=', $email);
 		})->get();
 	}
+
+	/**
+	 * Get All Student by Guardian
+	 * 
+	 * @param int $guardian_id
+	 * 
+	 * @return Student[]
+	 */
+	public function getByGuardian(int $guardian_id)
+	{
+		return $this->student->whereHas('guardians', function ($query) use ($guardian_id) {
+			$query->where('guardian_id', $guardian_id);
+		})->get();
+	}
 }

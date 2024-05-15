@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\Admin\TeacherController;
 use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\Front\SearchStudentController;
+use App\Http\Controllers\Api\Guardian\StudentController as GuardianStudentController;
 use App\Http\Controllers\Api\Student\CourseStudentController;
 use App\Http\Controllers\Api\Teacher\TeacherFileController;
 use App\Http\Controllers\Api\User\AgendaController;
@@ -94,6 +95,17 @@ Route::middleware(['auth:api'])->group(function () {
         // Route::put('password', [TeacherProfileController::class, 'changePassword'])->name('change-password');
 
         Route::apiResource('storage-files', TeacherFileController::class);
+    });
+
+    Route::name('guardian.')->middleware(['role:guardian'])->prefix('guardian')->group(function () {
+        Route::prefix('students')->name('students.')->group(function () {
+            Route::get('/', [GuardianStudentController::class, 'index'])->name('index');
+            Route::get('{student_id}', [GuardianStudentController::class, 'show'])->name('show');
+
+            // Route::get('{student_id}/attendances', [GuardianController::class, 'attendances'])->name('student.attendances');
+            // Route::get('{student_id}/course-works', [GuardianController::class, 'courseWorks'])->name('student.course-works');
+            // Route::get('{student_id}/course-works/{course_work_id}', [GuardianController::class, 'courseWork'])->name('student.course-work');
+        });
     });
 
     Route::name('student.')->middleware(['role:student'])->prefix('student')->group(function () {

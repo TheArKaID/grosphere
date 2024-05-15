@@ -19,11 +19,11 @@ class GuardianResource extends JsonResource
             'id' => $this->id,
             'user_id' => $this->user_id,
             'students' => StudentResource::collection($this->whenLoaded('students')),
-            'name' => $this->user->name,
-            'email' => $this->user->email,
-            'phone' => $this->user->phone,
+            'name' => $this->user?->name,
+            'email' => $this->user?->email,
+            'phone' => $this->user?->phone,
             'address' => $this->address,
-            'status' => $this->user->status,
+            'status' => $this->user?->status,
             'created_at' => $this->created_at
         ] : [];
     }

@@ -81,6 +81,16 @@ class CourseStudent extends Model
     }
 
     /**
+     * Get all of the studentClasses for the Student
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function studentClasses(): HasMany
+    {
+        return $this->hasMany(StudentClass::class);
+    }
+
+    /**
      * Delete on boot
      * 
      * @return void
