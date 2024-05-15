@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Student;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class StudentService
 {
@@ -77,6 +78,13 @@ class StudentService
 
 		$student = $this->student->create($data);
 
+        $fileName = 'student/' . $student->id . '.' . explode('/', explode(':', substr($data['profile'], 0, strpos($data['profile'], ';')))[1])[1];
+
+        // Profile is image base64 encoded
+        // Decode to image and store to s3
+        $data['profile'] = base64_decode(substr($data['profile'], strpos($data['profile'], ",")+1));
+        Storage::disk('s3')->put($fileName, $data['profile']);
+
 		DB::commit();
 
 		return $student;
@@ -99,6 +107,7 @@ class StudentService
 		$student->birth_place = $data['birth_place'] ?? $student->birth_place;
 		$student->address = $data['address'] ?? $student->address;
 		$student->gender = $data['gender'] ?? $student->gender;
+		$student->id_number = $data['id_number'] ?? $student->id_number;
 		$student->save();
 
 		$this->userService->updateUser($student->user_id, $data);

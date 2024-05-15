@@ -31,6 +31,7 @@ class UpdateStudentRequest extends FormRequest
             'address' => 'nullable|string',
             'phone' => 'nullable|string|min:8|max:50',
             'email' => 'nullable|email',
+            'id_number' => 'nullable|id_number',
         ];
     }
 }

@@ -20,6 +20,7 @@ class CreateStudentsTable extends Migration
             $table->string('birth_place', 100)->nullable()->default(null);
             $table->enum('gender', ['M', 'F'])->nullable()->default(null);
             $table->text('address')->nullable()->default(null);
+            $table->string('id_number', 25);
             $table->timestamps();
         });
     }

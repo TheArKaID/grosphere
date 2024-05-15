@@ -33,7 +33,9 @@ class StoreStudentRequest extends FormRequest
             'birth_date' => 'nullable|date_format:d-m-Y',
             'birth_place' => 'nullable|string|max:100',
             'gender' => 'nullable|string|between:M,F',
-            'address' => 'nullable|string'
+            'address' => 'nullable|string',
+            'profile' => 'required|string',
+            'id_number' => 'required|string|max:25',
         ];
     }
 }
