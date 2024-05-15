@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Storage;
 
 class StudentResource extends JsonResource
 {
@@ -27,6 +28,7 @@ class StudentResource extends JsonResource
             'birth_place' => $this->birth_place,
             'address' => $this->address,
             'status' => $this->user->status,
+            'photo' => Storage::disk('s3')->url('students/' . $this->id . '.png'),
             'guardians' => $this->guardians->map(function ($guardian) {
                 return GuardianResource::make($guardian->guardian);
             }),

@@ -34,7 +34,7 @@ class StoreStudentRequest extends FormRequest
             'birth_place' => 'nullable|string|max:100',
             'gender' => 'nullable|string|between:M,F',
             'address' => 'nullable|string',
-            'profile' => 'required|string',
+            'photo' => 'required|string',
             'id_number' => 'required|string|max:25',
         ];
     }
