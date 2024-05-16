@@ -94,7 +94,7 @@ class StudentController extends Controller
             'address' => 'nullable|string',
             'phone' => 'nullable|string|min:8|max:50',
             'email' => 'nullable|email|unique:users,email,' . $student->user_id,
-            'id_number' => 'nullable|id_number'
+            'id_number' => 'nullable|string|max:25',
         ]);
 
         $student = new StudentResource($this->studentService->updateStudent($student->id, $validated));
