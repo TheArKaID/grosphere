@@ -17,7 +17,6 @@ class InvoiceResource extends JsonResource
         parent::wrap('invoices');
         return $this->resource ? [
             'id' => $this->id,
-            'subscription_id' => $this->subscription_id,
             'invoice_number' => $this->invoice_number,
             'invoice_file' => $this->invoice_file,
             'currency' => $this->currency,

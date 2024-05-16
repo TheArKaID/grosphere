@@ -17,7 +17,6 @@ class GuardianResource extends JsonResource
         parent::wrap('guardians');
         return $this->resource ? [
             'id' => $this->id,
-            'user_id' => $this->user_id,
             'students' => StudentResource::collection($this->whenLoaded('students')),
             'name' => $this->user?->name,
             'email' => $this->user?->email,

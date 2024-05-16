@@ -17,8 +17,6 @@ class SubscriptionResource extends JsonResource
         parent::wrap('subscriptions');
         return $this->resource ? [
             'id' => $this->id,
-            'student_id' => $this->student_id,
-            'course_work_id' => $this->course_work_id,
             'price' => $this->price,
             'active_days' => $this->active_days,
             'active_until' => $this->active_until,
