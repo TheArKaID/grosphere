@@ -15,16 +15,15 @@ return new class extends Migration
             $table->id();
             $table->foreignId('subscription_id')->constrained();
             $table->string('invoice_number');
-            $table->string('invoice_file');
-            $table->integer('price');
+            $table->string('invoice_file')->nullable()->default(null);
+            $table->decimal('price');
             $table->enum('currency', ['idr', 'sgd'])->default('idr');
             $table->integer('active_days');
             $table->integer('total_meeting');
             $table->date('due_date');
             $table->date('expired_date');
-            $table->enum('status', ['pending', 'proof', 'paid', 'canceled'])->default('pending');
+            $table->enum('status', ['unpaid', 'unconfirm', 'paid', 'overdue'])->default('unpaid');
             $table->string('payment_method')->nullable();
-            $table->string('payment_proof')->nullable();
             $table->timestamps();
         });
     }

@@ -26,7 +26,7 @@ class SubscriptionResource extends JsonResource
             'status' => $this->status,
             'created_at' => $this->created_at,
             'courseStudents' => CourseStudentResource::make($this->whenLoaded('courseStudents')),
-            // 'invoices' => CourseStudentResource::make($this->whenLoaded('invoices')),
+            'invoices' => InvoiceResource::make($this->whenLoaded('invoices')),
             'courseWork' => CourseWorkResource::make($this->whenLoaded('courseWork')),
             'student' => StudentResource::make($this->whenLoaded('student')),
         ] : [];

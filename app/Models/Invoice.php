@@ -17,7 +17,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $expired_date
  * @property string $status
  * @property string $payment_method
- * @property string $payment_proof
  * @property string $created_at
  * @property string $updated_at
  * @property Subscription $subscription
@@ -27,7 +26,7 @@ class Invoice extends Model
     /**
      * @var array
      */
-    protected $fillable = ['subscription_id', 'invoice_number', 'invoice_file', 'price', 'currency', 'active_days', 'total_meeting', 'due_date', 'expired_date', 'status', 'payment_method', 'payment_proof', 'created_at', 'updated_at'];
+    protected $fillable = ['subscription_id', 'invoice_number', 'invoice_file', 'price', 'currency', 'active_days', 'total_meeting', 'due_date', 'expired_date', 'status', 'payment_method', 'created_at', 'updated_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

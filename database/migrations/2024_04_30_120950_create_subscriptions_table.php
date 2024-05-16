@@ -15,9 +15,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('student_id')->constrained();
             $table->foreignId('course_work_id')->constrained();
-            $table->integer('price');
+            $table->decimal('price');
+            $table->enum('currency', ['idr', 'sgd'])->default('idr');
             $table->integer('active_days');
-            $table->date('active_until');
+            $table->date('active_until')->nullable()->default(null);
             $table->integer('total_meeting');
             $table->enum('status', ['active', 'inactive'])->default('inactive');
             $table->timestamps();

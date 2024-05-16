@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\Admin\CourseWorkController;
 use App\Http\Controllers\Api\Admin\CurriculumController;
 use App\Http\Controllers\Api\Admin\DashboardController;
 use App\Http\Controllers\Api\Admin\GuardianController;
+use App\Http\Controllers\Api\Admin\PaymentController;
 use App\Http\Controllers\Api\Admin\StudentController;
 use App\Http\Controllers\Api\Admin\TeacherController;
 use App\Http\Controllers\Api\Admin\UserController;
@@ -70,6 +71,11 @@ Route::middleware(['auth:api'])->group(function () {
 
         // Route::resource('announcements', AnnouncementController::class)->except(['edit', 'create']);
 
+        Route::prefix('payments')->group(function () {
+            Route::get('/', [PaymentController::class, 'index'])->name('payments.index');
+            Route::post('/', [PaymentController::class, 'store'])->name('payments.store');
+        });
+
         Route::apiResource('curricula', CurriculumController::class);
         Route::prefix('curricula')->group(function () {
             // Api Resource Chapter
@@ -118,8 +124,6 @@ Route::middleware(['auth:api'])->group(function () {
     });
 
     Route::name('user.')->middleware(['role:admin|teacher|student|guardian'])->prefix('user')->group(function () {
-
-        
         // Route::get('announcements', [UserAnnouncementController::class, 'index'])->name('announcements.index');
         // Route::get('announcements/{announcement_id}', [UserAnnouncementController::class, 'show'])->name('announcements.show');
 

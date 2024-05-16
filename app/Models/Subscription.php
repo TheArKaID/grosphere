@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property integer $id
  * @property integer $student_id
  * @property integer $course_work_id
+ * @property string $currency
  * @property integer $price
  * @property integer $active_days
  * @property string $active_until
@@ -25,7 +26,7 @@ class Subscription extends Model
     /**
      * @var array
      */
-    protected $fillable = ['student_id', 'course_work_id', 'price', 'active_days', 'active_until', 'total_meeting', 'status', 'created_at', 'updated_at'];
+    protected $fillable = ['student_id', 'course_work_id', 'price', 'currency', 'active_days', 'active_until', 'total_meeting', 'status', 'created_at', 'updated_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
