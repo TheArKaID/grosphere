@@ -24,13 +24,6 @@ class UpdateGuardianRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'name' => 'nullable|string|max:255',
-            'email' => 'nullable|string|email|max:255|unique:users',
-            'phone' => 'nullable|string|min:8|max:50',
-            'address' => 'nullable|string|max:255',
-            'student_ids' => 'required|array',
-            'student_ids.*' => 'integer|exists:students,id',
-        ];
+        return [];
     }
 }

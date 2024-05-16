@@ -81,13 +81,20 @@ class GuardianController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  Guardian  $guardian
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateGuardianRequest $request, $id)
+    public function update(UpdateGuardianRequest $request, Guardian $guardian)
     {
-        $validated = $request->validated();
-        $guardian = new GuardianResource($this->guardianService->update($id, $validated));
+        $validated = $request->validate([
+            'name' => 'nullable|string|max:255',
+            'email' => 'nullable|string|email|max:255|unique:users,email,' . $guardian->user_id,
+            'phone' => 'nullable|string|min:8|max:50',
+            'address' => 'nullable|string|max:255',
+            'student_ids' => 'required|array',
+            'student_ids.*' => 'integer|exists:students,id',
+        ]);
+        $guardian = new GuardianResource($this->guardianService->update($guardian->id, $validated));
 
         return response()->json([
             'status' => 200,

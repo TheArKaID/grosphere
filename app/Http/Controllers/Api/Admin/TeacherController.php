@@ -81,13 +81,18 @@ class TeacherController extends Controller
      * Update the specified resource in storage.
      *
      * @param \App\Http\Requests\UpdateTeacherRequest $request
-     * @param int $id
+     * @param Teacher $teacher
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateTeacherRequest $request, int $id)
+    public function update(UpdateTeacherRequest $request, Teacher $teacher)
     {
-        $validated = $request->validated();
-        $teacher = $this->teacherService->update($id, $validated);
+        $validated = $request->validate([
+            'name' => 'nullable|string|max:255',
+            'phone' => 'nullable|string|min:8|max:50',
+            'email' => 'nullable|email|string|max:255|unique:users,email,' . $teacher->user_id,
+        ]);
+
+        $teacher = $this->teacherService->update($teacher->id, $validated);
 
         return response()->json([
             'status' => 200,

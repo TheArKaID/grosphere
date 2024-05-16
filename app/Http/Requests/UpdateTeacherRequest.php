@@ -23,10 +23,6 @@ class UpdateTeacherRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'name' => 'nullable|string|max:255',
-            'phone' => 'nullable|string|min:8|max:50',
-            'email' => 'nullable|email',
-        ];
+        return [];
     }
 }

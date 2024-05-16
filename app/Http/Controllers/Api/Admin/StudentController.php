@@ -8,6 +8,7 @@ use App\Http\Requests\StoreStudentRequest;
 use App\Http\Requests\UpdatePasswordRequest;
 use App\Http\Requests\UpdateStudentRequest;
 use App\Http\Resources\StudentResource;
+use App\Models\Student;
 use App\Services\StudentService;
 use Illuminate\Http\Request;
 
@@ -80,14 +81,23 @@ class StudentController extends Controller
      * Update the specified resource in storage.
      *
      * @param \Illuminate\Http\Request $request
-     * @param int $id
+     * @param Student $student
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateStudentRequest $request, $id)
+    public function update(UpdateStudentRequest $request, Student $student)
     {
-        $validated = $request->validated();
+        $validated = $request->validate([
+            'name' => 'string|max:255',
+            'birth_date' => 'nullable|date_format:d-m-Y',
+            'birth_place' => 'nullable|string|max:255',
+            'gender' => 'nullable|numeric|between:0,1',
+            'address' => 'nullable|string',
+            'phone' => 'nullable|string|min:8|max:50',
+            'email' => 'nullable|email|unique:users,email,' . $student->user_id,
+            'id_number' => 'nullable|id_number'
+        ]);
 
-        $student = new StudentResource($this->studentService->updateStudent($id, $validated));
+        $student = new StudentResource($this->studentService->updateStudent($student->id, $validated));
 
         return response()->json([
             'status' => 200,

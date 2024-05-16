@@ -13,7 +13,7 @@ class UpdateStudentRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return $this->user()->hasRole('admin');
     }
 
     /**
@@ -23,15 +23,6 @@ class UpdateStudentRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'name' => 'string|max:255',
-            'birth_date' => 'nullable|date_format:d-m-Y',
-            'birth_place' => 'nullable|string|max:255',
-            'gender' => 'nullable|numeric|between:0,1',
-            'address' => 'nullable|string',
-            'phone' => 'nullable|string|min:8|max:50',
-            'email' => 'nullable|email',
-            'id_number' => 'nullable|id_number',
-        ];
+        return [];
     }
 }
