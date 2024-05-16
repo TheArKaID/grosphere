@@ -87,9 +87,11 @@ class UserService
 		$user->email = $data['email'] ?? $user->email;
 		$user->phone = $data['phone'] ?? $user->phone;
 		$user->status = $data['status'] ?? $user->status;
-		$user->save();
+		
+		if ($data['password'])
+			$this->changePassword($id, $data['password']);
 
-		$user->detail->update($data);
+		$user->save();
 
 		return $user;
 	}

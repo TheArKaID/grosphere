@@ -11,6 +11,7 @@ use App\Http\Resources\StudentResource;
 use App\Models\Student;
 use App\Services\StudentService;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rules\Password;
 
 class StudentController extends Controller
 {
@@ -95,6 +96,7 @@ class StudentController extends Controller
             'phone' => 'nullable|string|min:8|max:50',
             'email' => 'nullable|email|unique:users,email,' . $student->user_id,
             'id_number' => 'nullable|string|max:25',
+            'password' => ['nullable', 'confirmed', Password::min(8)->letters()->numbers()->mixedCase()]
         ]);
 
         $student = new StudentResource($this->studentService->updateStudent($student->id, $validated));
