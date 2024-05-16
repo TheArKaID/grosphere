@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 /**
@@ -35,10 +36,12 @@ class Guardian extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * The students that belong to the Guardian
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function students()
+    public function students(): BelongsToMany
     {
-        return $this->hasMany(GuardianStudent::class);
+        return $this->belongsToMany(Student::class, 'guardian_students')->using(GuardianStudent::class)->withTimestamps();
     }
 }

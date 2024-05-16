@@ -17,6 +17,7 @@ class StudentResource extends JsonResource
     public function toArray($request)
     {
         parent::wrap('students');
+        // dd($this->user);
         return $this->resource ? [
             'id' => $this->id,
             'name' => $this->user->name,
@@ -28,9 +29,7 @@ class StudentResource extends JsonResource
             'address' => $this->address,
             'status' => $this->user->status,
             'photo' => Storage::disk('s3')->url('students/' . $this->id . '.png'),
-            'guardians' => $this->guardians->map(function ($guardian) {
-                return GuardianResource::make($guardian->guardian);
-            }),
+            'guardians' => GuardianResource::collection($this->whenLoaded('guardians')),
             'courseStudents' => CourseStudentResource::collection($this->whenLoaded('courseStudents')),
             // 'studentClasses' => CourseStudentResource::collection($this->whenLoaded('studentClasses')),
             'subscriptions' => SubscriptionResource::collection($this->whenLoaded('subscriptions')),

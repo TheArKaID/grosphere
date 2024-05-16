@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 
 /**
  * @property integer $id
@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property Guardian $guardian
  * @property Student $student
  */
-class GuardianStudent extends Model
+class GuardianStudent extends Pivot
 {
     /**
      * @var array

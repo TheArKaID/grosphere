@@ -68,7 +68,7 @@ class GuardianController extends Controller
      */
     public function show($id)
     {
-        $guardian = $this->guardianService->getById($id);
+        $guardian = $this->guardianService->getById($id)->load(['students', 'students.user']);
 
         return response()->json([
             'status' => 200,

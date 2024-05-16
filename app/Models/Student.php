@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
@@ -78,12 +79,12 @@ class Student extends Model
     // }
 
     /**
-     * Get all of the guardians for the Student
+     * The guardians that belong to the Student
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function guardians(): HasMany
+    public function guardians(): BelongsToMany
     {
-        return $this->hasMany(GuardianStudent::class);
+        return $this->belongsToMany(Guardian::class, 'guardian_students')->using(GuardianStudent::class)->withTimestamps();
     }
 }

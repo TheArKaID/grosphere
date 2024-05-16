@@ -84,6 +84,9 @@ class GuardianService
 
         $user->assignRole('guardian');
 
+        // There's Student IDs, sync them
+        $this->syncStudents($guardian, $data['student_ids']);
+
         DB::commit();
 
         return $guardian;
@@ -104,6 +107,8 @@ class GuardianService
 
         $guardian->update($data);
         $guardian->user->update($data);
+
+        $this->syncStudents($guardian, $data['student_ids']);
 
         DB::commit();
 
@@ -138,38 +143,16 @@ class GuardianService
     }
 
     /**
-     * Add Student
+     * Sync Students
      * 
      * @param Guardian $guardian
      * @param array $children
      * 
      * @return bool
      */
-    public function addStudent(Guardian $guardian, array $children)
+    public function syncStudents(Guardian $guardian, array $children)
     {
-        foreach ($children as $key => $child) {
-            $student = $this->studentService->getById($child);
-            $guardian->students()->firstOrCreate([
-                'student_id' => $student->id
-            ]);
-        }
-
-        return true;
-    }
-
-    /**
-     * Remove Student
-     * 
-     * @param Guardian $guardian
-     * @param int $studentId
-     * 
-     * @return bool
-     */
-    public function removeStudent(Guardian $guardian, int $studentId)
-    {
-        $guardian->students()->where('student_id', $studentId)->delete();
-
-        return true;
+        return $guardian->students()->sync($children);
     }
 
     /**
