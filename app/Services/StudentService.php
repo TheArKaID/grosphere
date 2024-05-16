@@ -139,14 +139,14 @@ class StudentService
 	 * Update guardian_id
 	 * 
 	 * @param int $id
-	 * @param int $guardian_id
+	 * @param array $guardian_ids
 	 * 
 	 * @return Student
 	 */
-	public function updateParentId(int $id, int $guardian_id)
+	public function syncGuardians(int $id, array $guardian_ids)
 	{
 		$student = $this->getById($id);
-		$student->guardians()->sync($guardian_id);
+		$student->guardians()->sync($guardian_ids);
 
 		return $student;
 	}

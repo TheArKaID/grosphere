@@ -131,4 +131,31 @@ class StudentController extends Controller
             'message' => 'Student Password Changed Successfully'
         ], 200);
     }
+
+    /**
+     * Sync Guardians
+     * 
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function syncGuardians(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'guardian_ids' => 'required|array',
+            'guardian_ids.*' => 'integer|exists:guardians,id',
+        ], [
+            'guardian_ids.required' => 'Guardians is required',
+            'guardian_ids.*.integer' => 'Guardians must be an integer',
+            'guardian_ids.*.exists' => 'Guardians not found'
+        ]);
+
+        $this->studentService->syncGuardians($id, $validated['guardian_ids']);
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Guardians Synced Successfully'
+        ], 200);
+    }
 }

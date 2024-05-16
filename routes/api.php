@@ -55,6 +55,7 @@ Route::middleware(['auth:api'])->group(function () {
         Route::apiResource('students', StudentController::class);
         Route::prefix('students/{student_id}')->group(function () {
             Route::put('password', [StudentController::class, 'changePassword'])->name('students.change-password');
+            Route::post('guardians', [StudentController::class, 'syncGuardians'])->name('students.guardians');
         });
 
         Route::apiResource('guardians', GuardianController::class);
