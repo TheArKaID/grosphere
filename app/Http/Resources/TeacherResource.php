@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 
 class TeacherResource extends JsonResource
 {
@@ -23,6 +24,7 @@ class TeacherResource extends JsonResource
             'phone' => $this->user->phone,
             'courseTeachers' => $this->whenLoaded('courseTeachers') ? CourseTeacherResource::collection($this->courseTeachers) : [],
             'status' => $this->user->status,
+            'photo' => Storage::disk('s3')->url('teachers/' . $this->id . '.png'),
             'created_at' => $this->created_at
         ] : [];
     }

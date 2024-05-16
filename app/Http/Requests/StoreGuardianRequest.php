@@ -30,6 +30,7 @@ class StoreGuardianRequest extends FormRequest
             'password' => ['required', 'confirmed', Password::min(8)->letters()->numbers()->mixedCase()],
             'phone' => 'nullable|string|min:8|max:50',
             'address' => 'nullable|string|max:255',
+            'photo' => 'required|string',
         ];
     }
 }

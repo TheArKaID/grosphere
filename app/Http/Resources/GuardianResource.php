@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 
 class GuardianResource extends JsonResource
 {
@@ -23,6 +24,7 @@ class GuardianResource extends JsonResource
             'phone' => $this->user?->phone,
             'address' => $this->address,
             'status' => $this->user?->status,
+            'photo' => Storage::disk('s3')->url('guardians/' . $this->id . '.png'),
             'created_at' => $this->created_at
         ] : [];
     }

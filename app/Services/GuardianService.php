@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Guardian;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class GuardianService
 {
@@ -75,6 +76,11 @@ class GuardianService
         $user = $this->userService->createUser($data);
         $data['user_id'] = $user->id;
         $guardian = $this->guardians->create($data);
+
+        // Profile is image base64 encoded
+        // Decode to image and store to s3
+        $data['photo'] = base64_decode(substr($data['photo'], strpos($data['photo'], ",")+1));
+        Storage::disk('s3')->put('guardians/' . $guardian->id . '.png', $data['photo']);
 
         $user->assignRole('guardian');
 

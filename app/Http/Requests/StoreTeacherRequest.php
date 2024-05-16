@@ -29,6 +29,7 @@ class StoreTeacherRequest extends FormRequest
             'email' => 'required|string|email|max:255|unique:users',
             'password' => ['required', 'confirmed', Password::min(8)->letters()->numbers()->mixedCase()],
             'phone' => 'nullable|string|min:8|max:50',
+            'photo' => 'required|string',
         ];
     }
 }

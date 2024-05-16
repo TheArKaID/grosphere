@@ -78,12 +78,10 @@ class StudentService
 
 		$student = $this->student->create($data);
 
-        $fileName = 'students/' . $student->id . '.png';
-
         // Profile is image base64 encoded
         // Decode to image and store to s3
         $data['photo'] = base64_decode(substr($data['photo'], strpos($data['photo'], ",")+1));
-        Storage::disk('s3')->put($fileName, $data['photo']);
+        Storage::disk('s3')->put('students/' . $student->id . '.png', $data['photo']);
 
 		DB::commit();
 

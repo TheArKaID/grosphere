@@ -81,6 +81,11 @@ class TeacherService
         $data['user_id'] = $user->id;
         $teacher = $this->teacher->create($data);
 
+        // Profile is image base64 encoded
+        // Decode to image and store to s3
+        $data['photo'] = base64_decode(substr($data['photo'], strpos($data['photo'], ",")+1));
+        Storage::disk('s3')->put('teachers/' . $teacher->id . '.png', $data['photo']);
+
         $user->assignRole('teacher');
 
         DB::commit();
