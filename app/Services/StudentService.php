@@ -204,11 +204,11 @@ class StudentService
 	 * 
 	 * @param int $guardian_id
 	 * 
-	 * @return Student[]
+	 * @return \Illuminate\Database\Eloquent\Collection
 	 */
 	public function getByGuardian(int $guardian_id)
 	{
-		return $this->student->whereHas('guardians', function ($query) use ($guardian_id) {
+		return $this->student->with('user')->whereHas('guardians', function ($query) use ($guardian_id) {
 			$query->where('guardian_id', $guardian_id);
 		})->get();
 	}

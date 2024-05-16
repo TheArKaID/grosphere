@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Subscription;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
 class PaymentSubscriptionService
@@ -73,5 +74,21 @@ class PaymentSubscriptionService
 
         DB::commit();
         return $subscription;
+    }
+    
+    /**
+     * Get All Subscriptions by Guardian
+     * 
+     * @param int $guardianId
+     * 
+     * @return Collection
+     */
+    public function getByGuardian(int $guardianId): Collection
+    {
+        return Subscription::whereHas('student', function ($query) use ($guardianId) {
+            $query->whereHas('guardians', function ($query) use ($guardianId) {
+                $query->where('guardian_id', $guardianId);
+            });
+        })->get();
     }
 }
