@@ -107,7 +107,7 @@ class TeacherService
         $teacher = $this->getById($id);
 
         $teacher->update($data);
-        $teacher->user->update($data);
+		$this->userService->updateUser($teacher->user_id, $data);
 
         DB::commit();
 

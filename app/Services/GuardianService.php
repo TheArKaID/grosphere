@@ -106,7 +106,7 @@ class GuardianService
         $guardian = $this->getById($id);
 
         $guardian->update($data);
-        $guardian->user->update($data);
+		$this->userService->updateUser($guardian->user_id, $data);
 
         $this->syncStudents($guardian, $data['student_ids']);
 

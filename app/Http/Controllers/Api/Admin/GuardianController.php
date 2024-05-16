@@ -12,6 +12,7 @@ use App\Models\Guardian;
 use App\Models\Student;
 use App\Services\GuardianService;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rules\Password;
 
 class GuardianController extends Controller
 {
@@ -93,6 +94,7 @@ class GuardianController extends Controller
             'address' => 'nullable|string|max:255',
             'student_ids' => 'required|array',
             'student_ids.*' => 'integer|exists:students,id',
+            'password' => ['nullable', 'confirmed', Password::min(8)->letters()->numbers()->mixedCase()]
         ]);
         $guardian = new GuardianResource($this->guardianService->update($guardian->id, $validated));
 

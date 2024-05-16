@@ -88,7 +88,7 @@ class UserService
 		$user->phone = $data['phone'] ?? $user->phone;
 		$user->status = $data['status'] ?? $user->status;
 		
-		if ($data['password'])
+		if ($data['password'] ?? false)
 			$this->changePassword($id, $data['password']);
 
 		$user->save();
