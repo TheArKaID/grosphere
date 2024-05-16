@@ -73,8 +73,9 @@ Route::middleware(['auth:api'])->group(function () {
         // Route::resource('announcements', AnnouncementController::class)->except(['edit', 'create']);
 
         Route::prefix('payments')->group(function () {
-            Route::get('/', [PaymentController::class, 'index'])->name('payments.index');
             Route::post('/', [PaymentController::class, 'store'])->name('payments.store');
+            Route::get('/', [PaymentController::class, 'index'])->name('payments.index');
+            Route::get('{subscription}', [PaymentController::class, 'show'])->name('payments.show');
         });
 
         Route::apiResource('curricula', CurriculumController::class);

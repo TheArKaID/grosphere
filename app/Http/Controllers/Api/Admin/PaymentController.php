@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
+use App\Exceptions\ModelGetEmptyException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreSubscriptionRequest;
 use App\Http\Requests\UpdateSubscriptionRequest;
@@ -23,7 +24,17 @@ class PaymentController extends Controller
      */
     public function index()
     {
-        return $this->subscriptionService->getAll();
+        $subscriptions = SubscriptionResource::collection($this->subscriptionService->getAll());
+
+        if ($subscriptions->count() == 0) {
+            throw new ModelGetEmptyException("Payment Subscription");
+        }
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Subscriptions Fetched Successfully',
+            'data' => $subscriptions->response()->getData(true)
+        ], 200);
     }
 
     /**
@@ -47,7 +58,13 @@ class PaymentController extends Controller
      */
     public function show(Subscription $subscription)
     {
-        //
+        $subscription = SubscriptionResource::make($this->subscriptionService->getOne($subscription->id)->load(['invoices', 'courseStudents', 'courseWork', 'student']));
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Subscription Fetched Successfully',
+            'data' => $subscription
+        ], 200);
     }
 
     /**
