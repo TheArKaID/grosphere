@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('subscription_id')->constrained();
             $table->string('invoice_number');
             $table->string('invoice_file')->nullable()->default(null);
-            $table->decimal('price');
+            $table->decimal('price', 15, 2);
             $table->enum('currency', ['idr', 'sgd'])->default('idr');
             $table->integer('active_days');
             $table->integer('total_meeting');

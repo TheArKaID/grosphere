@@ -61,9 +61,6 @@ class PaymentSubscriptionService
             'course_work_id' => $data['course_work_id'],
         ], $data);
 
-        $subscription->status = 'unpaid';
-        $subscription->save();
-
         $subscription->invoices()->create([
             'invoice_number' => $data['invoice_number'],
             'price' => $data['price'],
@@ -71,7 +68,7 @@ class PaymentSubscriptionService
             'active_days' => $data['active_days'],
             'total_meeting' => $data['total_meeting'],
             'due_date' => $data['due_date'],
-            'expired_date' => $data['expired_date'],
+            'expired_date' => $data['expired_date']
         ]);
 
         DB::commit();
