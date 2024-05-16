@@ -23,7 +23,7 @@ class StoreAttendanceRequest extends FormRequest
     {
         return [
             'student_id' => 'required|integer|exists:students,id',
-            'guardian' => 'required|string|max:255',
+            'guardian_id' => 'required|integer|exists:guardians,id',
             'temperature' => 'required|string|max:255',
             'remark' => 'required|string|max:25500',
             'type' => 'required|string|in:in,out',

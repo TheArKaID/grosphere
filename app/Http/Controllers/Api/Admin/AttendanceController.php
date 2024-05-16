@@ -45,7 +45,7 @@ class AttendanceController extends Controller
         return response()->json([
             'status' => 201,
             'message' => 'Attendance recorded',
-            'data' => $this->attendanceService->create($request->validated())
+            'data' => AttendanceResource::make($this->attendanceService->create($request->validated()))
         ], 201);
     }
 

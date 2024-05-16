@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Storage;
 /**
  * @property integer $id
  * @property integer $student_id
- * @property string $guardian
+ * @property integer $guardian_id
  * @property string $temperature
  * @property string $remark
  * @property string $type
@@ -25,7 +25,7 @@ class Attendance extends Model
     /**
      * @var array
      */
-    protected $fillable = ['student_id', 'guardian', 'temperature', 'remark', 'type', 'proof', 'admin_id', 'created_at', 'updated_at'];
+    protected $fillable = ['student_id', 'guardian_id', 'temperature', 'remark', 'type', 'proof', 'admin_id', 'created_at', 'updated_at'];
 
     protected $appends = ['out'];
 
@@ -40,6 +40,16 @@ class Attendance extends Model
     public function getProofAttribute($value)
     {
         return $value ? Storage::disk('s3')->url($value) : null;
+    }
+
+    /**
+     * Get the guardian that owns the Attendance
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function guardian(): BelongsTo
+    {
+        return $this->belongsTo(Guardian::class);
     }
 
     /**
