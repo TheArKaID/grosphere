@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Http\Resources\AttendanceResource;
 use App\Models\Attendance;
 use Doctrine\DBAL\Query;
 use Illuminate\Support\Facades\DB;
@@ -59,7 +60,7 @@ class AttendanceService
         if (request()->has('page') && request()->get('page') == 'all') {
             return $attendance->get();
         }
-        return $attendance->whereType('in')->paginate(request('size', 10));
+        return $attendance->whereType('in')->paginate(request('size', 10))->load(['student.user']);
     }
 
     /**
@@ -141,16 +142,16 @@ class AttendanceService
     function find(int $id) : array
     {
         $in = $this->attendance->where('type', 'in')->findOrFail($id)
-        ->setHidden(['out']);
+        ->setHidden(['out'])->load(['student.user', 'guardian']);
 
         $out = $this->attendance->where('student_id', $in->student_id)
             ->where('type', 'out')
             ->whereDate('created_at', $in->created_at)
-            ->first()?->setHidden(['out']);
+            ->first()?->setHidden(['out'])?->load(['student.user', 'guardian']);
 
         return [
-            'in' => $in,
-            'out' => $out
+            'in' => AttendanceResource::make($in),
+            'out' => $out ? AttendanceResource::make($out) : null
         ];
     }
 }

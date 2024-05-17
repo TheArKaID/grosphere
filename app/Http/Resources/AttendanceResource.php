@@ -26,7 +26,8 @@ class AttendanceResource extends JsonResource
             'verificator' => $this->admin?->user?->name,
             'created_at' => Carbon::parse($this->created_at)->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::parse($this->updated_at)->format('Y-m-d H:i:s'),
-            'student' => new StudentResource($this->student),
+            'student' => new StudentResource($this->whenLoaded('student')),
+            'guardian' => new GuardianResource($this->whenLoaded('guardian')),
             'out' => $this->out
         ] : [];
     }
