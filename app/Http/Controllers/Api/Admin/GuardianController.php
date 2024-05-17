@@ -122,44 +122,25 @@ class GuardianController extends Controller
     }
 
     /**
-     * Add a student to a guardian
+     * Sync students of a guardian
      * 
      * @param Request $request
      * @param Guardian $guardian
      * 
      * @return \Illuminate\Http\Response
      */
-    public function addStudent(Request $request, Guardian $guardian)
+    public function syncStudent(Request $request, Guardian $guardian)
     {
         $validated = $request->validate([
             'students' => 'required|array',
             'students.*' => 'required|integer|exists:students,id'
         ]);
 
-        $this->guardianService->addStudent($guardian, $validated['students']);
+        $this->guardianService->syncStudents($guardian, $validated['students']);
 
         return response()->json([
             'status' => 200,
             'message' => 'Student Added Successfully'
-        ], 200);
-    }
-
-    /**
-     * Remove a Student from a guardian
-     * 
-     * @param Request $request
-     * @param Guardian $guardian
-     * @param Student $student
-     * 
-     * @return \Illuminate\Http\Response
-     */
-    public function removeStudent(Request $request, Guardian $guardian, Student $student)
-    {
-        $this->guardianService->removeStudent($guardian, $student->id);
-
-        return response()->json([
-            'status' => 200,
-            'message' => 'Student Removed Successfully'
         ], 200);
     }
 

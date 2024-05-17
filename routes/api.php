@@ -60,8 +60,7 @@ Route::middleware(['auth:api'])->group(function () {
 
         Route::apiResource('guardians', GuardianController::class);
         Route::prefix('guardians/{guardian}')->group(function () {
-            Route::post('student', [GuardianController::class, 'addStudent'])->name('guardians.add-student');
-            Route::delete('student/{student}', [GuardianController::class, 'removeStudent'])->name('guardians.remove-student');
+            Route::post('student', [GuardianController::class, 'syncStudent'])->name('guardians.sync-student');
             Route::put('password', [GuardianController::class, 'changePassword'])->name('guardians.change-password');
         });
 
