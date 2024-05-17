@@ -105,7 +105,8 @@ Route::middleware(['auth:api'])->group(function () {
     });
 
     Route::name('guardian.')->middleware(['role:guardian'])->prefix('guardian')->group(function () {
-        Route::get('payments', [GuardianStudentController::class, 'subscriptions'])->name('subscriptions');
+        Route::get('payments', [GuardianStudentController::class, 'subscriptions'])->name('subscriptions.index');
+        Route::get('payments/{subscription}', [GuardianStudentController::class, 'subscription'])->name('subscriptions.detail');
         Route::prefix('students')->name('students.')->group(function () {
             Route::get('/', [GuardianStudentController::class, 'index'])->name('index');
             Route::get('{student_id}', [GuardianStudentController::class, 'show'])->name('show');

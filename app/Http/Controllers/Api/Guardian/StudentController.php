@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\StudentResource;
 use App\Http\Resources\SubscriptionResource;
 use App\Models\Student;
+use App\Models\Subscription;
 use App\Services\PaymentSubscriptionService;
 use App\Services\StudentService;
 use Illuminate\Http\Request;
@@ -82,7 +83,7 @@ class StudentController extends Controller
      */
     public function subscriptions()
     {
-        $subscriptions = SubscriptionResource::collection($this->subscriptionsService->getByGuardian(auth()->user()->detail->id)->load(['student', 'invoices']));
+        $subscriptions = SubscriptionResource::collection($this->subscriptionsService->getByGuardian(auth()->user()->detail->id)->load(['student']));
 
         if (!$subscriptions->count()) {
             throw new ModelGetEmptyException("Subscription's Guardian");
@@ -92,6 +93,24 @@ class StudentController extends Controller
             'status' => 200,
             'message' => 'All Subscription of all Students',
             'data' => $subscriptions
+        ], 200);
+    }
+
+    /**
+     * Get One Subscription detail of a Student
+     * 
+     * @param Subscription $subscription
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function subscription(Subscription $subscription)
+    {
+        $subscription = new SubscriptionResource($subscription->load(['student', 'invoices']));
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Subscription detail of a Student',
+            'data' => $subscription
         ], 200);
     }
 }
