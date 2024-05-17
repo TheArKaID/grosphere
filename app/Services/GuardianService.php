@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Guardian;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
@@ -34,6 +35,11 @@ class GuardianService
                     ->orWhere('phone', 'like', '%' . request()->get('search') . '%');
             });
         }
+
+        if ($studentId = request()->get('student_id', false)) {
+            return $this->getByStudentId($studentId);
+        }
+
         if (request()->has('page') && request()->get('page') == 'all') {
             return $this->guardians->get();
         }
@@ -170,5 +176,19 @@ class GuardianService
         $this->userService->changePassword($guardian->user->id, $password);
 
         return true;
+    }
+
+    /**
+     * Get Guardians by Student ID
+     * 
+     * @param int $student_id
+     * 
+     * @return Collection
+     */
+    public function getByStudentId(int $student_id)
+    {
+        return $this->guardians->whereHas('students', function ($query) use ($student_id) {
+            $query->where('student_id', $student_id);
+        })->get();
     }
 }
