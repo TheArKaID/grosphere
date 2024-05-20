@@ -132,16 +132,9 @@ class GuardianService
         DB::beginTransaction();
 
         $guardian = $this->getById($id);
-
-        if ($guardian->students) {
-            foreach ($guardian->students as $key => $student) {
-                $student->guardian_id = null;
-                $student->save();
-            }
-        }
-
+        $user_id = $guardian->user_id;
         $guardian->delete();
-        $this->userService->deleteUser($guardian->user_id);
+        $this->userService->deleteUser($user_id);
 
         DB::commit();
 
