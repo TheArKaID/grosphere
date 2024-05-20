@@ -184,4 +184,19 @@ class GuardianService
             $query->where('student_id', $student_id);
         })->get();
     }
+
+    /**
+     * Check if the guardian is the student's guardian
+     * 
+     * @param int $guardian_id
+     * @param int $student_id
+     * 
+     * @return bool
+     */
+    public function isGuardian(int $guardian_id, int $student_id)
+    {
+        return $this->guardians->where('id', $guardian_id)->whereHas('students', function ($query) use ($student_id) {
+            $query->where('student_id', $student_id);
+        })->exists();
+    }
 }

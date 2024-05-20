@@ -71,11 +71,10 @@ class AttendanceService
      */
     function create(array $data) : Attendance
     {
-
         $validated = $this->validate($data);
 
         if ($validated !== true) {
-            throw ValidationException::withMessages(['check-type' => $validated]);
+            throw ValidationException::withMessages($validated);
         }
         DB::beginTransaction();
 
@@ -99,15 +98,20 @@ class AttendanceService
 
     /**
      * Validate the attendance of student.
-     * Student could only check in once a day, and check out once a day.
-     * Check out could only be done by the same student that already checked in.
+     * Student should check in before check out.
+     * After the checkout, student could check in again.
      * 
      * @param array $data
      * 
-     * @return array
+     * @return array|bool
      */
-    function validate(array $data) : bool|string
+    function validate(array $data) : array|bool
     {
+        $guardianService = app(GuardianService::class);
+        if (!$guardianService->isGuardian($data['guardian_id'], $data['student_id'])) {
+            return ['guardian' => 'Guardian is not the guardian of the student'];
+        }
+
         $attendance = $this->attendance->where('student_id', $data['student_id'])
             ->whereDate('created_at', now()->toDateString())
             ->latest()
@@ -115,19 +119,16 @@ class AttendanceService
 
         if ($attendance) {
             if ($attendance->type === 'in' && $data['type'] === 'in') {
-                return 'Student already checked in';
+                return ['check-type' => 'Student already checked in'];
             }
 
             if ($attendance->type === 'out' && $data['type'] === 'out') {
-                return 'Student already checked out';
-            }
-
-            if ($attendance->type === 'out' && $data['type'] === 'in') {
-                return 'Student has already checked out';
+                return ['check-type' => 'Student already checked out'];
             }
         } elseif ($data['type'] === 'out') {
-            return 'Student has not checked in';
+            return ['check-type' => 'Student has not checked in'];
         }
+
         return true;
     }
 
