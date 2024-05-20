@@ -35,7 +35,7 @@ class AttendanceService
      */
     function pair()
     {
-        $attendance = $this->attendance->with(['student.user', 'guardian.user']);
+        $attendance = $this->attendance->with(['student.user', 'guardian.user'])->whereType('in')->orderBy('id', 'desc');
         if ($search = request()->get('search', false)) {
             $attendance = $attendance
             ->orWhere(function ($query) use ($search) {
@@ -51,8 +51,7 @@ class AttendanceService
                         $query->where('name', 'like', "%$search%");
                     });
                 });
-            })
-            ;
+            });
         }
         if($date = request()->get('date', false)) {
             $attendance = $attendance->whereDate('created_at', $date);
@@ -60,7 +59,7 @@ class AttendanceService
         if (request()->has('page') && request()->get('page') == 'all') {
             return $attendance->get();
         }
-        return $attendance->whereType('in')->paginate(request('size', 10));
+        return $attendance->paginate(request('size', 10));
     }
 
     /**
