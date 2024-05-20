@@ -35,7 +35,7 @@ class AttendanceService
      */
     function pair()
     {
-        $attendance = $this->attendance;
+        $attendance = $this->attendance->with(['student.user', 'guardian.user']);
         if ($search = request()->get('search', false)) {
             $attendance = $attendance
             ->orWhere(function ($query) use ($search) {
@@ -60,7 +60,7 @@ class AttendanceService
         if (request()->has('page') && request()->get('page') == 'all') {
             return $attendance->get();
         }
-        return $attendance->whereType('in')->paginate(request('size', 10))->load(['student.user']);
+        return $attendance->whereType('in')->paginate(request('size', 10));
     }
 
     /**
