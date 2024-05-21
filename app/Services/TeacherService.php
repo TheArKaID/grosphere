@@ -109,6 +109,11 @@ class TeacherService
         $teacher->update($data);
 		$this->userService->updateUser($teacher->user_id, $data);
 
+        if ($photo = $data['photo'] ?? false) {
+            $photo = base64_decode(substr($photo, strpos($photo, ",")+1));
+            Storage::disk('s3')->put('teachers/' . $teacher->id . '.png', $photo);
+        }
+
         DB::commit();
 
         return $teacher;
