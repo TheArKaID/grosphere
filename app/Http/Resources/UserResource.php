@@ -21,10 +21,28 @@ class UserResource extends JsonResource
             'name' => $this->name,
             'email' => $this->email,
             'roles' => $this->roles->pluck('name'),
-            'photo' => Storage::exists('public/user/' . $this->id . "/profile.png")
-                ? asset('storage/user/' . $this->id . "/profile.png")
-                : asset('images/user/profile.png'),
+            'photo' => $this->getPhoto(),
             'detail' => $this->getDetail(),
         ];
+    }
+
+    function getPhoto() {
+        switch ($this->roles[0]->name) {
+            case 'student':
+                return Storage::disk('s3')->url('students/' . $this->detail->id . '.png');
+                break;
+            case 'teacher':
+                return Storage::disk('s3')->url('teachers/' . $this->detail->id . '.png');
+                break;
+            case 'guardian':
+                return Storage::disk('s3')->url('guardians/' . $this->detail->id . '.png');
+                break;
+            case 'admin':
+                return asset('storage/user/' . $this->id . "/profile.png");
+                break;
+            default:
+                return asset('images/user/profile.png');
+                break;
+        }
     }
 }
