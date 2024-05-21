@@ -108,6 +108,10 @@ class StudentService
 		$student->id_number = $data['id_number'] ?? $student->id_number;
 		$student->save();
 
+        if ($photo = $data['photo'] ?? false) {
+            $photo = base64_decode(substr($photo, strpos($photo, ",")+1));
+            Storage::disk('s3')->put('students/' . $student->id . '.png', $photo);
+        }
 		$this->userService->updateUser($student->user_id, $data);
 
 		DB::commit();
