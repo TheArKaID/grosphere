@@ -91,6 +91,7 @@ class GuardianController extends Controller
             'name' => 'nullable|string|max:255',
             'email' => 'nullable|string|email|max:255|unique:users,email,' . $guardian->user_id,
             'phone' => 'nullable|string|min:8|max:50',
+            'photo' => 'nullable|string',
             'address' => 'nullable|string|max:255',
             'student_ids' => 'required|array',
             'student_ids.*' => 'integer|exists:students,id',

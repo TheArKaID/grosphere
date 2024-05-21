@@ -114,7 +114,7 @@ class UserService
 		$user->status = $data['status'] ?? $user->status;
 
 		if (isset($data['photo'])) {
-			$this->uploadProfileImage($id, $data['photo']);
+			$this->uploadProfileImage($user->detail->id, $user->roles[0]->name, $data['photo']);
 		}
 
 		$user->save();
@@ -129,13 +129,15 @@ class UserService
 	 * Upload profile photo
 	 * 
 	 * @param int $id
-	 * @param mix $photo
+	 * @param string $role
+	 * @param string $photo
 	 * 
 	 * @return Illuminate\Database\Eloquent\Model
 	 */
-	public function uploadProfileImage($id, $photo)
+	public function uploadProfileImage($id, $role, $photo)
 	{
-		return Storage::putFileAs('public/user/' . $id . '/', $photo, 'profile.png');
+		$photo = base64_decode(substr($photo, strpos($photo, ",")+1));
+		return Storage::disk('s3')->put($role.'/' . $id . '.png', $photo);
 	}
 
 	/**

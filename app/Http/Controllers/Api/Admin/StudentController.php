@@ -96,6 +96,7 @@ class StudentController extends Controller
             'phone' => 'nullable|string|min:8|max:50',
             'email' => 'nullable|email|unique:users,email,' . $student->user_id,
             'id_number' => 'nullable|string|max:25',
+            'photo' => 'nullable|string',
             'password' => ['nullable', 'confirmed', Password::min(8)->letters()->numbers()->mixedCase()]
         ]);
 

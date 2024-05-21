@@ -116,6 +116,11 @@ class GuardianService
 
         $this->syncStudents($guardian, $data['student_ids']);
 
+        if ($photo = $data['photo'] ?? false) {
+            $photo = base64_decode(substr($photo, strpos($photo, ",")+1));
+            Storage::disk('s3')->put('guardians/' . $guardian->id . '.png', $photo);
+        }
+
         DB::commit();
 
         return $guardian;
