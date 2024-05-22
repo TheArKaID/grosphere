@@ -31,11 +31,18 @@ class AttendanceService
     /**
      * Pair all attendances in and out for everyday.
      * 
+     * @param string $parent_id
+     * 
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    function pair()
+    function pair($parent_id = null)
     {
         $attendance = $this->attendance->with(['student.user', 'guardian.user'])->whereType('in')->orderBy('id', 'desc');
+
+        if ($parent_id) {
+            $attendance = $attendance->where('guardian_id', $parent_id);
+        }
+
         if ($search = request()->get('search', false)) {
             $attendance = $attendance
             ->orWhere(function ($query) use ($search) {
@@ -136,12 +143,17 @@ class AttendanceService
      * Get the attendance record by in id.
      * 
      * @param integer $id
+     * @param integer $guardian_id
      * 
      * @return array
      */
-    function find(int $id) : array
+    function find(int $id, int $guardian_id = null) : array
     {
-        $in = $this->attendance->where('type', 'in')->findOrFail($id)
+        $in = $this->attendance->where('type', 'in')->where(function ($query) use ($guardian_id) {
+            if ($guardian_id) {
+                $query->where('guardian_id', $guardian_id);
+            }
+        })->findOrFail($id)
         ->setHidden(['out'])->load(['student.user', 'guardian']);
 
         $out = $this->attendance->where('student_id', $in->student_id)
