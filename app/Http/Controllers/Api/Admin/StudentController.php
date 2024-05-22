@@ -98,6 +98,12 @@ class StudentController extends Controller
             'id_number' => 'nullable|string|max:25',
             'photo' => 'nullable|string',
             'password' => ['nullable', 'confirmed', Password::min(8)->letters()->numbers()->mixedCase()]
+        ], [
+            'password.confirmed' => 'Password confirmation does not match',
+            'password.min' => 'Password must be at least 8 characters',
+            'password.letters' => 'Password must contain at least one letter',
+            'password.numbers' => 'Password must contain at least one number',
+            'password.mixed_case' => 'Password must contain at least one uppercase and one lowercase letter',
         ]);
 
         $student = new StudentResource($this->studentService->updateStudent($student->id, $validated));

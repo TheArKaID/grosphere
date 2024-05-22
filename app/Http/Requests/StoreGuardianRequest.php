@@ -35,4 +35,15 @@ class StoreGuardianRequest extends FormRequest
             'student_ids.*' => 'integer|exists:students,id',
         ];
     }
+
+    public function messages()
+    {
+        return [
+            'password.confirmed' => 'Password confirmation does not match',
+            'password.min' => 'Password must be at least 8 characters',
+            'password.letters' => 'Password must contain at least one letter',
+            'password.numbers' => 'Password must contain at least one number',
+            'password.mixed_case' => 'Password must contain at least one uppercase and one lowercase letter',
+        ];
+    }
 }

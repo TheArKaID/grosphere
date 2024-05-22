@@ -96,6 +96,12 @@ class GuardianController extends Controller
             'student_ids' => 'required|array',
             'student_ids.*' => 'integer|exists:students,id',
             'password' => ['nullable', 'confirmed', Password::min(8)->letters()->numbers()->mixedCase()]
+        ], [
+            'password.confirmed' => 'Password confirmation does not match',
+            'password.min' => 'Password must be at least 8 characters',
+            'password.letters' => 'Password must contain at least one letter',
+            'password.numbers' => 'Password must contain at least one number',
+            'password.mixed_case' => 'Password must contain at least one uppercase and one lowercase letter',
         ]);
         $guardian = new GuardianResource($this->guardianService->update($guardian->id, $validated));
 
