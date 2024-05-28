@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $about
  * @property string $sub_title
  * @property string $color
+ * @property string $status
  * @property string $created_at
  * @property string $updated_at
  * @property CourseWork[] $courseWorks
