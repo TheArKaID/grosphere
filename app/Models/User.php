@@ -14,6 +14,7 @@ use Spatie\Permission\Traits\HasRoles;
 
 /**
  * @property integer $id
+ * @property integer $agency_id
  * @property string $name
  * @property string $email
  * @property string $phone
@@ -27,6 +28,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property Guardian[] $guardians
  * @property Student[] $students
  * @property Teacher[] $teachers
+ * @property Agency $agency
  */
 class User extends Authenticatable implements JWTSubject
 {
@@ -42,7 +44,7 @@ class User extends Authenticatable implements JWTSubject
     /**
      * @var array
      */
-    protected $fillable = ['name', 'email', 'phone', 'email_verified_at', 'password', 'status', 'remember_token', 'created_at', 'updated_at'];
+    protected $fillable = ['agency_id', 'name', 'email', 'phone', 'email_verified_at', 'password', 'status', 'remember_token', 'created_at', 'updated_at'];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -177,6 +179,16 @@ class User extends Authenticatable implements JWTSubject
         }
 
         return $detail;
+    }
+
+    /**
+     * Get the agency that owns the User
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function agency(): BelongsTo
+    {
+        return $this->belongsTo(Agency::class);
     }
 
     /**

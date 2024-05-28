@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property integer $id
+ * @property integer $agency_id
  * @property integer $curriculum_id
  * @property string $subject
  * @property integer $grade
@@ -19,6 +21,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property CourseTeacher[] $courseTeachers
  * @property Curriculum $curriculum
  * @property Subscription[] $subscriptions
+ * @property Agency $agency
  */
 class CourseWork extends Model
 {
@@ -65,5 +68,10 @@ class CourseWork extends Model
     public function subscriptions()
     {
         return $this->hasMany(Subscription::class);
+    }
+
+    public function agency(): BelongsTo
+    {
+        return $this->belongsTo(Agency::class);
     }
 }

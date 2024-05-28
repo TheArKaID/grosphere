@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property integer $id
+ * @property integer $agency_id
  * @property string $subject
  * @property integer $grade
  * @property integer $term
@@ -13,13 +14,14 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $updated_at
  * @property Chapter[] $chapters
  * @property CourseWork[] $courseWorks
+ * @property Agency $agency
  */
 class Curriculum extends Model
 {
     /**
      * @var array
      */
-    protected $fillable = ['subject', 'grade', 'term', 'created_at', 'updated_at'];
+    protected $fillable = ['agency_id', 'subject', 'grade', 'term', 'created_at', 'updated_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -35,5 +37,13 @@ class Curriculum extends Model
     public function courseWorks()
     {
         return $this->hasMany(CourseWork::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function agency()
+    {
+        return $this->belongsTo(Agency::class);
     }
 }
