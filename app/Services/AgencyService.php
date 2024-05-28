@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Agency;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class AgencyService
 {
@@ -51,7 +52,15 @@ class AgencyService
      */
     public function create($data)
     {
-        return $this->agency->create($data);
+        DB::beginTransaction();
+
+        $agency = $this->agency->create($data);
+
+        $data['logo'] = base64_decode(substr($data['logo'], strpos($data['logo'], ",")+1));
+        Storage::disk('s3')->put('agencies/' . $agency->id . '.png', $data['logo']);
+
+        DB::commit();
+        return $agency;
     }
 
     /**
@@ -66,8 +75,13 @@ class AgencyService
     {
         DB::beginTransaction();
 
-        $agency = $this->agency->findOrFail($id);
+        $agency = $this->getOne($id);
         $agency->update($data);
+
+        if ($data['logo'] ?? false) {
+            $data['logo'] = base64_decode(substr($data['logo'], strpos($data['logo'], ",")+1));
+            Storage::disk('s3')->put('agencies/' . $agency->id . '.png', $data['logo']);
+        }
 
         DB::commit();
         return $agency;

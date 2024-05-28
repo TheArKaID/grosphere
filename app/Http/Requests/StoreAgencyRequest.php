@@ -30,7 +30,7 @@ class StoreAgencyRequest extends FormRequest
             'phone' => ['nullable', 'string', 'max:255'],
             'email' => ['required', 'email', 'unique:agencies,email', 'max:255'],
             'website' => ['nullable', 'string', 'max:255'],
-            'logo' => ['nullable', 'file', 'mimes:jpeg,jpg,png', 'max:2048'],
+            'logo' => ['nullable', 'string'],
             'status' => ['required', 'string', 'in:active,inactive'],
         ];
     }
