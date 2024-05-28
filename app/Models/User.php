@@ -126,6 +126,9 @@ class User extends Authenticatable implements JWTSubject
             case 'teacher':
                 $detail = $this->hasOne(Teacher::class);
                 break;
+            case 'superadmin':
+                $detail = $this->hasOne(SuperAdmin::class);
+                break;
             default:
                 $detail = $this->hasOne(Student::class);
                 break;
@@ -174,7 +177,7 @@ class User extends Authenticatable implements JWTSubject
                 ];
                 break;
             default:
-                $detail = $this->detail->toArray();
+                $detail = $this->detail;
                 break;
         }
 
@@ -212,6 +215,7 @@ class User extends Authenticatable implements JWTSubject
             foreach ($user->agendas as $agenda) {
                 $agenda->delete();
             }
+            $user->detail?->delete();
         });
     }
 }
