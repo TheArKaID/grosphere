@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Admin;
 use App\Models\Agency;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -116,5 +117,31 @@ class AgencyService
             ->whereHas('user', function ($query) use ($search) {
                 $query->where('name', 'like', '%' . $search . '%');
             });
+    }
+
+    /**
+     * Create Admin User
+     * 
+     * @param Agency $agency
+     * @param array $data
+     * 
+     * @return \App\Models\User
+     */
+    public function createAdmin(Agency $agency, array $data)
+    {
+        $user = $agency->users()->create([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'agency_id' => $agency->id,
+            'password' => bcrypt($data['password'])
+        ]);
+
+        $user->assignRole('admin');
+
+        Admin::create([
+            'user_id' => $user->id,
+        ]);
+
+        return $user;
     }
 }

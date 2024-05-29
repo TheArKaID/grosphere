@@ -46,6 +46,9 @@ Route::name('front')->prefix('front')->group(function () {
 Route::middleware(['auth:api'])->group(function () {
     Route::name('superadmin.')->middleware(['role:superadmin'])->prefix('superadmin')->group(function () {
         Route::apiResource('agencies', AgencyController::class);
+        Route::prefix('agencies/{agency}')->group(function () {
+            Route::post('admin', [AgencyController::class, 'createAdmin'])->name('agencies.admin');
+        });
     });
     Route::name('admin.')->middleware(['role:admin'])->prefix('admin')->group(function () {
         Route::prefix('dashboard')->group(function () {

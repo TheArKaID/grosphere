@@ -9,6 +9,8 @@ use App\Http\Resources\AgencyResource;
 use App\Models\Agency;
 use App\Services\AgencyService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rules\Password;
 
 class AgencyController extends Controller
 {
@@ -88,5 +90,36 @@ class AgencyController extends Controller
             'status' => 200,
             'message' => 'Agency deleted'
         ], 200);
+    }
+
+    /**
+     * Create Admin User
+     * 
+     * @param Request $request
+     * @param Agency $agency
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function createAdmin(Request $request, Agency $agency)
+    {
+        $data = $request->validate([
+            'name' => 'required|string',
+            'email' => 'required|email|unique:users,email',
+            'password' => ['required', 'confirmed', 'string', Password::min(8)->letters()->numbers()->mixedCase()]
+        ], [
+            'password.confirmed' => 'Password confirmation does not match',
+            'password.min' => 'Password must be at least 8 characters',
+            'password.letters' => 'Password must contain at least one letter',
+            'password.numbers' => 'Password must contain at least one number',
+            'password.mixed_case' => 'Password must contain at least one uppercase and one lowercase letter',
+        ]);
+
+        $adminUser = $this->agencyService->createAdmin($agency, $data);
+
+        return response()->json([
+            'status' => 201,
+            'message' => 'Admin user created',
+            'data' => $adminUser
+        ], 201);
     }
 }
