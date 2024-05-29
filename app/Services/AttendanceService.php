@@ -37,36 +37,39 @@ class AttendanceService
      */
     function pair($parent_id = null)
     {
-        $attendance = $this->attendance->with(['student.user', 'guardian.user'])->whereType('in')->orderBy('id', 'desc');
-
         if ($parent_id) {
-            $attendance = $attendance->where('guardian_id', $parent_id);
+            $this->attendance = $this->attendance->where('guardian_id', $parent_id);
         }
 
         if ($search = request()->get('search', false)) {
-            $attendance = $attendance
-            ->orWhere(function ($query) use ($search) {
-                $query->whereHas('student', function ($query) use ($search) {
-                    $query->whereHas('user', function ($query) use ($search) {
-                        $query->where('name', 'like', "%$search%");
+            $this->attendance = $this->attendance
+            ->where(function ($q) use ($search) {
+                $q->where(function ($query) use ($search) {
+                    $query->whereHas('student', function ($query) use ($search) {
+                        $query->whereHas('user', function ($query) use ($search) {
+                            $query->where('name', 'like', "%$search%");
+                        });
                     });
-                });
-            })
-            ->orWhere(function ($query)  use ($search) {
-                $query->whereHas('admin', function ($query) use ($search) {
-                    $query->whereHas('user', function ($query) use ($search) {
-                        $query->where('name', 'like', "%$search%");
+                })
+                ->orWhere(function ($query)  use ($search) {
+                    $query->whereHas('admin', function ($query) use ($search) {
+                        $query->whereHas('user', function ($query) use ($search) {
+                            $query->where('name', 'like', "%$search%");
+                        });
                     });
                 });
             });
         }
         if($date = request()->get('date', false)) {
-            $attendance = $attendance->whereDate('created_at', $date);
+            $this->attendance = $this->attendance->whereDate('created_at', $date);
         }
-        if (request()->has('page') && request()->get('page') == 'all') {
-            return $attendance->get();
-        }
-        return $attendance->paginate(request('size', 10));
+
+        $this->attendance = $this->attendance->with(['student.user', 'guardian.user'])
+        ->whereHas('student.user', function ($query) {
+            $query->where('agency_id', auth()->user()->agency_id);
+        })
+        ->whereType('in')->orderBy('id', 'desc');
+        return request()->has('page') && request()->get('page') == 'all' ? $this->attendance->get() : $this->attendance->paginate(request('size', 10));
     }
 
     /**
