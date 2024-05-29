@@ -195,6 +195,18 @@ class User extends Authenticatable implements JWTSubject
     }
 
     /**
+     * Scope a query to only include users of logged in user's agency
+     * 
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * 
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeAgency($query)
+    {
+        return $query->where('agency_id', auth()->user()->agency_id);
+    }
+
+    /**
      * Delete detail on delete user
      * 
      * @return void
