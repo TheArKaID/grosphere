@@ -52,6 +52,7 @@ class CurriculumService
      */
     public function create($data)
     {
+		$data['agency_id'] = auth()->user()->agency_id;
         return $this->curriculum->create($data);
     }
 

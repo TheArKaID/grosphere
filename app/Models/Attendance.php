@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Storage;
 /**
  * @property integer $id
  * @property integer $student_id
+ * @property integer $agency_id
  * @property integer $guardian_id
  * @property string $temperature
  * @property string $remark
@@ -19,13 +20,16 @@ use Illuminate\Support\Facades\Storage;
  * @property string $created_at
  * @property string $updated_at
  * @property Student $student
+ * @property Guardian $guardian
+ * @property Admin $admin
+ * @property Agency $agency
  */
 class Attendance extends Model
 {
     /**
      * @var array
      */
-    protected $fillable = ['student_id', 'guardian_id', 'temperature', 'remark', 'type', 'proof', 'admin_id', 'created_at', 'updated_at'];
+    protected $fillable = ['student_id', 'agency_id', 'guardian_id', 'temperature', 'remark', 'type', 'proof', 'admin_id', 'created_at', 'updated_at'];
 
     protected $appends = ['out'];
 
@@ -77,5 +81,10 @@ class Attendance extends Model
     public function admin(): BelongsTo
     {
         return $this->belongsTo(Admin::class);
+    }
+
+    public function agency(): BelongsTo
+    {
+        return $this->belongsTo(Agency::class);
     }
 }

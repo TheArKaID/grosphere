@@ -79,6 +79,8 @@ class GuardianService
 
         $data['password'] = bcrypt($data['password']);
 
+		$data['agency_id'] = auth()->user()->agency_id;
+
         $user = $this->userService->createUser($data);
         $data['user_id'] = $user->id;
         $guardian = $this->guardians->create($data);

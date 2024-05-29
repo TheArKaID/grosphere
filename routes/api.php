@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\AgencyController;
 use App\Http\Controllers\Api\Admin\AnnouncementController;
 use App\Http\Controllers\Api\Admin\AttendanceController;
 use App\Http\Controllers\Api\Admin\ChapterController;
@@ -43,6 +44,9 @@ Route::name('front')->prefix('front')->group(function () {
     Route::post('student/search', [SearchStudentController::class, 'index'])->name('student.search');
 });
 Route::middleware(['auth:api'])->group(function () {
+    Route::name('superadmin.')->middleware(['role:superadmin'])->prefix('superadmin')->group(function () {
+        Route::apiResource('agencies', AgencyController::class);
+    });
     Route::name('admin.')->middleware(['role:admin'])->prefix('admin')->group(function () {
         Route::prefix('dashboard')->group(function () {
             Route::get('users', [DashboardController::class, 'users']);
