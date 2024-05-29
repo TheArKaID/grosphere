@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreClassSessionRequest;
 use App\Http\Requests\UpdateClassSessionRequest;
+use App\Http\Resources\ClassSessionResource;
 use App\Models\ClassSession;
 use App\Services\ClassSessionService;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class ClassSessionController extends Controller
 {
@@ -22,10 +24,16 @@ class ClassSessionController extends Controller
      */
     public function index()
     {
+        $classSessions = ClassSessionResource::collection($this->classSessionService->getAll());
+
+        if ($classSessions->count() == 0) {
+           throw new ModelNotFoundException('ClassSessions');
+        }
+
         return response()->json([
             'status' => 200,
             'message' => 'Success',
-            'data' => $this->classSessionService->getAll()
+            'data' => $classSessions->response()->getData(true)
         ], 200);
     }
 
@@ -52,7 +60,7 @@ class ClassSessionController extends Controller
         return response()->json([
             'status' => 200,
             'message' => 'Success',
-            'data' => $classSession
+            'data' => ClassSessionResource::make($classSession->load('teacher', 'courseWork', 'classMaterials', 'studentClasses'))
         ], 200);
     }
 
