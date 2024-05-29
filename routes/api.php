@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Api\Admin\AgencyController;
 use App\Http\Controllers\Api\Admin\AnnouncementController;
 use App\Http\Controllers\Api\Admin\AttendanceController;
 use App\Http\Controllers\Api\Admin\ChapterController;
@@ -18,6 +17,8 @@ use App\Http\Controllers\Api\Front\SearchStudentController;
 use App\Http\Controllers\Api\Guardian\AttendanceController as GuardianAttendanceController;
 use App\Http\Controllers\Api\Guardian\StudentController as GuardianStudentController;
 use App\Http\Controllers\Api\Student\CourseStudentController;
+use App\Http\Controllers\Api\Super\AgencyController;
+use App\Http\Controllers\Api\Super\StudentController as SuperStudentController;
 use App\Http\Controllers\Api\Teacher\TeacherFileController;
 use App\Http\Controllers\Api\User\AgendaController;
 use App\Http\Controllers\Api\User\AnnouncementController as UserAnnouncementController;
@@ -48,6 +49,9 @@ Route::middleware(['auth:api'])->group(function () {
         Route::apiResource('agencies', AgencyController::class);
         Route::prefix('agencies/{agency}')->group(function () {
             Route::post('admin', [AgencyController::class, 'createAdmin'])->name('agencies.admin');
+            
+            Route::get('students', [SuperStudentController::class, 'index'])->name('agencies.students.index');
+            Route::get('students/{students}', [SuperStudentController::class, 'show'])->name('agencies.students.show');
         });
     });
     Route::name('admin.')->middleware(['role:admin'])->prefix('admin')->group(function () {

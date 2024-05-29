@@ -26,6 +26,11 @@ class StudentService
 	 */
 	public function getAll()
 	{
+		if (!auth()->user()->hasRole('superadmin')) {
+			$this->student = $this->student->whereHas('user', function ($query) {
+				$query->agency();
+			});
+		}
 		if (request()->has('search')) {
 			$this->student = $this->student->whereHas('user', function ($query) {
 				$query->where('name', 'like', '%' . request()->get('search') . '%')
