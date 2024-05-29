@@ -56,6 +56,9 @@ class CourseWorkService
     public function create($data)
     {
         DB::beginTransaction();
+
+		$data['agency_id'] = auth()->user()->agency_id;
+
         $courseWork = $this->courseWork->create($data);
 
         if (isset($data['teacher_id'])) {
