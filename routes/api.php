@@ -19,6 +19,7 @@ use App\Http\Controllers\Api\Guardian\StudentController as GuardianStudentContro
 use App\Http\Controllers\Api\Student\CourseStudentController;
 use App\Http\Controllers\Api\Super\AgencyController;
 use App\Http\Controllers\Api\Super\StudentController as SuperStudentController;
+use App\Http\Controllers\Api\Teacher\ClassSessionController as TeacherClassSessionController;
 use App\Http\Controllers\Api\Teacher\TeacherFileController;
 use App\Http\Controllers\Api\User\AgendaController;
 use App\Http\Controllers\Api\User\AnnouncementController as UserAnnouncementController;
@@ -114,6 +115,11 @@ Route::middleware(['auth:api'])->group(function () {
         // Route::put('password', [TeacherProfileController::class, 'changePassword'])->name('change-password');
 
         Route::apiResource('storage-files', TeacherFileController::class);
+        
+        Route::prefix('class-sessions')->group(function () {
+            Route::get('/', [TeacherClassSessionController::class, 'index'])->name('class-sessions.index');
+            Route::get('{class_session}', [TeacherClassSessionController::class, 'show'])->name('class-sessions.show');
+        });
     });
 
     Route::name('guardian.')->middleware(['role:guardian'])->prefix('guardian')->group(function () {

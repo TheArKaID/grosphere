@@ -21,6 +21,9 @@ class ClassSessionService
      */
     public function getAll()
     {
+        if (auth()->user()->hasRole('teacher')) {
+            $this->classSession = $this->classSession->where('teacher_id', auth()->id());
+        }
         if (request()->has('search')) {
             $search = request()->get('search');
             $this->classSession = $this->search($search);
@@ -40,6 +43,9 @@ class ClassSessionService
      */
     public function getOne($id)
     {
+        if (auth()->user()->hasRole('teacher')) {
+            $this->classSession = $this->classSession->where('teacher_id', auth()->id());
+        }
         return $this->classSession->findOrFail($id);
     }
 
