@@ -24,7 +24,7 @@ class ClassSessionController extends Controller
      */
     public function index()
     {
-        $classSessions = ClassSessionResource::collection($this->classSessionService->getAll()->load('teacher', 'courseWork'));
+        $classSessions = ClassSessionResource::collection($this->classSessionService->getAll());
 
         if ($classSessions->count() == 0) {
            throw new ModelGetEmptyException('ClassSessions');

@@ -9,6 +9,8 @@ use App\Http\Requests\UpdateClassSessionRequest;
 use App\Http\Resources\ClassSessionResource;
 use App\Models\ClassSession;
 use App\Services\ClassSessionService;
+use Illuminate\Http\Request;
+
 class ClassSessionController extends Controller
 {
     protected $classSessionService;
@@ -23,7 +25,7 @@ class ClassSessionController extends Controller
      */
     public function index()
     {
-        $classSessions = ClassSessionResource::collection($this->classSessionService->getAll()->load('courseWork'));
+        $classSessions = ClassSessionResource::collection($this->classSessionService->getAll());
 
         if ($classSessions->count() == 0) {
             throw new ModelGetEmptyException('ClassSession');
@@ -47,9 +49,9 @@ class ClassSessionController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(ClassSession $classSession)
+    public function show(int $id)
     {
-        $classSession = new ClassSessionResource($this->classSessionService->getOne($classSession->id)->load(['studentClasses', 'courseWork', 'classMaterials']));
+        $classSession = new ClassSessionResource($this->classSessionService->getOne($id));
 
         return response()->json([
             'status' => 200,
