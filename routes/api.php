@@ -119,6 +119,7 @@ Route::middleware(['auth:api'])->group(function () {
         Route::prefix('class-sessions')->group(function () {
             Route::get('/', [TeacherClassSessionController::class, 'index'])->name('class-sessions.index');
             Route::get('{class_session}', [TeacherClassSessionController::class, 'show'])->name('class-sessions.show');
+            Route::post('{class_session}/end', [TeacherClassSessionController::class, 'end'])->name('class-sessions.end');
         });
     });
 

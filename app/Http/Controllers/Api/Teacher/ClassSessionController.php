@@ -73,4 +73,21 @@ class ClassSessionController extends Controller
     {
         //
     }
+
+    /**
+     * End the class session.
+     * 
+     * @param ClassSession $classSession
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function end(ClassSession $classSession)
+    {
+        $this->classSessionService->end($classSession->id);
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Success'
+        ], 200);
+    }
 }

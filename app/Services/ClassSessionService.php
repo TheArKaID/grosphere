@@ -22,7 +22,7 @@ class ClassSessionService
     public function getAll()
     {
         if (auth()->user()->hasRole('teacher')) {
-            $this->classSession = $this->classSession->where('teacher_id', auth()->id());
+            $this->classSession = $this->classSession->where('teacher_id', auth()->user()->detail->id);
         }
         if (request()->has('search')) {
             $search = request()->get('search');
@@ -126,5 +126,17 @@ class ClassSessionService
     public function filterByDate($date)
     {
         return $this->classSession->whereMonth('date', date('m', strtotime($date)))->get();
+    }
+
+    /**
+     * End the class session
+     * 
+     * @param int $id
+     * 
+     * @return void
+     */
+    public function end($id)
+    {
+        
     }
 }
