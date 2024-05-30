@@ -134,11 +134,25 @@ class ClassSessionService
      * End the class session
      * 
      * @param int $id
+     * @param array $data
      * 
      * @return void
      */
-    public function end($id)
+    public function end($id, array $data)
     {
+        if (auth()->user()->hasRole('teacher')) {
+            $this->classSession->where('teacher_id', auth()->id());
+        }
+        $classSession = $this->getOne($id);
+        $classSession->summary = $data['summary'];
         
+        foreach ($data['students'] as $student) {
+            $classSession->studentClasses()->updateOrCreate([
+                'course_student_id' => $student['id']
+            ], [
+                'rating' => $student['rating'],
+                'remark' => $student['remark']
+            ]);
+        }
     }
 }

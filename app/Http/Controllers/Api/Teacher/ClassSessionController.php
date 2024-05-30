@@ -79,13 +79,21 @@ class ClassSessionController extends Controller
     /**
      * End the class session.
      * 
-     * @param ClassSession $classSession
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
      * 
      * @return \Illuminate\Http\JsonResponse
      */
-    public function end(ClassSession $classSession)
+    public function end(Request $request, int $id)
     {
-        $this->classSessionService->end($classSession->id);
+        $data = $request->validate([
+            'summary' => 'required|string',
+            'students' => 'required|array',
+            'students.*.id' => 'required|integer|exists:students,id',
+            'students.*.rating' => 'required|in:1,2,3,4,5',
+            'students.*.remark' => 'required|string'
+        ]);
+        $this->classSessionService->end($id, $data);
 
         return response()->json([
             'status' => 200,
