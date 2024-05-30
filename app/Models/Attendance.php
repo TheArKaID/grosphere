@@ -21,7 +21,6 @@ use Illuminate\Support\Facades\Storage;
  * @property Student $student
  * @property Guardian $guardian
  * @property Admin $admin
- * @property Agency $agency
  */
 class Attendance extends Model
 {
