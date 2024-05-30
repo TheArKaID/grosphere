@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $date
  * @property string $time
  * @property integer $quota
+ * @property string $summary
  * @property string $created_at
  * @property string $updated_at
  * @property ClassMaterial[] $classMaterials
@@ -25,7 +26,7 @@ class ClassSession extends Model
     /**
      * @var array
      */
-    protected $fillable = ['course_work_id', 'teacher_id', 'title', 'description', 'date', 'time', 'quota', 'created_at', 'updated_at'];
+    protected $fillable = ['course_work_id', 'teacher_id', 'title', 'description', 'date', 'time', 'quota', 'summary', 'created_at', 'updated_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
