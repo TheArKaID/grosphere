@@ -24,6 +24,7 @@ class ClassSessionResource extends JsonResource
             'date' => $this->date,
             'time' => $this->time,
             'quota' => $this->quota,
+            'used_quota' => count($this->studentClasses),
             'teacher' => $this->whenLoaded('teacher', function () {
                 return new TeacherResource($this->teacher);
             }),
