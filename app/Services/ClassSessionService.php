@@ -60,8 +60,8 @@ class ClassSessionService
      */
     public function create($data)
     {
-        if (isset($data['total_session'])) {
-            return $this->createMultiple($data);
+        if ($totalSession = $data['total_session'] ?? false) {
+            return $this->createMultiple($totalSession, $data);
         } else {
             return $this->createOne($data);
         }
@@ -87,18 +87,19 @@ class ClassSessionService
     /**
      * Create Multiple Class Session
      * 
+     * @param int $totalSession
      * @param array $data
      * 
      * @return \App\Models\ClassSession[]
      */
-    public function createMultiple($data)
+    public function createMultiple($totalSession, $data)
     {
         $classSessions = [];
         DB::beginTransaction();
-        foreach ($data as $classData) {
-            $class = $this->classSession->create($classData);
-            $thumbnailName = $class->id . '.' . $classData['thumbnail']->extension();
-            $class->thumbnail = $classData['thumbnail']->storeAs('class-sessions', $thumbnailName, 's3');
+        for ($i = 0; $i < $totalSession; $i++) {
+            $class = $this->classSession->create($data);
+            $thumbnailName = $class->id . '.' . $data['thumbnail']->extension();
+            $class->thumbnail = $data['thumbnail']->storeAs('class-sessions', $thumbnailName, 's3');
             $class->save();
             $classSessions[] = $class;
         }

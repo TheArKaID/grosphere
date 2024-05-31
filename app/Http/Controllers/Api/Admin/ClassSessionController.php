@@ -48,7 +48,7 @@ class ClassSessionController extends Controller
         return response()->json([
             'status' => 200,
             'message' => 'ClassSession Created Successfully',
-            'data' => $classSession
+            'data' => is_array($classSession) ? ClassSessionResource::collection($classSession) : ClassSessionResource::make($classSession)
         ], 200);
     }
 
