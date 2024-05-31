@@ -61,20 +61,49 @@ class ClassSessionService
     public function create($data)
     {
         if (isset($data['total_session'])) {
-            return DB::transaction(function () use ($data) {
-                $totalSession = $data['total_session'];
-                unset($data['total_session']);
-                $classSessions = [];
-                for ($i = 0; $i < $totalSession; $i++) {
-                    // For each session, the date will be the next week
-                    $data['date'] = date('Y-m-d', strtotime('+' . $i . ' week'));
-                    $classSessions[] = $this->classSession->create($data);
-                }
-                return $classSessions;
-            });
+            return $this->createMultiple($data);
         } else {
-            return $this->classSession->create($data);
+            return $this->createOne($data);
         }
+    }
+
+    /**
+     * Create One Class Session
+     * 
+     * @param array $data
+     * 
+     * @return \App\Models\ClassSession
+     */
+    public function createOne($data)
+    {
+        $class = $this->classSession->create($data);
+        $thumbnailName = $class->id . '.' . $data['thumbnail']->extension();
+        $data['thumbnail']->storeAs('class-sessions', $thumbnailName, 's3');
+        $class->thumbnail = $data['thumbnail']->storeAs('class-sessions', $thumbnailName, 's3');
+        
+        return $class;
+    }
+
+    /**
+     * Create Multiple Class Session
+     * 
+     * @param array $data
+     * 
+     * @return \App\Models\ClassSession[]
+     */
+    public function createMultiple($data)
+    {
+        $classSessions = [];
+        DB::beginTransaction();
+        foreach ($data as $classData) {
+            $class = $this->classSession->create($classData);
+            $thumbnailName = $class->id . '.' . $classData['thumbnail']->extension();
+            $class->thumbnail = $classData['thumbnail']->storeAs('class-sessions', $thumbnailName, 's3');
+            $class->save();
+            $classSessions[] = $class;
+        }
+        DB::commit();
+        return $classSessions;
     }
 
     /**
