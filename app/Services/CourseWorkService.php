@@ -68,9 +68,9 @@ class CourseWorkService
             $courseTeacher->save();
         }
 
-        $thumbnailName = $courseWork->id . '.' . $data['thumbnail']->extension();
-        $data['thumbnail']->storeAs('course-works', $thumbnailName, 's3');
-        $courseWork->thumbnail = $data['thumbnail']->storeAs('course-works', $thumbnailName, 's3');
+        $data['thumbnail'] = base64_decode(substr($data['thumbnail'], strpos($data['thumbnail'], ",")+1));
+        Storage::disk('s3')->put('course-works/' . $courseWork->id . '.png', $data['thumbnail']);
+        
         $courseWork->save();
 
         DB::commit();
@@ -88,10 +88,9 @@ class CourseWorkService
     public function update(CourseWork $courseWork, $data)
     {
         if (isset($data['thumbnail'])) {
-            Storage::delete('course_works/' . $courseWork->thumbnail);
-            $thumbnailName = $courseWork->id . '.' . $data['thumbnail']->extension();
-            $data['thumbnail']->storeAs('course_works', $thumbnailName);
-            $data['thumbnail'] = $thumbnailName;
+            Storage::disk('s3')->delete('course_works/' . $courseWork->thumbnail);
+            $data['thumbnail'] = base64_decode(substr($data['thumbnail'], strpos($data['thumbnail'], ",")+1));
+            Storage::disk('s3')->put('course-works/' . $courseWork->id . '.png', $data['thumbnail']);
         }
         $courseWork->update($data);
         return $courseWork;

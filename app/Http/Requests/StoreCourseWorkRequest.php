@@ -27,7 +27,7 @@ class StoreCourseWorkRequest extends FormRequest
             'grade' => 'required|numeric',
             'term' => 'required|numeric',
             'quota' => 'required|numeric',
-            'thumbnail' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'thumbnail' => 'required|string',
 
             'teacher_id' => 'nullable|exists:teachers,id',
         ];
