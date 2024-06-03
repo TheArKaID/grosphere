@@ -59,7 +59,10 @@ class CourseWorkService
 
 		$data['agency_id'] = auth()->user()->agency_id;
 
+        $thumbnail = $data['thumbnail'] ?? null;
+        unset($data['thumbnail']);
         $courseWork = $this->courseWork->create($data);
+        $courseWork->thumbnail = 'course-works/' . $courseWork->id . '.png';
 
         if (isset($data['teacher_id'])) {
             $courseTeacher = new CourseTeacher();
@@ -68,8 +71,8 @@ class CourseWorkService
             $courseTeacher->save();
         }
 
-        $data['thumbnail'] = base64_decode(substr($data['thumbnail'], strpos($data['thumbnail'], ",")+1));
-        Storage::disk('s3')->put('course-works/' . $courseWork->id . '.png', $data['thumbnail']);
+        $thumbnail = base64_decode(substr($thumbnail, strpos($thumbnail, ",")+1));
+        Storage::disk('s3')->put($courseWork->thumbnail, $thumbnail);
         
         $courseWork->save();
 
@@ -89,8 +92,11 @@ class CourseWorkService
     {
         if (isset($data['thumbnail'])) {
             Storage::disk('s3')->delete('course_works/' . $courseWork->thumbnail);
-            $data['thumbnail'] = base64_decode(substr($data['thumbnail'], strpos($data['thumbnail'], ",")+1));
-            Storage::disk('s3')->put('course-works/' . $courseWork->id . '.png', $data['thumbnail']);
+            $thumbnail = $data['thumbnail'] ?? null;
+            unset($data['thumbnail']);
+
+            $thumbnail = base64_decode(substr($thumbnail, strpos($thumbnail, ",")+1));
+            Storage::disk('s3')->put($courseWork->thumbnail, $thumbnail);
         }
         $courseWork->update($data);
         return $courseWork;

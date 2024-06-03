@@ -77,10 +77,15 @@ class ClassSessionService
      */
     public function createOne($data)
     {
+        $thumbnail = $data['thumbnail'] ?? null;
+        unset($data['thumbnail']);
         $class = $this->classSession->create($data);
+        $class->thumbnail = 'class-sessions/' . $class->id . '.png';
 
-        $data['thumbnail'] = base64_decode(substr($data['thumbnail'], strpos($data['thumbnail'], ",")+1));
-        Storage::disk('s3')->put('class-sessions/' . $class->id . '.png', $data['thumbnail']);
+        $thumbnail = base64_decode(substr($thumbnail, strpos($thumbnail, ",")+1));
+        Storage::disk('s3')->put($class->thumbnail, $thumbnail);
+
+        $class->save();
         
         return $class;
     }
@@ -98,11 +103,14 @@ class ClassSessionService
         $classSessions = [];
         DB::beginTransaction();
         for ($i = 0; $i < $totalSession; $i++) {
+            $thumbnail = $data['thumbnail'] ?? null;
+            unset($data['thumbnail']);
             $class = $this->classSession->create($data);
+            $class->thumbnail = 'class-sessions/' . $class->id . '.png';
+        
+            $thumbnail = base64_decode(substr($thumbnail, strpos($thumbnail, ",")+1));
+            Storage::disk('s3')->put($class->thumbnail, $thumbnail);
 
-            $data['thumbnail'] = base64_decode(substr($data['thumbnail'], strpos($data['thumbnail'], ",")+1));
-            Storage::disk('s3')->put('class-sessions/' . $class->id . '.png', $data['thumbnail']);
-            
             $class->save();
             $classSessions[] = $class;
         }
