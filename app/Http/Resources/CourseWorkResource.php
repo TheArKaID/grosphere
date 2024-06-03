@@ -23,7 +23,7 @@ class CourseWorkResource extends JsonResource
             'grade' => $this->grade,
             'term' => $this->term,
             'quota' => $this->quota,
-            'thumbnail' => Storage::disk('s3')->url($this->thumbnail),
+            'thumbnail' => $this->thumbnail ? Storage::disk('s3')->url($this->thumbnail) : '',
             'curriculum' => $this->curriculum ? [
                 'id' => $this->curriculum->id,
                 'subject' => $this->curriculum->subject,
