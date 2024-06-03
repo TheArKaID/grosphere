@@ -22,11 +22,15 @@ class UpdateClassSessionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required|string',
+            'course_work_id' => 'nullable|exists:course_works,id',
+            'teacher_id' => 'nullable|exists:teachers,id',
+            'title' => 'nullable|string',
             'description' => 'nullable|string',
-            'date' => 'required|date',
-            'time' => 'required|date_format:H:i',
-            'quota' => 'required|integer',
+            'date' => 'nullable|date|date_format:Y-m-d',
+            'time' => 'nullable|date_format:H:i',
+            'quota' => 'nullable|integer',
+            'type' => 'nullable|in:virtual,hybrid',
+            'thumbnail' => 'nullable|string',
         ];
     }
 }

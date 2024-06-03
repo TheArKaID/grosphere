@@ -128,6 +128,20 @@ class ClassSessionService
      */
     public function update(ClassSession $classSession, $data)
     {
+        // Remove null or empty data
+        $data = array_filter($data, function ($value) {
+            return !is_null($value) && $value !== '';
+        });
+
+        if (isset($data['thumbnail'])) {
+            Storage::disk('s3')->delete($classSession->thumbnail);
+
+            $thumbnail = $data['thumbnail'] ?? null;
+            unset($data['thumbnail']);
+
+            $thumbnail = base64_decode(substr($thumbnail, strpos($thumbnail, ",")+1));
+            Storage::disk('s3')->put($classSession->thumbnail, $thumbnail);
+        }
         $classSession->update($data);
         return $classSession;
     }
