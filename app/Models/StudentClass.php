@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Pivot;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property integer $id
  * @property integer $course_student_id
+ * @property integer $student_id
  * @property integer $class_session_id
  * @property string $present_at
  * @property string $rating
@@ -16,12 +18,13 @@ use Illuminate\Database\Eloquent\Model;
  * @property ClassSession $class
  * @property CourseStudent $courseStudent
  */
-class StudentClass extends Model
+class StudentClass extends Pivot
 {
+    protected $table = 'student_classes';
     /**
      * @var array
      */
-    protected $fillable = ['course_student_id', 'class_session_id', 'present_at', 'rating', 'remark', 'created_at', 'updated_at'];
+    protected $fillable = ['course_student_id', 'student_id', 'class_session_id', 'present_at', 'rating', 'remark', 'created_at', 'updated_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -37,5 +40,15 @@ class StudentClass extends Model
     public function courseStudent()
     {
         return $this->belongsTo(CourseStudent::class);
+    }
+
+    /**
+     * Get the student that owns the StudentClass
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function student(): BelongsTo
+    {
+        return $this->belongsTo(Student::class);
     }
 }
