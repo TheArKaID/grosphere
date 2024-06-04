@@ -24,6 +24,7 @@ class ClassSessionResource extends JsonResource
             'date' => $this->date,
             'time' => $this->time,
             'quota' => $this->quota,
+            'type' => $this->type,
             'thumbnail' => $this->thumbnail ? Storage::disk('s3')->url($this->thumbnail) : '',
             'used_quota' => count($this->studentClasses),
             'teacher' => $this->whenLoaded('teacher', function () {
