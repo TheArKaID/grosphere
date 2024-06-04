@@ -26,9 +26,14 @@ class ClassSessionService
         if (auth()->user()->hasRole('teacher')) {
             $this->classSession = $this->classSession->where('teacher_id', auth()->user()->detail->id);
         }
-        if (request()->has('search')) {
-            $search = request()->get('search');
+        if ($search = request()->get('search', false)) {
             $this->classSession = $this->search($search);
+        }
+        if ($date_month = request()->get('date_month', false)) {
+            $this->classSession = $this->filterByMonth($date_month);
+        }
+        if (request()->get('active_only', false)) {
+            $this->classSession = $this->classSession->whereDate('date', '>=', date('Y-m-d'));
         }
         if (request()->has('page') && request()->get('page') == 'all') {
             return $this->classSession->get();
@@ -178,11 +183,11 @@ class ClassSessionService
      * 
      * @param string $date
      * 
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return mixed
      */
-    public function filterByDate($date)
+    public function filterByMonth($date)
     {
-        return $this->classSession->whereMonth('date', date('m', strtotime($date)))->get();
+        return $this->classSession->whereMonth('date', date('m', strtotime($date)));
     }
 
     /**
