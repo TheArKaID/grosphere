@@ -19,7 +19,7 @@ class StudentClassResource extends JsonResource
 
         $student = $this->courseStudent?->student ?? $this->student;
         return $this->resource ? [
-            'student_name' => $student,
+            'student_name' => $student?->user->name,
             'avatar' => Storage::disk('s3')->url('students/' . $student->id . '.png'),
         ] : [];
     }

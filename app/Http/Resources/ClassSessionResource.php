@@ -35,9 +35,7 @@ class ClassSessionResource extends JsonResource
             'class_materials' => $this->whenLoaded('classMaterials', function () {
                 return ClassMaterialResource::collection($this->classMaterials);
             }),
-            'students' => $this->whenLoaded('studentClasses', function () {
-                return StudentClassResource::collection($this->studentClasses);
-            }),
+            'students' => StudentClassResource::collection($this->enrolled()),
             'created_at' => $this->created_at
         ] : [];
     }

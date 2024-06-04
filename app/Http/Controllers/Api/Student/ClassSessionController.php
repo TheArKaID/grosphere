@@ -89,8 +89,15 @@ class ClassSessionController extends Controller
         ], 200);
     }
 
-    public function showStudentClasses(StudentClass $studentClass) {
-        
+    public function showStudentClasses(ClassSession $classSession)
+    {
+        $classSession = ClassSessionResource::make($this->classSessionService->getOneForStudent($classSession->id));
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Success',
+            'data' => $classSession
+        ], 200);
     }
 
     public function enroll(Request $request, int $classSessionId)

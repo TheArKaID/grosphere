@@ -72,4 +72,14 @@ class ClassSession extends Model
     {
         return $this->belongsToMany(Student::class, 'student_classes')->using(StudentClass::class)->withTimestamps();
     }
+
+    /**
+     * The students that belong to the ClassSession
+     * 
+     * @return mixed
+     */
+    public function enrolled()
+    {
+        return count($this->studentClasses) ? $this->studentClasses : $this->students;
+    }
 }

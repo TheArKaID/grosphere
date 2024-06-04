@@ -2,7 +2,10 @@
 
 namespace App\Services;
 
+use App\Exceptions\NotEnrolledException;
 use App\Models\ClassSession;
+use App\Models\StudentClass;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
@@ -55,6 +58,38 @@ class ClassSessionService
             $this->classSession = $this->classSession->where('teacher_id', auth()->user()->detail->id);
         }
         return $this->classSession->findOrFail($id);
+    }
+
+    /**
+     * Get Class Session detail for enrolled student
+     * 
+     * @param int $id
+     * 
+     * @return ClassSession
+     */
+    public function getOneForStudent($id)
+    {
+        if (!$this->isEnrolled($id, auth()->user()->detail->id)) {
+            throw new NotEnrolledException('You are not enrolled in this class session');
+        }
+
+        $this->classSession = $this->classSession->with(['teacher', 'classMaterials', 'courseWork', 'students', 'studentClasses.courseStudent.student']);
+        return $this->classSession->findOrFail($id);
+    }
+
+    /**
+     * Check if student already enrolled
+     * 
+     * @param int $id
+     * @param int $studentId
+     * 
+     * @return bool
+     */
+    public function isEnrolled($id, $studentId)
+    {
+        return StudentClass::where('class_session_id', $id)->where(function (Builder $query) use ($studentId) {
+            $query->where('course_student_id', $studentId)->orWhere('student_id', $studentId);
+        })->exists();
     }
 
     /**
