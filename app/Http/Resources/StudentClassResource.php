@@ -17,9 +17,10 @@ class StudentClassResource extends JsonResource
     {
         parent::wrap('student_classes');
 
+        $student = $this->courseStudent?->student ?? $this->student;
         return $this->resource ? [
-            'student_name' => $this->courseStudent->student->name,
-            'avatar' => Storage::disk('s3')->url('students/' . $this->courseStudent->student->id . '.png'),
+            'student_name' => $student,
+            'avatar' => Storage::disk('s3')->url('students/' . $student->id . '.png'),
         ] : [];
     }
 }
