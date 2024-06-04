@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * @property integer $id
@@ -60,5 +61,15 @@ class ClassSession extends Model
     public function studentClasses()
     {
         return $this->hasMany(StudentClass::class);
+    }
+
+    /**
+     * The students that belong to the ClassSession
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function students(): BelongsToMany
+    {
+        return $this->belongsToMany(Student::class, 'student_classes')->using(StudentClass::class)->withTimestamps();
     }
 }

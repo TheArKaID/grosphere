@@ -88,4 +88,14 @@ class Student extends Model
     {
         return $this->belongsToMany(Guardian::class, 'guardian_students')->using(GuardianStudent::class)->withTimestamps();
     }
+
+    /**
+     * The classes that belong to the Student
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function classes(): BelongsToMany
+    {
+        return $this->belongsToMany(ClassSession::class, 'student_classes')->using(StudentClass::class)->withTimestamps();
+    }
 }
