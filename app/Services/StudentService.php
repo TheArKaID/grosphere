@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Models\Student;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
@@ -222,5 +224,75 @@ class StudentService
 		return $this->student->with('user')->whereHas('guardians', function ($query) use ($guardian_id) {
 			$query->where('guardian_id', $guardian_id);
 		})->get();
+	}
+
+    /**
+     * Get all course students
+     * 
+     * @return Collection
+     */
+    public function getAllStudentClassSessions()
+    {
+        $student = $this->getById(Auth::user()->detail->id);
+		$classes = $student->classes();
+        if ($search = request()->get('search', false)) {
+            $classes = $this->search($classes, $search);
+        }
+        if ($date_month = request()->get('date_month', false)) {
+            $classes = $this->filterByMonth($classes, $date_month);
+        }
+        if (request()->get('active_only', false)) {
+            $classes = $classes->whereDate('date', '>=', date('Y-m-d'));
+        }
+        if (request()->has('page') && request()->get('page') == 'all') {
+            return $classes->get();
+        }
+        return $classes->paginate(request('size', 10));
+    }
+
+    /**
+     * Search in ClassSession
+     * 
+	 * @param mixed $classSession
+     * @param string $search
+	 * 
+     * @return ClassSession
+     */
+    public function search($classes, $search)
+    {
+        return $classes->where('title', 'like', '%' . $search . '%')
+        ->orWhere('description', 'like', '%' . $search . '%')
+        ->orWhere('date', 'like', '%' . $search . '%')
+        ->orWhere('time', 'like', '%' . $search . '%');
+    }
+
+    /**
+     * Get all Class Session in a month 
+     * 
+	 * @param mixed $classes
+     * @param string $date
+     * 
+     * @return mixed
+     */
+    public function filterByMonth($classes, $date)
+    {
+        return $classes->whereMonth('date', date('m', strtotime($date)));
+    }
+
+	/**
+	 * Enroll Student to Class
+	 * 
+	 * @param int $student_id
+	 * @param int $class_id
+	 * 
+	 * @return void
+	 */
+	public function enrollStudentToClass(int $class_id)
+	{
+		$classService = App::make(ClassSessionService::class);
+		$classService->getOne($class_id);
+		$student = $this->getById(Auth::user()->detail->id);
+
+		$student->classes()->syncWithoutDetaching($class_id);
 	}
 }

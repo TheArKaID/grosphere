@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\Front\SearchStudentController;
 use App\Http\Controllers\Api\Guardian\AttendanceController as GuardianAttendanceController;
 use App\Http\Controllers\Api\Guardian\StudentController as GuardianStudentController;
+use App\Http\Controllers\Api\Student\ClassSessionController as StudentClassSessionController;
 use App\Http\Controllers\Api\Student\CourseStudentController;
 use App\Http\Controllers\Api\Super\AgencyController;
 use App\Http\Controllers\Api\Super\StudentController as SuperStudentController;
@@ -146,6 +147,13 @@ Route::middleware(['auth:api'])->group(function () {
 
         // Terkait "My Course"
         Route::apiResource('course-students', CourseStudentController::class)->only(['index', 'show']);
+        
+        Route::prefix('class-sessions')->group(function () {
+            Route::get('/', [StudentClassSessionController::class, 'index'])->name('class-sessions.index');
+            Route::get('student-classes', [StudentClassSessionController::class, 'studentClasses'])->name('class-sessions.student-classess.index');
+            Route::get('student-classes/{student_classes}', [StudentClassSessionController::class, 'showStudentClasses'])->name('class-sessions.student-classess.show');
+            Route::post('{class_session}/enroll', [StudentClassSessionController::class, 'enroll'])->name('class-sessions.enroll');
+        });
     });
 
     Route::name('user.')->middleware(['role:admin|teacher|student|guardian'])->prefix('user')->group(function () {
