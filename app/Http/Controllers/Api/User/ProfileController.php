@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\UpdatePasswordRequest;
 use App\Http\Requests\User\UpdateRequest;
+use App\Http\Resources\AgencyThemeResource;
 use App\Http\Resources\UserResource;
 use App\Services\UserService;
 use Illuminate\Http\Request;
@@ -69,6 +70,22 @@ class ProfileController extends Controller
         return response()->json([
             'status' => 200,
             'message' => 'Password Updated Successfully'
+        ], 200);
+    }
+
+    /**
+     * Get User Theme
+     * 
+     * @param Request $request
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getTheme(Request $request)
+    {
+        return response()->json([
+            'status' => 200,
+            'message' => 'Success',
+            'data' => AgencyThemeResource::make($this->userService->getUserTheme())
         ], 200);
     }
 }

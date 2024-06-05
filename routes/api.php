@@ -156,7 +156,7 @@ Route::middleware(['auth:api'])->group(function () {
         });
     });
 
-    Route::name('user.')->middleware(['role:admin|teacher|student|guardian'])->prefix('user')->group(function () {
+    Route::name('user.')->middleware(['role:admin|teacher|student|guardian|superadmin'])->prefix('user')->group(function () {
         // Route::get('announcements', [UserAnnouncementController::class, 'index'])->name('announcements.index');
         // Route::get('announcements/{announcement_id}', [UserAnnouncementController::class, 'show'])->name('announcements.show');
 
@@ -166,6 +166,7 @@ Route::middleware(['auth:api'])->group(function () {
         Route::get('/', [UserProfileController::class, 'index'])->name('profile');
         Route::put('/', [UserProfileController::class, 'update'])->name('profile.update');
         Route::put('password', [UserProfileController::class, 'updatePassword'])->name('profile.update.password');
+        Route::get('theme', [UserProfileController::class, 'getTheme'])->name('profile.theme');
     });
 
     Route::post('auth/logout', [AuthController::class, 'logout']);

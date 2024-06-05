@@ -226,4 +226,15 @@ class UserService
 
 	// 	return $this->liveUserService->leaveLiveUser($data);
 	// }
+
+	/**
+	 * Get User Theme by its Agency
+	 * 
+	 * @return Agency
+	 */
+	public function getUserTheme()
+	{
+		$user = auth()->user();
+		return $user->agency;
+	}
 }
