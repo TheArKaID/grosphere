@@ -116,8 +116,8 @@ class Handler extends ExceptionHandler
             }
         });
 
-        // NotEnrolledException
-        $this->renderable(function (NotEnrolledException $e, $request) {
+        // JoinClassSessionException
+        $this->renderable(function (JoinClassSessionException $e, $request) {
             if ($request->is('api/*')) {
                 return response()->json([
                     'status' => 400,

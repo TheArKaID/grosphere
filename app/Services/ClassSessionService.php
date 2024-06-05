@@ -2,10 +2,10 @@
 
 namespace App\Services;
 
-use App\Exceptions\NotEnrolledException;
+use App\Exceptions\JoinClassSessionException;
 use App\Models\ClassSession;
 use App\Models\StudentClass;
-use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
@@ -70,7 +70,11 @@ class ClassSessionService
     public function getOneForStudent($id)
     {
         if (!$this->isEnrolled($id, auth()->user()->detail->id)) {
-            throw new NotEnrolledException('You are not enrolled in this class session');
+            throw new JoinClassSessionException('You are not enrolled in this class session');
+        }
+
+        if (!$this->isToday($id)) {
+            throw new JoinClassSessionException('You can only join class session schedule on the day of the class session');
         }
 
         $this->classSession = $this->classSession->with(['teacher', 'classMaterials', 'courseWork', 'students', 'studentClasses.courseStudent.student']);
@@ -89,6 +93,33 @@ class ClassSessionService
     {
         return StudentClass::where('class_session_id', $id)->where(function (Builder $query) use ($studentId) {
             $query->where('course_student_id', $studentId)->orWhere('student_id', $studentId);
+        })->exists();
+    }
+
+    /**
+     * Check if the class session schedule is today
+     * 
+     * @param int $id
+     * 
+     * @return bool
+     */
+    public function isToday($id)
+    {
+        return $this->classSession->where('id', $id)->whereDate('date', date('Y-m-d'))->exists();
+    }
+
+    /**
+     * Check if there is already a schedule on the day of the selected class schedule for the student
+     * 
+     * @param int $studentId
+     * @param string $date
+     * 
+     * @return bool
+     */
+    public function isScheduleConflict($studentId, $date)
+    {
+        return StudentClass::where('course_student_id', $studentId)->whereHas('classSession', function (Builder $query) use ($date) {
+            $query->whereDate('date', $date);
         })->exists();
     }
 
