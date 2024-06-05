@@ -76,6 +76,10 @@ class AgencyService
     {
         DB::beginTransaction();
 
+        // Remove null values
+        $data = array_filter($data, function ($value) {
+            return $value !== null;
+        });
         $agency = $this->getOne($id);
         $agency->update($data);
 

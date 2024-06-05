@@ -32,6 +32,7 @@ class UpdateAgencyRequest extends FormRequest
             'website' => ['nullable', 'string', 'max:255'],
             'logo' => ['nullable', 'string'],
             'status' => ['required', 'string', 'in:active,inactive'],
+            'active_until' => ['nullable', 'date', 'date_format:Y-m-d H:i']
         ];
     }
 }
