@@ -32,6 +32,7 @@ class StoreAgencyRequest extends FormRequest
             'website' => ['nullable', 'string', 'max:255'],
             'logo' => ['nullable', 'string'],
             'status' => ['required', 'string', 'in:active,inactive'],
+            'active_until' => ['required', 'date', 'date_format:Y-m-d H:i']
         ];
     }
 }

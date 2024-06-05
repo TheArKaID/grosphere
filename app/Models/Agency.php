@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $sub_title
  * @property string $color
  * @property string $status
+ * @property string $active_until
  * @property string $created_at
  * @property string $updated_at
  * @property CourseWork[] $courseWorks
@@ -26,7 +27,7 @@ class Agency extends Model
     /**
      * @var array
      */
-    protected $fillable = ['name', 'phone', 'email', 'address', 'website', 'about', 'sub_title', 'color', 'status', 'created_at', 'updated_at'];
+    protected $fillable = ['name', 'phone', 'email', 'address', 'website', 'about', 'sub_title', 'color', 'status', 'active_until', 'created_at', 'updated_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

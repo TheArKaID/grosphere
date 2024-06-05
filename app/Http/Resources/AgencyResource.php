@@ -27,6 +27,7 @@ class AgencyResource extends JsonResource
             'sub_title' => $this->sub_title,
             'color' => $this->color,
             'status' => $this->status,
+            'active_until' => $this->active_until,
             'created_at' => $this->created_at,
         ] : [];
     }
