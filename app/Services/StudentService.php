@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Exceptions\RegisterStudentClassException;
 use App\Models\Student;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
@@ -290,9 +291,14 @@ class StudentService
 	public function enrollStudentToClass(int $class_id)
 	{
 		$classService = App::make(ClassSessionService::class);
-		$classService->getOne($class_id);
-		$student = $this->getById(Auth::user()->detail->id);
+		$class = $classService->getOne($class_id);
+		$studentId = Auth::user()->detail->id;
 
+		if ($classService->isScheduleConflict($studentId, $class->date)) {
+			throw new RegisterStudentClassException('Student already have class in the selected class schedule');
+		}
+
+		$student = $this->getById($studentId);
 		$student->classes()->syncWithoutDetaching($class_id);
 	}
 }

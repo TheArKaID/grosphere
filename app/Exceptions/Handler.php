@@ -116,7 +116,6 @@ class Handler extends ExceptionHandler
             }
         });
 
-        // JoinClassSessionException
         $this->renderable(function (JoinClassSessionException $e, $request) {
             if ($request->is('api/*')) {
                 return response()->json([
@@ -126,6 +125,15 @@ class Handler extends ExceptionHandler
             }
         });
 
+        $this->renderable(function (RegisterStudentClassException $e, $request) {
+            if ($request->is('api/*')) {
+                return response()->json([
+                    'status' => 400,
+                    'message' => $e->getMessage()
+                ], 400);
+            }
+        });
+        
         $this->renderable(function (Throwable $e, $request) {
             if ($request->is('api/*')) {
                 if (config('app.debug')) {
