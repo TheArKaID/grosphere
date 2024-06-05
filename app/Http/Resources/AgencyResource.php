@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 
 class AgencyResource extends JsonResource
 {
@@ -26,6 +27,8 @@ class AgencyResource extends JsonResource
             'about' => $this->about,
             'sub_title' => $this->sub_title,
             'color' => $this->color,
+            'logo' => Storage::disk('s3')->url('agencies/' . $this->id . '.png'),
+            'logo-sm' => Storage::disk('s3')->url('agencies/' . $this->id . '-sm.png'),
             'status' => $this->status,
             'active_until' => $this->active_until,
             'created_at' => $this->created_at,
