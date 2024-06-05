@@ -31,7 +31,7 @@ class UpdateAgencyRequest extends FormRequest
             'email' => ['nullable', 'email', 'unique:agencies,email,' . $this->agency->id, 'max:255'],
             'website' => ['nullable', 'string', 'max:255'],
             'logo' => ['nullable', 'string'],
-            'logo-sm' => ['nullable', 'string'],
+            'logo_sm' => ['nullable', 'string'],
             'status' => ['required', 'string', 'in:active,inactive'],
             'active_until' => ['nullable', 'date', 'date_format:Y-m-d H:i']
         ];

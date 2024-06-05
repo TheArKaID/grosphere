@@ -31,7 +31,7 @@ class StoreAgencyRequest extends FormRequest
             'email' => ['required', 'email', 'unique:agencies,email', 'max:255'],
             'website' => ['nullable', 'string', 'max:255'],
             'logo' => ['nullable', 'string'],
-            'logo-sm' => ['nullable', 'string'],
+            'logo_sm' => ['nullable', 'string'],
             'status' => ['required', 'string', 'in:active,inactive'],
             'active_until' => ['required', 'date', 'date_format:Y-m-d H:i']
         ];
