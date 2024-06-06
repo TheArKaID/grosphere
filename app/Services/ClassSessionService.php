@@ -289,5 +289,6 @@ class ClassSessionService
                 'rating' => $student['rating'],
                 'remark' => $student['remark']
             ]);
+        }
     }
 }
