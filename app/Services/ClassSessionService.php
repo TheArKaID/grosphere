@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Exceptions\EndClassSessionException;
 use App\Exceptions\JoinClassSessionException;
 use App\Models\ClassSession;
 use App\Models\StudentClass;
@@ -266,19 +267,27 @@ class ClassSessionService
      */
     public function end($id, array $data)
     {
-        if (auth()->user()->hasRole('teacher')) {
-            $this->classSession->where('teacher_id', auth()->id());
+        $this->classSession->where('teacher_id', auth()->id());
+
+        if (!$this->isToday($id)) {
+            throw new EndClassSessionException('You can only end class session schedule on the day of the class session');
         }
         $classSession = $this->getOne($id);
         $classSession->summary = $data['summary'];
-        
+
         foreach ($data['students'] as $student) {
+            // If the class session is a course work, then the student is a course student
+            $attribute = $classSession->course_work_id ? [
+                // If course student is not found, then the student is not enrolled in the class session
+                'course_student_id' => $classSession->courseWork->courseStudents()->where('student_id', $student['id'])->first()?->id
+            ] : [
+                'student_id' => $student['id']
+            ];
             $classSession->studentClasses()->updateOrCreate([
-                'course_student_id' => $student['id']
+                $attribute
             ], [
                 'rating' => $student['rating'],
                 'remark' => $student['remark']
             ]);
-        }
     }
 }
