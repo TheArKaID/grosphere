@@ -239,10 +239,12 @@ class ClassSessionService
      */
     public function search($search)
     {
-        return $this->classSession->where('title', 'like', '%' . $search . '%')
-        ->orWhere('description', 'like', '%' . $search . '%')
-        ->orWhere('date', 'like', '%' . $search . '%')
-        ->orWhere('time', 'like', '%' . $search . '%');
+        return $this->classSession->where(function ($query) use($search) {
+            $query->where('title', 'like', '%' . $search . '%')
+            ->orWhere('description', 'like', '%' . $search . '%')
+            ->orWhere('date', 'like', '%' . $search . '%')
+            ->orWhere('time', 'like', '%' . $search . '%');
+        });
     }
 
     /**
