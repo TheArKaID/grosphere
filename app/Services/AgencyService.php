@@ -57,8 +57,10 @@ class AgencyService
 
         $agency = $this->agency->create($data);
 
-        $data['logo'] = base64_decode(substr($data['logo'], strpos($data['logo'], ",")+1));
-        Storage::disk('s3')->put('agencies/' . $agency->id . '.png', $data['logo']);
+        if ($logo = $data['logo'] ?? false) {
+            $logo = base64_decode(substr($logo, strpos($logo, ",")+1));
+            Storage::disk('s3')->put('agencies/' . $agency->id . '.png', $logo);
+        }
 
         if ($smallLogo = $data['logo_sm'] ?? false) {
             $smallLogo = base64_decode(substr($smallLogo, strpos($smallLogo, ",")+1));
