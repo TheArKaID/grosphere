@@ -49,7 +49,7 @@ class AgencyController extends Controller
         return response()->json([
             'status' => 201,
             'message' => 'Agency created',
-            'data' => new AgencyResource($agency->load('admins'))
+            'data' => new AgencyResource($agency)
         ], 201);
     }
 
@@ -61,7 +61,7 @@ class AgencyController extends Controller
         return response()->json([
             'status' => 200,
             'message' => 'Agency',
-            'data' => new AgencyResource($agency)
+            'data' => new AgencyResource($agency->load('admins'))
         ], 200);
     }
 
