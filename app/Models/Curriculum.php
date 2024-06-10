@@ -46,4 +46,18 @@ class Curriculum extends Model
     {
         return $this->belongsTo(Agency::class);
     }
+
+    /**
+     * Boot
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        if (auth()->check() && !auth()->user()->hasRole('superadmin')) {
+            static::addGlobalScope('agency', function ($builder) {
+                $builder->where('agency_id', auth()->user()->agency_id);
+            });
+        }
+    }
 }
