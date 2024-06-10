@@ -74,4 +74,18 @@ class CourseWork extends Model
     {
         return $this->belongsTo(Agency::class);
     }
+
+    /**
+     * Boot
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        if (auth()->check() && auth()->user()->role != 'superadmin') {
+            static::addGlobalScope('agency', function ($builder) {
+                $builder->where('agency_id', auth()->user()->agency_id);
+            });
+        }
+    }
 }
