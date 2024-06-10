@@ -55,16 +55,6 @@ class Agency extends Model
     }
 
     /**
-     * Get all of the admins for the Agency
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function admins(): HasMany
-    {
-        return $this->hasMany(Admin::class);
-    }
-
-    /**
      * Boot on delete
      * 
      * @return void

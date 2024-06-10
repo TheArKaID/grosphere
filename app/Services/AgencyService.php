@@ -146,6 +146,7 @@ class AgencyService
      */
     public function createAdmin(Agency $agency, array $data)
     {
+        DB::beginTransaction();
         $user = $agency->users()->create([
             'name' => $data['name'],
             'email' => $data['email'],
@@ -156,9 +157,10 @@ class AgencyService
         $user->assignRole('admin');
 
         Admin::create([
-            'user_id' => $user->id,
-            'agency_id' => $agency->id
+            'user_id' => $user->id
         ]);
+
+        DB::commit();
 
         return $user;
     }
@@ -173,7 +175,13 @@ class AgencyService
      */
     public function deleteAdmin(Agency $agency, int $adminId)
     {
-        $admin = $agency->admins()->findOrFail($adminId);
-        $admin->user->delete();
+        $admin = Admin::findOrFail($adminId);
+        if ($admin->user->hasRole('admin') && $admin->user->agency_id == $agency->id) {
+            $admin->user->delete();
+        }
+        // Failed to delete admin
+        else {
+            
+        }
     }
 }

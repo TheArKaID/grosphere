@@ -26,7 +26,7 @@ class Admin extends Model
     /**
      * @var array
      */
-    protected $fillable = ['user_id', 'agency_id', 'created_at', 'updated_at'];
+    protected $fillable = ['user_id', 'created_at', 'updated_at'];
 
     /**
      * Get all of the attendances for the Admin
