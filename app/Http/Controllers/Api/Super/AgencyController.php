@@ -61,7 +61,7 @@ class AgencyController extends Controller
         return response()->json([
             'status' => 200,
             'message' => 'Agency',
-            'data' => new AgencyResource($agency->load('admins'))
+            'data' => new AgencyResource($agency->load('users'))
         ], 200);
     }
 
