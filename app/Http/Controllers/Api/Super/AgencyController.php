@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Api\Super;
 
+use App\Exceptions\ModelGetEmptyException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreAgencyRequest;
 use App\Http\Requests\UpdateAgencyRequest;
 use App\Http\Resources\AgencyResource;
 use App\Models\Agency;
 use App\Services\AgencyService;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules\Password;
 
@@ -29,7 +29,7 @@ class AgencyController extends Controller
         $agencies = AgencyResource::collection($this->agencyService->getAll());
 
         if (count($agencies) == 0) {
-            throw new ModelNotFoundException('No agencies found');
+            throw new ModelGetEmptyException('No agencies found');
         }
 
         return response()->json([
