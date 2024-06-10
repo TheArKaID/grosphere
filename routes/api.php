@@ -51,6 +51,7 @@ Route::middleware(['auth:api'])->group(function () {
         Route::apiResource('agencies', AgencyController::class);
         Route::prefix('agencies/{agency}')->group(function () {
             Route::post('admin', [AgencyController::class, 'createAdmin'])->name('agencies.admin');
+            Route::delete('admin/{admin}', [AgencyController::class, 'deleteAdmin'])->name('agencies.admin.delete');
             
             Route::get('students', [SuperStudentController::class, 'index'])->name('agencies.students.index');
             Route::get('students/{students}', [SuperStudentController::class, 'show'])->name('agencies.students.show');

@@ -113,7 +113,7 @@ class User extends Authenticatable implements JWTSubject
     {
         $detail = null;
 
-        switch ($this->roles()->first()->name) {
+        switch ($this->roles()->first()?->name) {
             case 'admin':
                 $detail = $this->hasOne(Admin::class);
                 break;
@@ -216,18 +216,6 @@ class User extends Authenticatable implements JWTSubject
         parent::boot();
 
         static::deleting(function ($user) {
-            foreach ($user->liveUsers ?? [] as $liveUser) {
-                $liveUser->delete();
-            }
-
-            foreach ($user->announcementUsers as $au) {
-                $au->delete();
-            }
-
-            foreach ($user->agendas as $agenda) {
-                $agenda->delete();
-            }
-            $user->detail?->delete();
         });
     }
 }

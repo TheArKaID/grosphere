@@ -157,8 +157,23 @@ class AgencyService
 
         Admin::create([
             'user_id' => $user->id,
+            'agency_id' => $agency->id
         ]);
 
         return $user;
+    }
+
+    /**
+     * Delete Admin User
+     * 
+     * @param Agency $agency
+     * @param int $adminId
+     * 
+     * @return void
+     */
+    public function deleteAdmin(Agency $agency, int $adminId)
+    {
+        $admin = $agency->admins()->findOrFail($adminId);
+        $admin->user->delete();
     }
 }
