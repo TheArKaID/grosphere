@@ -59,4 +59,20 @@ class Subscription extends Model
     {
         return $this->belongsTo(Student::class);
     }
+
+    /**
+     * Boot
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        if (auth()->check() && !auth()->user()->hasRole('superadmin')) {
+            static::addGlobalScope('agency', function ($builder) {
+                $builder->whereHas('student.user', function ($query) {
+                    $query->where('agency_id', auth()->user()->agency_id);
+                });
+            });
+        }
+    }
 }
