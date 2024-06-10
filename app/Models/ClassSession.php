@@ -82,4 +82,22 @@ class ClassSession extends Model
     {
         return count($this->studentClasses) ? $this->studentClasses : $this->students;
     }
+
+    /**
+     * Boot
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        if (auth()->check() && !auth()->user()->hasRole('superadmin')) {
+            static::addGlobalScope('agency', function ($builder) {
+                $builder->whereHas('courseWork', function ($query) {
+                    $query->where('agency_id', auth()->user()->agency_id);
+                })->orWhereHas('teacher.user', function ($query) {
+                    $query->where('agency_id', auth()->user()->agency_id);
+                });
+            });
+        }
+    }
 }
