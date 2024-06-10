@@ -67,5 +67,13 @@ class Guardian extends Model
         static::deleting(function ($guardian) {
             $guardian->students()->detach();
         });
+        
+        if (auth()->check() && !auth()->user()->hasRole('superadmin')) {
+            static::addGlobalScope('agency', function ($builder) {
+                $builder->whereHas('user', function ($query) {
+                    $query->where('agency_id', auth()->user()->agency_id);
+                });
+            });
+        }
     }
 }
