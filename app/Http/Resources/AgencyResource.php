@@ -30,6 +30,9 @@ class AgencyResource extends JsonResource
             'logo' => Storage::disk('s3')->url('agencies/' . $this->id . '.png'),
             'logo-sm' => Storage::disk('s3')->url('agencies/' . $this->id . '-sm.png'),
             'status' => $this->status,
+            'admins' => $this->whenLoaded('admins', function () {
+                return AdminResource::collection($this->admins);
+            }),
             'active_until' => $this->active_until,
             'created_at' => $this->created_at,
         ] : [];

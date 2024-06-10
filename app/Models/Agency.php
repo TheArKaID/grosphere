@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property integer $id
@@ -51,6 +52,16 @@ class Agency extends Model
     public function users()
     {
         return $this->hasMany(User::class);
+    }
+
+    /**
+     * Get all of the admins for the Agency
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function admins(): HasMany
+    {
+        return $this->hasMany(Admin::class);
     }
 
     /**
