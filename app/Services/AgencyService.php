@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Admin;
 use App\Models\Agency;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
@@ -130,9 +131,9 @@ class AgencyService
     public function search($search)
     {
         return $this->agency
-            ->whereHas('user', function ($query) use ($search) {
-                $query->where('name', 'like', '%' . $search . '%');
-            });
+        ->where(function (Builder $query) use ($search) {
+            $query->orWhere('name', 'like', '%' . $search . '%');
+        });
     }
 
     /**
