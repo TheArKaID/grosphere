@@ -105,7 +105,8 @@ class AgencyController extends Controller
         $data = $request->validate([
             'name' => 'required|string',
             'email' => 'required|email|unique:users,email',
-            'password' => ['required', 'confirmed', 'string', Password::min(8)->letters()->numbers()->mixedCase()]
+            'password' => ['required', 'confirmed', 'string', Password::min(8)->letters()->numbers()->mixedCase()],
+            'photo' => 'required|string',
         ], [
             'password.confirmed' => 'Password confirmation does not match',
             'password.min' => 'Password must be at least 8 characters',
