@@ -101,7 +101,7 @@ class GuardianController extends Controller
             'password.min' => 'Password must be at least 8 characters',
             'password.letters' => 'Password must contain at least one letter',
             'password.numbers' => 'Password must contain at least one number',
-            'password.mixed_case' => 'Password must contain at least one uppercase and one lowercase letter',
+            'password.mixed' => 'Password must contain at least one uppercase and one lowercase letter',
         ]);
         $guardian = new GuardianResource($this->guardianService->update($guardian->id, $validated));
 
