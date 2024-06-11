@@ -5,6 +5,8 @@ namespace App\Services;
 use App\Http\Resources\AttendanceResource;
 use App\Models\Attendance;
 use Doctrine\DBAL\Query;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
@@ -72,6 +74,42 @@ class AttendanceService
         return request()->has('page') && request()->get('page') == 'all' ? $this->attendance->get() : $this->attendance->paginate(request('size', 10));
     }
 
+    /**
+     * Get all 'in' attendance records.
+     * 
+     * @param string $filter
+     * 
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    function totalIn($filter = null) : \Illuminate\Database\Eloquent\Collection
+    {
+        $this->attendance = $this->attendance->select(['id', 'student_id', 'type', 'created_at'])->whereType('in');
+
+        if ($filter) {
+            $this->attendance = $this->filterByRange($filter);
+        }
+
+        return $this->attendance->get();
+    }
+
+    /**
+     * Filter weekly or monthly attendance records.
+     * 
+     * @param string $filter
+     * 
+     * @return Builder|EloquentBuilder
+     */
+    function filterByRange(string $filter) : Builder|EloquentBuilder
+    {
+        switch ($filter) {
+            case 'weekly':
+                return $this->attendance->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()]);
+                break;
+            default:
+                return $this->attendance->whereMonth('created_at', now()->month);
+                break;
+        }
+    }
     /**
      * Create a new attendance record.
      * 

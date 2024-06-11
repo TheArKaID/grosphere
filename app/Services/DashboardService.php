@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Agenda;
+use Carbon\CarbonPeriod;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -70,20 +71,50 @@ class DashboardService
      * 
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function attendances()
+    public function attendances($filter)
     {
         $attendanceService = app()->make(AttendanceService::class);
+        $studentService = app()->make(StudentService::class);
 
-        return $attendanceService->pair()->map(function ($attendance) {
-            return [
-                'id' => $attendance->id,
-                'student_id' => $attendance->student_id,
-                'student' => $attendance->student->user->name,
-                'guardian' => $attendance->guardian,
-                'in' => Carbon::make($attendance->created_at)->format('Y-m-d H:i:s'),
-                'out' => $attendance->out
-            ];
+        $totalStudent = $studentService->count();
+
+        // Create an array of days using Carbon between weekly or monthly based on $filter
+        if ($filter =='weekly') {
+            $days = collect(CarbonPeriod::create(now()->startOfWeek(), now()->endOfWeek()))->map(function ($day) {
+                return $day->format('Y-m-d');
+            });
+        
+        } else {
+            $days = collect(CarbonPeriod::create(now()->startOfMonth(), now()->endOfMonth()))->map(function ($day) {
+                return $day->format('Y-m-d');
+            });
+        }
+
+        $totalStudentIn = $attendanceService->totalIn($filter);
+        /**
+         * The result is array of:
+         * "id": 4,
+         * "student_id": 1,
+         * "type": "in",
+         * "created_at": "2024-05-07T09:47:22.000000Z",
+         * "out": null
+         *  Group it by date, then count the total student in
+         */
+        $attendances = $totalStudentIn->groupBy(function ($attendance) {
+            return Carbon::parse($attendance->created_at)->format('Y-m-d');
+        })->map(function ($attendance) {
+            return $attendance->count();
         });
+
+        $newAttendances = [];
+        foreach ($days as $day) {
+            if (isset($attendances[$day])) {
+                $newAttendances[$day] = [$attendances[$day], $totalStudent - $attendances[$day]];
+            } else {
+                $newAttendances[$day] = [0, $totalStudent];
+            }
+        }
+        return $newAttendances;
     }
 
     /**

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Exceptions\ModelGetEmptyException;
 use App\Http\Controllers\Controller;
 use App\Services\DashboardService;
+use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
@@ -69,12 +70,12 @@ class DashboardController extends Controller
      * 
      * @return \Illuminate\Http\JsonResponse
      */
-    public function attendances()
+    public function attendances(Request $request)
     {
         return response()->json([
             'status' => 200,
             'message' => 'All Attendances Data',
-            'data' => $this->dashboardService->attendances()
+            'data' => $this->dashboardService->attendances($request->get('filter', null))
         ], 200);
     }
 }
