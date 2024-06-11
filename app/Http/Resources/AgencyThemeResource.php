@@ -24,7 +24,7 @@ class AgencyThemeResource extends JsonResource
             'sub_title' => $this->sub_title,
             'color' => $this->color,
             'logo' => Storage::disk('s3')->url('agencies/' . $this->id . '.png'),
-            'logo-sm' => Storage::disk('s3')->url('agencies/' . $this->id . '-sm.png'),
+            'logo_sm' => Storage::disk('s3')->url('agencies/' . $this->id . '-sm.png'),
         ];
     }
 }
