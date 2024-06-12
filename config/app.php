@@ -234,4 +234,11 @@ return [
 
     ],
 
+    'teacher' => [
+        'file' => [
+            'disk' => 's3',
+            'max_size' => env('TEACHER_MAX_FILE_SIZE', '261440000'),
+            'allowed_extensions' => ['pdf', 'mp4', 'mov', 'jpg', 'jpeg', 'png']
+        ]
+    ],
 ];
