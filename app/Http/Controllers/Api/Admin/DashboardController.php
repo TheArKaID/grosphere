@@ -75,7 +75,21 @@ class DashboardController extends Controller
         return response()->json([
             'status' => 200,
             'message' => 'All Attendances Data',
-            'data' => $this->dashboardService->attendances($request->get('filter', null))
+            'data' => $this->dashboardService->attendances()
+        ], 200);
+    }
+
+    /**
+     * Return Attendances Data
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function attendanceSummary(Request $request)
+    {
+        return response()->json([
+            'status' => 200,
+            'message' => 'All Attendances Data',
+            'data' => $this->dashboardService->attendanceSummary($request->get('filter', null))
         ], 200);
     }
 }

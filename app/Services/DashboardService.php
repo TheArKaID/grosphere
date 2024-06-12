@@ -67,11 +67,13 @@ class DashboardService
     }
 
     /**
-     * Attendances Data
+     * Get Attendance Summary
+     * 
+     * @param string $filter
      * 
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function attendances($filter)
+    public function attendanceSummary($filter)
     {
         $attendanceService = app()->make(AttendanceService::class);
         $studentService = app()->make(StudentService::class);
@@ -115,6 +117,27 @@ class DashboardService
             }
         }
         return $newAttendances;
+    }
+
+    /**
+     * Attendances Data
+     * 
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function attendances()
+    {
+        $attendanceService = app()->make(AttendanceService::class);
+
+        return $attendanceService->pair()->map(function ($attendance) {
+            return [
+                'id' => $attendance->id,
+                'student_id' => $attendance->student_id,
+                'student' => $attendance->student->user->name,
+                'guardian' => $attendance->guardian,
+                'in' => Carbon::make($attendance->created_at)->format('Y-m-d H:i:s'),
+                'out' => $attendance->out
+            ];
+        });
     }
 
     /**

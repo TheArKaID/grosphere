@@ -63,6 +63,7 @@ Route::middleware(['auth:api'])->group(function () {
             Route::get('calendars', [DashboardController::class, 'calendars']);
             Route::get('payment-overdues', [DashboardController::class, 'paymentOverdues']);
             Route::get('attendances', [DashboardController::class, 'attendances']);
+            Route::get('attendance-summary', [DashboardController::class, 'attendanceSummary']);
         });
 
         Route::resource('users', UserController::class)->except(['edit', 'create']);
