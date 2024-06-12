@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Exceptions\TeacherFileException;
 use App\Models\Teacher;
 use App\Models\TeacherFile;
 use Illuminate\Support\Facades\DB;
@@ -254,6 +255,11 @@ class TeacherService
             $data['teacher_id'] = $teacherId;
     
             if ($file = request()->file('content')) {
+                $data['file_size'] = $file->getSize();   
+                if ($this->isReachMaxFileSize($teacherId, $data['file_size'])) {
+                    throw new TeacherFileException('Teacher reach max file size. Currently using '. $this->getTotalFileSizeMb($teacherId) .' of ' . $this->getMaxFileSizeMb() . '. Please delete some files.');
+                }
+
                 if (!isset($data['content_type'])) {
                     $data['content_type'] = $file->getMimeType();
                 }
@@ -262,7 +268,6 @@ class TeacherService
                 $data['content'] = Storage::disk('s3')->url($data['file_path']);
                 $data['file_name'] = $file->getClientOriginalName();
                 $data['file_extension'] = $file->getClientOriginalExtension();
-                $data['file_size'] = $file->getSize();   
             }
     
             return $this->teacherFile->create($data);
@@ -270,7 +275,7 @@ class TeacherService
             if ($data['file_path']){
                 Storage::disk('s3')->delete($data['file_path']);
             }
-            throw $e;
+            throw new TeacherFileException('Filed to upload file. Please contact Administrator. ' . $e->getMessage());
         }
     }
 
@@ -319,6 +324,20 @@ class TeacherService
     }
 
     /**
+     * Check if teacher reach max file size
+     * 
+     * @param int $teacherId
+     * @param int $fileSize
+     * 
+     * @return bool
+     */
+    public function isReachMaxFileSize(int $teacherId, int $fileSize)
+    {
+        // 2MB is for safety
+        return ($this->getTotalFileSize($teacherId) + $fileSize + 2 * 1024 *1024) > $this->getMaxFileSize();
+    }
+
+    /**
      * Get total of teacher file size
      * 
      * @param int $teacherId
@@ -340,5 +359,25 @@ class TeacherService
     public function getTotalFileSizeMb(int $teacherId)
     {
         return round($this->getTotalFileSize($teacherId) / 1024 / 1024, 2);
+    }
+
+    /**
+     * Get maximum file size for teacher
+     * 
+     * @return int
+     */
+    public function getMaxFileSize()
+    {
+        return config('app.teacher.file.max_size');
+    }
+    
+    /**
+     * Get maximum file size for teacher in MB
+     * 
+     * @return int
+     */
+    public function getMaxFileSizeMb()
+    {
+        return round($this->getMaxFileSize() / 1024 / 1024, 2);
     }
 }
