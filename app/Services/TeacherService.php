@@ -289,22 +289,37 @@ class TeacherService
      */
     public function updateTeacherFile(TeacherFile $teacherFile, array $data)
     {
-        if (request()->hasFile('content')) {
-            $file = request()->file('content');
-            Storage::delete($teacherFile->file_path);
-            $data['file_path'] = $file->store('teachers/' . $teacherFile->teacher_id, 's3');
-            if (isset($data['content_type'])) {
-                $data['content_type'] = $file->getMimeType();
+        DB::beginTransaction();
+        try {
+            if ($file = request()->file('content')) {
+                // Before delete, move to another storage first
+                Storage::disk('s3')->move($teacherFile->file_path, 'teachers/deleted/' . $teacherFile->file_name);
+
+                $data['file_path'] = $file->store('teachers/' . $teacherFile->teacher_id, 's3');
+                if (isset($data['content_type'])) {
+                    $data['content_type'] = $file->getMimeType();
+                }
+
+                $data['content'] = Storage::disk('s3')->url($data['file_path']);
+                $data['file_name'] = $file->getClientOriginalName();
+                $data['file_extension'] = $file->getClientOriginalExtension();
+                $data['file_size'] = $file->getSize();
             }
-            $data['content'] = Storage::disk('s3')->url($data['file_path']);
-            $data['file_name'] = $file->getClientOriginalName();
-            $data['file_extension'] = $file->getClientOriginalExtension();
-            $data['file_size'] = $file->getSize();
+    
+            $teacherFile->update($data);
+    
+            Storage::delete('teachers/deleted/' . $teacherFile->file_name);
+            DB::commit();
+            return $teacherFile;
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            if ($data['file_path']){
+                Storage::disk('s3')->delete($data['file_path']);
+                Storage::disk('s3')->move('teachers/deleted/' . $teacherFile->file_name, $teacherFile->file_path);
+            }
+            throw new TeacherFileException('Filed to upload file. Please contact Administrator. ' . $th->getMessage());
         }
-
-        $teacherFile->update($data);
-
-        return $teacherFile;
+        
     }
 
     /**
