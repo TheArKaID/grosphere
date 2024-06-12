@@ -25,7 +25,7 @@ class StoreTeacherFileRequest extends FormRequest
         return [
             'name' => 'nullable|string|max:255',
             'content' => ['required', new ContentMustBeFileOrString],
-            'content_type' => 'required|string|max:255'
+            'content_type' => 'nullable|string|max:255'
         ];
     }
 }
