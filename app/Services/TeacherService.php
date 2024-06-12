@@ -21,6 +21,7 @@ class TeacherService
     ) {
         $this->teacher = $teacher;
         $this->userService = $userService;
+        $this->teacherFile = $teacherFile;
         // $this->liveClassService = $liveClassService;
     }
 
@@ -250,16 +251,17 @@ class TeacherService
     public function createTeacherFile(int $teacherId, array $data)
     {
         $data['teacher_id'] = $teacherId;
+        $file = request()->file('content');
         
         if (!isset($data['content_type'])) {
-            $data['content_type'] = request()->file('content')->getMimeType();
+            $data['content_type'] = $file->getMimeType();
         }
 
-        $data['file_path'] = request()->file('content')->store('teachers/' . $teacherId, 's3');
+        $data['file_path'] = $file->store('teachers/' . $teacherId, 's3');
         $data['content'] = Storage::disk('s3')->url($data['file_path']);
-        $data['file_name'] = request()->file('content')->getClientOriginalName();
-        $data['file_extension'] = request()->file('content')->getClientOriginalExtension();
-        $data['file_size'] = request()->file('content')->getSize();
+        $data['file_name'] = $file->getClientOriginalName();
+        $data['file_extension'] = $file->getClientOriginalExtension();
+        $data['file_size'] = $file->getSize();
 
         return $this->teacherFile->create($data);
     }
@@ -275,15 +277,16 @@ class TeacherService
     public function updateTeacherFile(TeacherFile $teacherFile, array $data)
     {
         if (request()->hasFile('content')) {
+            $file = request()->file('content');
             Storage::delete($teacherFile->file_path);
-            $data['file_path'] = request()->file('content')->store('teachers/' . $teacherFile->teacher_id, 's3');
+            $data['file_path'] = $file->store('teachers/' . $teacherFile->teacher_id, 's3');
             if (isset($data['content_type'])) {
-                $data['content_type'] = request()->file('content')->getMimeType();
+                $data['content_type'] = $file->getMimeType();
             }
             $data['content'] = Storage::disk('s3')->url($data['file_path']);
-            $data['file_name'] = request()->file('content')->getClientOriginalName();
-            $data['file_extension'] = request()->file('content')->getClientOriginalExtension();
-            $data['file_size'] = request()->file('content')->getSize();
+            $data['file_name'] = $file->getClientOriginalName();
+            $data['file_extension'] = $file->getClientOriginalExtension();
+            $data['file_size'] = $file->getSize();
         }
 
         $teacherFile->update($data);
@@ -305,5 +308,29 @@ class TeacherService
         $teacherFile->delete();
 
         return true;
+    }
+
+    /**
+     * Get total of teacher file size
+     * 
+     * @param int $teacherId
+     * 
+     * @return int
+     */
+    public function getTotalFileSize(int $teacherId)
+    {
+        return $this->teacherFile->where('teacher_id', $teacherId)->sum('file_size');
+    }
+
+    /**
+     * Get total of teacher file size
+     * 
+     * @param int $teacherId
+     * 
+     * @return int
+     */
+    public function getTotalFileSizeMb(int $teacherId)
+    {
+        return round($this->getTotalFileSize($teacherId) / 1024 / 1024);
     }
 }
