@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -31,5 +32,17 @@ class TeacherFile extends Model
     public function teacher()
     {
         return $this->belongsTo(Teacher::class);
+    }
+
+    /**
+     * Parse the file_size from bytes to mega bytes
+     * 
+     * @return string
+     */
+    public function fileSize(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => round($value / 1024 / 1024, 2)
+        );
     }
 }
