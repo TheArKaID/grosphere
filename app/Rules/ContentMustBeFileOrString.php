@@ -22,7 +22,7 @@ class ContentMustBeFileOrString implements Rule
         // Validate as file
         return $value->isValid() &&
                in_array($value->extension(), ['pdf', 'mp4', 'mov', 'jpg', 'jpeg', 'png']) &&
-               $value->getSize() <= 200 * 1024 * 1024;
+               $value->getSize() <= 100 * 1024 * 1024;
     }
 
     /**
@@ -32,6 +32,6 @@ class ContentMustBeFileOrString implements Rule
      */
     public function message()
     {
-        return 'The :attribute must be a file (pdf, mp4, mov, jpg, jpeg, or png up to 200MB) or a string.';
+        return 'The :attribute must be a file (pdf, mp4, mov, jpg, jpeg, or png up to 100MB) or a string.';
     }
 }
