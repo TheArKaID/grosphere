@@ -27,7 +27,7 @@ class TeacherFileController extends Controller
             'message' => "Success",
             'data' => [
                 'meta' => [
-                    'max_size' => round(env('TEACHER_MAX_FILE_SIZE', '261440000') / 1024 / 1024, 2),
+                    'max_size' => $this->teacherService->getMaxFileSizeMb(),
                     'used_size' => $this->teacherService->getTotalFileSizeMb(auth()->user()->detail->id)
                 ],
                 'files' => $this->teacherService->getAllTeacherFile(auth()->user()->detail->id)
