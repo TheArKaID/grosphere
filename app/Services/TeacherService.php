@@ -331,11 +331,18 @@ class TeacherService
      */
     public function deleteTeacherFile(TeacherFile $teacherFile)
     {
-        Storage::delete($teacherFile->content);
+        DB::beginTransaction();
+        try {
+            $teacherFile->delete();
 
-        $teacherFile->delete();
+            Storage::delete($teacherFile->content);
 
-        return true;
+            DB::commit();
+            return true;
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            throw new TeacherFileException('Filed to delete file. Please contact Administrator. ' . $th->getMessage());
+        }
     }
 
     /**
