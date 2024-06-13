@@ -6,8 +6,9 @@ use App\Exceptions\MailException;
 
 class MailService 
 {
-    function __construct(
-        protected array $config,
+    protected $config;
+
+    public function __construct(
         protected \GuzzleHttp\Client $client
     ) {
         $this->config = config('mail.mailers.mail-blast');
