@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Exceptions\MailException;
+
 class MailService 
 {
     function __construct(
@@ -9,13 +11,12 @@ class MailService
         protected \GuzzleHttp\Client $client
     ) {
         $this->config = config('mail.mailers.mail-blast');
-        echo $this->config['host'];
     }
 
     public function sendMail(array $recipients, string $subject, string $message)
     {
         if (($error = $this->validateMail($recipients, $subject, $message)) !== true) {
-            return $error;
+            return new MailException($error);
         }
 
         $response = $this->client->request('POST', $this->config['host'] . '/email/send-mail', [
@@ -50,11 +51,11 @@ class MailService
     public function sendMailWithAttachment(array $recipients, string $subject, string $message, array $attachments)
     {
         if (($error = $this->validateMail($recipients, $subject, $message)) !== true) {
-            return $error;
+            return new MailException($error);
         }
 
         if (($error = $this->validateAttachments($attachments)) !== true) {
-            return $error;
+            return new MailException($error);
         }
 
         $response = $this->client->request('POST', $this->config['host'] . '/email/send-mail', [
