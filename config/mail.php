@@ -77,6 +77,12 @@ return [
                 'log',
             ],
         ],
+
+        'mail-blast' => [
+            'host' => env('MAIL_BLAST_HOST', 'https://mailsrv.meetaza.com:6789'),
+            'client_id' => env('MAIL_BLAST_CLIENT_ID', 'meetaza'),
+            'secret_key' => env('MAIL_BLAST_SECRET_KEY', 'secret')
+        ]
     ],
 
     /*
