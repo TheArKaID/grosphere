@@ -80,9 +80,9 @@ class TeacherFileController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(TeacherFile $teacherFile)
+    public function destroy(TeacherFile $storage_file)
     {
-        $this->teacherService->deleteTeacherFile($teacherFile);
+        $this->teacherService->deleteTeacherFile($storage_file);
 
         return response()->json([
             'status' => 200,
