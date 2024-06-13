@@ -29,7 +29,7 @@ class MailService
             'body' => json_encode([
                 'to' => $recipients,
                 'subject' => $subject,
-                'message' => [
+                'content' => [
                     'type' => 'text/html',
                     'value' => $message,
                 ]
