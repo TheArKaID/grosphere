@@ -333,6 +333,10 @@ class TeacherService
     {
         DB::beginTransaction();
         try {
+            if ($teacherFile->teacher_id != auth()->user()->detail->id) {
+                throw new TeacherFileException('You are not authorized to delete this file.');
+            }
+
             $teacherFile->delete();
 
             Storage::delete($teacherFile->content);
