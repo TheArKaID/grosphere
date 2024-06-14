@@ -163,7 +163,7 @@ class AgencyService
         ]);
 
         $data['photo'] = base64_decode(substr($data['photo'], strpos($data['photo'], ",")+1));
-        Storage::disk('s3')->put('admins/' . $admin->id . '.png', $data['photo']);
+        Storage::disk('s3')->put('users/' . $admin->id . '.png', $data['photo']);
 
         DB::commit();
 
