@@ -110,8 +110,10 @@ class UserService
 	{
 		DB::beginTransaction();
 		$user = $this->user->findOrFail($id);
-		$user->name = $data['name'] ?? $user->name;
+		$user->first_name = $data['first_name'] ?? $user->first_name;
+		$user->last_name = $data['last_name'] ?? $user->last_name;
 		$user->email = $data['email'] ?? $user->email;
+		$user->username = $data['username'] ?? $user->username;
 		$user->phone = $data['phone'] ?? $user->phone;
 		$user->status = $data['status'] ?? $user->status;
 
