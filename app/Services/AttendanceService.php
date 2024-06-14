@@ -49,14 +49,14 @@ class AttendanceService
                 $q->where(function ($query) use ($search) {
                     $query->whereHas('student', function ($query) use ($search) {
                         $query->whereHas('user', function ($query) use ($search) {
-                            $query->where('name', 'like', "%$search%");
+                            $query->where('first_name', 'like', '%' . $search . '%')->orWhere('last_name', 'like', '%' . $search . '%');
                         });
                     });
                 })
                 ->orWhere(function ($query)  use ($search) {
                     $query->whereHas('admin', function ($query) use ($search) {
                         $query->whereHas('user', function ($query) use ($search) {
-                            $query->where('name', 'like', "%$search%");
+                            $query->where('first_name', 'like', '%' . $search . '%')->orWhere('last_name', 'like', '%' . $search . '%');
                         });
                     });
                 });

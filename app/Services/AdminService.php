@@ -113,7 +113,7 @@ class AdminService
     {
         return $this->admin
             ->whereHas('user', function ($query) use ($search) {
-                $query->where('name', 'like', '%' . $search . '%');
+                $query->where('first_name', 'like', '%' . $search . '%')->orWhere('last_name', 'like', '%' . $search . '%');
             });
     }
 }

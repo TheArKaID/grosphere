@@ -24,7 +24,7 @@ class PaymentSubscriptionService
     {
         if ($search = request()->get('search')) {
             $this->subscription = $this->subscription->withWhereHas('student.user', function ($query) use ($search) {
-                $query->where('name', 'like', "%$search%");
+                $query->where('first_name', 'like', '%' . $search . '%')->orWhere('last_name', 'like', '%' . $search . '%');
             });
         }
         if (request()->has('page') && request()->get('page') == 'all') {

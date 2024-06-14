@@ -35,8 +35,10 @@ class TeacherService
     {
         if (request()->has('search')) {
             $this->teacher = $this->teacher->whereHas('user', function ($query) {
-                $query->where('name', 'like', '%' . request()->get('search') . '%')
-                    ->orWhere('email', 'like', '%' . request()->get('search') . '%')
+                $query->where('first_name', 'like', '%' . request()->get('search') . '%')
+                    ->orWhere('last_name', 'like', '%' . request()->get('search') . '%')
+					->orWhere('email', 'like', '%' . request()->get('search') . '%')
+					->orWhere('username', 'like', '%' . request()->get('search') . '%')
                     ->orWhere('phone', 'like', '%' . request()->get('search') . '%');
             });
         }

@@ -32,8 +32,10 @@ class UserService
 	{
 		if (request()->has('page') && request()->get('page') == 'all') {
 			if (request()->has('search')) {
-				$this->user = $this->user->where('name', 'like', '%' . request()->get('search') . '%')
-					->orWhere('email', 'like', '%' . request()->get('search') . '%');
+				$this->user = $this->user->where('first_name', 'like', '%' . request()->get('search') . '%')
+					->orWhere('last_name', 'like', '%' . request()->get('search') . '%')
+					->orWhere('email', 'like', '%' . request()->get('search') . '%')
+					->orWhere('username', 'like', '%' . request()->get('search') . '%');
 			}
 			return $this->user->get();
 		}
