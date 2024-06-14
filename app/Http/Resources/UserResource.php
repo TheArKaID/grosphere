@@ -38,7 +38,7 @@ class UserResource extends JsonResource
                 return Storage::disk('s3')->url('guardians/' . $this->detail->id . '.png');
                 break;
             case 'admin':
-                return asset('storage/user/' . $this->id . "/profile.png");
+                return Storage::disk('s3')->url('admins/' . $this->detail->id . '.png');
                 break;
             default:
                 return asset('images/user/profile.png');
