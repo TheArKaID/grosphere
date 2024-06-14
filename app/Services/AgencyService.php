@@ -147,9 +147,11 @@ class AgencyService
     public function createAdmin(Agency $agency, array $data)
     {
         DB::beginTransaction();
+        $cred = isset($data['email']) ? 'email' : 'username';
         $user = $agency->users()->create([
-            'name' => $data['name'],
-            'email' => $data['email'],
+            'first_name' => $data['first_name'],
+            'last_name' => $data['last_name'],
+            $cred => $data[$cred],
             'agency_id' => $agency->id,
             'password' => bcrypt($data['password'])
         ]);

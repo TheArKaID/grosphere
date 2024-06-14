@@ -103,8 +103,10 @@ class AgencyController extends Controller
     public function createAdmin(Request $request, Agency $agency)
     {
         $data = $request->validate([
-            'name' => 'required|string',
-            'email' => 'required|email|unique:users,email',
+            'first_name' => 'required|string',
+            'last_name' => 'required|string',
+            'email' => ['sometimes', 'email', 'unique:users,email'],
+            'username' => 'required_without:email|string|max:255|unique:users,username',
             'password' => ['required', 'confirmed', 'string', Password::min(8)->letters()->numbers()->mixedCase()],
             'photo' => 'required|string',
         ], [
