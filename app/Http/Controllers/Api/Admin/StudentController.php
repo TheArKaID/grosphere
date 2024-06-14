@@ -88,13 +88,15 @@ class StudentController extends Controller
     public function update(UpdateStudentRequest $request, Student $student)
     {
         $validated = $request->validate([
-            'name' => 'string|max:255',
+            'first_name' => 'string|max:255',
+            'last_name' => 'string|max:255',
             'birth_date' => 'nullable|date_format:d-m-Y',
             'birth_place' => 'nullable|string|max:255',
             'gender' => 'nullable|numeric|between:0,1',
             'address' => 'nullable|string',
             'phone' => 'nullable|string|min:8|max:50',
-            'email' => 'nullable|email|unique:users,email,' . $student->user_id,
+            'email' => 'sometimes|string|email|max:255|unique:users,email,' . $student->user_id,
+            'username' => 'required_without:email|string|max:255|unique:users,username,' . $student->user_id,
             'id_number' => 'nullable|string|max:25',
             'photo' => 'nullable|string',
             'password' => ['nullable', 'confirmed', Password::min(8)->letters()->numbers()->mixedCase()]

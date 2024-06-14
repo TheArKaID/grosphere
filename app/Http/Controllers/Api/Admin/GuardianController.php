@@ -88,8 +88,10 @@ class GuardianController extends Controller
     public function update(UpdateGuardianRequest $request, Guardian $guardian)
     {
         $validated = $request->validate([
-            'name' => 'nullable|string|max:255',
-            'email' => 'nullable|string|email|max:255|unique:users,email,' . $guardian->user_id,
+            'first_name' => 'nullable|string|max:255',
+            'last_name' => 'nullable|string|max:255',
+            'email' => 'sometimes|string|email|max:255|unique:users,email,' . $guardian->user_id,
+            'username' => 'required_without:email|string|max:255|unique:users,username,' . $guardian->user_id,
             'phone' => 'nullable|string|min:8|max:50',
             'photo' => 'nullable|string',
             'address' => 'nullable|string|max:255',
