@@ -19,8 +19,10 @@ class GuardianResource extends JsonResource
         return $this->resource ? [
             'id' => $this->id,
             'students' => StudentResource::collection($this->whenLoaded('students')),
-            'name' => $this->user?->name,
+            'first_name' => $this->user?->first_name,
+            'last_name' => $this->user?->last_name,
             'email' => $this->user?->email,
+            'username' => $this->user?->username,
             'phone' => $this->user?->phone,
             'address' => $this->address,
             'status' => $this->user?->status,

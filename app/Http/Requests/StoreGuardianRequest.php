@@ -25,8 +25,10 @@ class StoreGuardianRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => ['sometimes', 'email', 'unique:users,email'],
+            'username' => 'required_without:email|string|max:255|unique:users,username',
             'password' => ['required', 'confirmed', Password::min(8)->letters()->numbers()->mixedCase()],
             'phone' => 'nullable|string|min:8|max:50',
             'address' => 'nullable|string|max:255',
