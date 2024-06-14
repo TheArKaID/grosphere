@@ -93,7 +93,7 @@ class TeacherController extends Controller
             'phone' => 'nullable|string|min:8|max:50',
             'photo' => 'nullable|string',
             'email' => 'sometimes|email|string|max:255|unique:users,email,' . $teacher->user_id,
-            'username' => 'required_without:email|string|max:255|unique:users,username,' . $teacher->user_id,
+            'username' => 'sometimes|string|max:255|unique:users,username,' . $teacher->user_id,
             'password' => ['nullable', 'confirmed', Password::min(8)->letters()->numbers()->mixedCase()]
         ], [
             'password.confirmed' => 'Password confirmation does not match',
