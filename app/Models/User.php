@@ -15,8 +15,10 @@ use Spatie\Permission\Traits\HasRoles;
 /**
  * @property integer $id
  * @property integer $agency_id
- * @property string $name
+ * @property string $first_name
+ * @property string $last_name
  * @property string $email
+ * @property string $username
  * @property string $phone
  * @property string $email_verified_at
  * @property string $password
@@ -44,7 +46,7 @@ class User extends Authenticatable implements JWTSubject
     /**
      * @var array
      */
-    protected $fillable = ['agency_id', 'name', 'email', 'phone', 'email_verified_at', 'password', 'status', 'remember_token', 'created_at', 'updated_at'];
+    protected $fillable = ['agency_id', 'first_name', 'last_name', 'email', 'username', 'phone', 'email_verified_at', 'password', 'status', 'remember_token', 'created_at', 'updated_at'];
 
     /**
      * The attributes that should be hidden for serialization.
