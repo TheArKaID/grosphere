@@ -20,8 +20,10 @@ class StudentResource extends JsonResource
         return $this->resource ? [
             'id' => $this->id,
             'id_number' => $this->id_number,
-            'name' => $this->user->name,
+            'first_name' => $this->user->first_name,
+            'last_name' => $this->user->last_name,
             'email' => $this->user->email,
+            'username' => $this->user->username,
             'phone' => $this->user->phone,
             'gender' => $this->gender,
             'birth_date' => Carbon::parse($this->birth_date)->toDateTimeString(),

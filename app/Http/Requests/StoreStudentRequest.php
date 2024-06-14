@@ -9,6 +9,13 @@ use Illuminate\Validation\Rules\Password;
 class StoreStudentRequest extends FormRequest
 {
     /**
+     * Indicates if the validator should stop on the first rule failure.
+     *
+     * @var bool
+     */
+    protected $stopOnFirstFailure = true;
+
+    /**
      * Determine if the user is authorized to make this request.
      *
      * @return bool
@@ -26,8 +33,10 @@ class StoreStudentRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string|max:255',
-            'email' => ['required', 'email', 'unique:users,email'],
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => ['sometimes', 'email', 'unique:users,email'],
+            'username' => 'required_without:email|string|max:255|unique:users,username',
             'password' => ['required', 'confirmed', Password::min(8)->letters()->numbers()->mixedCase()],
             'phone' => 'nullable|string|min:8|max:50',
             'birth_date' => 'nullable|date_format:d-m-Y',
