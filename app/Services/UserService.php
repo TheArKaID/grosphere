@@ -148,7 +148,11 @@ class UserService
 	 */
 	public function login($data)
 	{
-		$user = $this->user->where('email', $data['email']);
+		if ($this->isValidEmail($data['email'])) {
+			$user = $this->user->where('email', $data['email']);
+		} else {
+			$user = $this->user->where('username', $data['email']);
+		}
 
 		$user = $user->first();
 
@@ -156,6 +160,18 @@ class UserService
 			return false;
 		}
 		return $user;
+	}
+
+	/**
+	 * Validate if email is a valid email format
+	 * 
+	 * @param string $email
+	 * 
+	 * @return boolean
+	 */
+	public function isValidEmail($email)
+	{
+		return filter_var($email, FILTER_VALIDATE_EMAIL);
 	}
 
 	/**
