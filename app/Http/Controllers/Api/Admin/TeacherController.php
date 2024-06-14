@@ -88,10 +88,12 @@ class TeacherController extends Controller
     public function update(UpdateTeacherRequest $request, Teacher $teacher)
     {
         $validated = $request->validate([
-            'name' => 'nullable|string|max:255',
+            'first_name' => 'nullable|string|max:255',
+            'last_name' => 'nullable|string|max:255',
             'phone' => 'nullable|string|min:8|max:50',
             'photo' => 'nullable|string',
-            'email' => 'nullable|email|string|max:255|unique:users,email,' . $teacher->user_id,
+            'email' => 'sometimes|email|string|max:255|unique:users,email,' . $teacher->user_id,
+            'username' => 'nullable|string|string|max:255|unique:users,username,' . $teacher->user_id,
             'password' => ['nullable', 'confirmed', Password::min(8)->letters()->numbers()->mixedCase()]
         ], [
             'password.confirmed' => 'Password confirmation does not match',

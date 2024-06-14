@@ -19,10 +19,12 @@ class TeacherResource extends JsonResource
         return $this->resource ? [
             'id' => $this->id,
             'user_id' => $this->user_id,
-            'name' => $this->user->name,
+            'first_name' => $this->user->first_name,
+            'last_name' => $this->user->last_name,
             'email' => $this->user->email,
+            'username' => $this->user->username,
             'phone' => $this->user->phone,
-            'courseTeachers' => $this->whenLoaded('courseTeachers') ? CourseTeacherResource::collection($this->courseTeachers) : [],
+            'courseTeachers' => CourseTeacherResource::collection($this->whenLoaded('courseTeachers')),
             'status' => $this->user->status,
             'photo' => Storage::disk('s3')->url('teachers/' . $this->id . '.png'),
             'created_at' => $this->created_at
