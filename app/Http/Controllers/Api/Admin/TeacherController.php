@@ -11,8 +11,6 @@ use App\Http\Resources\TeacherCollection;
 use App\Http\Resources\TeacherResource;
 use App\Models\Teacher;
 use App\Services\TeacherService;
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rules\Password;
 
 class TeacherController extends Controller
 {
@@ -87,42 +85,9 @@ class TeacherController extends Controller
      */
     public function update(UpdateTeacherRequest $request, Teacher $teacher)
     {
-        $validated = $request->validate([
-            'first_name' => 'nullable|string|max:255',
-            'last_name' => 'nullable|string|max:255',
-            'phone' => 'nullable|string|min:8|max:50',
-            'photo' => 'nullable|string',
-            'email' => [
-                'nullable', 'email',
-                function ($attribute, $value, $fail) {
-                    if ($value && $attribute->username) {
-                        $fail('The username field must be null when email is provided.');
-                    }
-                },
-                'unique:users,email,' . $teacher->id
-            ],
-            'username' => [
-                'nullable',
-                function ($attribute, $value, $fail) {
-                    if (!$attribute->email && !$value) {
-                        $fail('The username field is required when email is not provided.');
-                    }
-                    if ($attribute->email && $value) {
-                        $fail('The username field must be null when email is provided.');
-                    }
-                },
-                'required_without:email', 'unique:users,username,' . $teacher->id
-            ],
-            'password' => ['nullable', 'confirmed', Password::min(8)->letters()->numbers()->mixedCase()]
-        ], [
-            'password.confirmed' => 'Password confirmation does not match',
-            'password.min' => 'Password must be at least 8 characters',
-            'password.letters' => 'Password must contain at least one letter',
-            'password.numbers' => 'Password must contain at least one number',
-            'password.mixed' => 'Password must contain at least one uppercase and one lowercase letter',
-        ]);
+        $data = $request->validated();
 
-        $teacher = $this->teacherService->update($teacher->id, $validated);
+        $teacher = $this->teacherService->update($teacher->id, $data);
 
         return response()->json([
             'status' => 200,

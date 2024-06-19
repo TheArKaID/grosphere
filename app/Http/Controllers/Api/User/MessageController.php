@@ -33,6 +33,31 @@ class MessageController extends Controller
     }
 
     /**
+     * Store a new message
+     * 
+     * @param Request $request
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function store(Request $request)
+    {
+        $data = $request->validate([
+            'recipient_id' => 'required|uuid|exists:users,id',
+            'message' => 'required|string',
+            'attachments' => 'nullable|array',
+            'attachments.*' => 'file|mimes:jpg,jpeg,png,pdf,mp4|max:20480'
+        ]);
+
+        $this->msgService->storeMessage($data);
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Message sent successfully',
+            'data' => ''
+        ], 200);
+    }
+
+    /**
      * Get Users are allowed to send messages to
      * 
      * @param Request $request

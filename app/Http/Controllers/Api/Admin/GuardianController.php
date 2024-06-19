@@ -9,10 +9,8 @@ use App\Http\Requests\UpdateGuardianRequest;
 use App\Http\Requests\UpdatePasswordRequest;
 use App\Http\Resources\GuardianResource;
 use App\Models\Guardian;
-use App\Models\Student;
 use App\Services\GuardianService;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rules\Password;
 
 class GuardianController extends Controller
 {
@@ -81,50 +79,14 @@ class GuardianController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  UpdateGuardianRequest  $request
      * @param  Guardian  $guardian
      * @return \Illuminate\Http\Response
      */
     public function update(UpdateGuardianRequest $request, Guardian $guardian)
     {
-        $validated = $request->validate([
-            'first_name' => 'nullable|string|max:255',
-            'last_name' => 'nullable|string|max:255',
-            'email' => [
-                'nullable', 'email',
-                function ($attribute, $value, $fail) {
-                    if ($value && $attribute->username) {
-                        $fail('The username field must be null when email is provided.');
-                    }
-                },
-                'unique:users,email,' . $guardian->id
-            ],
-            'username' => [
-                'nullable',
-                function ($attribute, $value, $fail) {
-                    if (!$attribute->email && !$value) {
-                        $fail('The username field is required when email is not provided.');
-                    }
-                    if ($attribute->email && $value) {
-                        $fail('The username field must be null when email is provided.');
-                    }
-                },
-                'required_without:email', 'unique:users,username,' . $guardian->id
-            ],
-            'phone' => 'nullable|string|min:8|max:50',
-            'photo' => 'nullable|string',
-            'address' => 'nullable|string|max:255',
-            'student_ids' => 'required|array',
-            'student_ids.*' => 'integer|exists:students,id',
-            'password' => ['nullable', 'confirmed', Password::min(8)->letters()->numbers()->mixedCase()]
-        ], [
-            'password.confirmed' => 'Password confirmation does not match',
-            'password.min' => 'Password must be at least 8 characters',
-            'password.letters' => 'Password must contain at least one letter',
-            'password.numbers' => 'Password must contain at least one number',
-            'password.mixed' => 'Password must contain at least one uppercase and one lowercase letter',
-        ]);
-        $guardian = new GuardianResource($this->guardianService->update($guardian->id, $validated));
+        $data = $request->validated();
+        $guardian = new GuardianResource($this->guardianService->update($guardian->id, $data));
 
         return response()->json([
             'status' => 200,

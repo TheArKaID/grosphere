@@ -11,7 +11,6 @@ use App\Http\Resources\StudentResource;
 use App\Models\Student;
 use App\Services\StudentService;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rules\Password;
 
 class StudentController extends Controller
 {
@@ -81,53 +80,14 @@ class StudentController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param UpdateStudentRequest $request
      * @param Student $student
      * @return \Illuminate\Http\Response
      */
     public function update(UpdateStudentRequest $request, Student $student)
     {
-        $validated = $request->validate([
-            'first_name' => 'string|max:255',
-            'last_name' => 'string|max:255',
-            'birth_date' => 'nullable|date_format:Y-m-d',
-            'birth_place' => 'nullable|string|max:255',
-            'gender' => 'nullable|numeric|between:0,1',
-            'address' => 'nullable|string',
-            'phone' => 'nullable|string|min:8|max:50',
-            'email' => [
-                'nullable', 'email',
-                function ($attribute, $value, $fail) {
-                    if ($value && $attribute->username) {
-                        $fail('The username field must be null when email is provided.');
-                    }
-                },
-                'unique:users,email,' . $student->id
-            ],
-            'username' => [
-                'nullable',
-                function ($attribute, $value, $fail) {
-                    if (!$attribute->email && !$value) {
-                        $fail('The username field is required when email is not provided.');
-                    }
-                    if ($attribute->email && $value) {
-                        $fail('The username field must be null when email is provided.');
-                    }
-                },
-                'required_without:email', 'unique:users,username,' . $student->id
-            ],
-            'id_number' => 'nullable|string|max:25',
-            'photo' => 'nullable|string',
-            'password' => ['nullable', 'confirmed', Password::min(8)->letters()->numbers()->mixedCase()]
-        ], [
-            'password.confirmed' => 'Password confirmation does not match',
-            'password.min' => 'Password must be at least 8 characters',
-            'password.letters' => 'Password must contain at least one letter',
-            'password.numbers' => 'Password must contain at least one number',
-            'password.mixed' => 'Password must contain at least one uppercase and one lowercase letter',
-        ]);
-
-        $student = new StudentResource($this->studentService->updateStudent($student->id, $validated));
+        $data = $request->validated();
+        $student = new StudentResource($this->studentService->updateStudent($student->id, $data));
 
         return response()->json([
             'status' => 200,

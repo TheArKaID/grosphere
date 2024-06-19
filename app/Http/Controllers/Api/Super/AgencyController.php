@@ -4,13 +4,12 @@ namespace App\Http\Controllers\Api\Super;
 
 use App\Exceptions\ModelGetEmptyException;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreAdminRequest;
 use App\Http\Requests\StoreAgencyRequest;
 use App\Http\Requests\UpdateAgencyRequest;
 use App\Http\Resources\AgencyResource;
 use App\Models\Agency;
 use App\Services\AgencyService;
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rules\Password;
 
 class AgencyController extends Controller
 {
@@ -95,47 +94,14 @@ class AgencyController extends Controller
     /**
      * Create Admin User
      * 
-     * @param Request $request
+     * @param StoreAdminRequest $request
      * @param Agency $agency
      * 
      * @return \Illuminate\Http\JsonResponse
      */
-    public function createAdmin(Request $request, Agency $agency)
+    public function createAdmin(StoreAdminRequest $request, Agency $agency)
     {
-        $data = $request->validate([
-            'first_name' => 'required|string',
-            'last_name' => 'required|string',
-            'email' => [
-                'nullable', 'email',
-                function ($attribute, $value, $fail) {
-                    if ($value && $attribute->username) {
-                        $fail('The username field must be null when email is provided.');
-                    }
-                },
-                'unique:users,email'
-            ],
-            'username' => [
-                'nullable',
-                function ($attribute, $value, $fail) {
-                    if (!$attribute->email && !$value) {
-                        $fail('The username field is required when email is not provided.');
-                    }
-                    if ($attribute->email && $value) {
-                        $fail('The username field must be null when email is provided.');
-                    }
-                },
-                'required_without:email', 'unique:users,username'
-            ],
-            'username' => 'required_without:email|nullable|max:255|unique:users,username',
-            'password' => ['required', 'confirmed', 'string', Password::min(8)->letters()->numbers()->mixedCase()],
-            'photo' => 'required|string',
-        ], [
-            'password.confirmed' => 'Password confirmation does not match',
-            'password.min' => 'Password must be at least 8 characters',
-            'password.letters' => 'Password must contain at least one letter',
-            'password.numbers' => 'Password must contain at least one number',
-            'password.mixed' => 'Password must contain at least one uppercase and one lowercase letter',
-        ]);
+        $data = $request->validated();
 
         $adminUser = $this->agencyService->createAdmin($agency, $data);
 

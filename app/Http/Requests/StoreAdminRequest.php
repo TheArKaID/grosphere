@@ -5,28 +5,26 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Password;
 
-class UpdateGuardianRequest extends FormRequest
+class StoreAdminRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
-     *
-     * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
-        return $this->user()->hasRole('admin');
+        return true;
     }
 
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules()
+    public function rules(): array
     {
         return [
-            'first_name' => 'nullable|string|max:255',
-            'last_name' => 'nullable|string|max:255',
+            'first_name' => 'required|string',
+            'last_name' => 'required|string',
             'email' => [
                 'nullable', 'email',
                 function ($attribute, $value, $fail) {
@@ -34,35 +32,32 @@ class UpdateGuardianRequest extends FormRequest
                         $fail('The username field must be null when email is provided.');
                     }
                 },
-                'unique:users,email,' . $this->guardian->id
+                'unique:users,email'
             ],
             'username' => [
                 'nullable',
                 function ($attribute, $value, $fail) {
-                    if (!$this->email && !$value) {
+                    if (!$attribute->email && !$value) {
                         $fail('The username field is required when email is not provided.');
                     }
-                    if ($this->email && $value) {
+                    if ($attribute->email && $value) {
                         $fail('The username field must be null when email is provided.');
                     }
                 },
-                'required_without:email', 'unique:users,username,' . $this->guardian->id
+                'required_without:email', 'unique:users,username'
             ],
-            'phone' => 'nullable|string|min:8|max:50',
-            'photo' => 'nullable|string',
-            'address' => 'nullable|string|max:255',
-            'student_ids' => 'required|array',
-            'student_ids.*' => 'integer|exists:students,id',
-            'password' => ['nullable', 'confirmed', Password::min(8)->letters()->numbers()->mixedCase()]
+            'username' => 'required_without:email|nullable|max:255|unique:users,username',
+            'password' => ['required', 'confirmed', 'string', Password::min(8)->letters()->numbers()->mixedCase()],
+            'photo' => 'required|string',
         ];
     }
 
     /**
-     * Messages for validation rules
+     * Messages for validation rules.
      * 
-     * @return array
+     * @return array<string, string>
      */
-    public function messages()
+    public function messages(): array
     {
         return [
             'password.confirmed' => 'Password confirmation does not match',
