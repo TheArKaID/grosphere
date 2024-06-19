@@ -22,8 +22,8 @@ class StoreAttendanceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'student_id' => 'required|integer|exists:students,id',
-            'guardian_id' => 'required|integer|exists:guardians,id',
+            'student_id' => 'required|string|exists:students,id',
+            'guardian_id' => 'required|string|exists:guardians,id',
             'temperature' => 'required|string|max:255',
             'remark' => 'nullable|string|max:25500',
             'type' => 'required|string|in:in,out',
@@ -40,10 +40,10 @@ class StoreAttendanceRequest extends FormRequest
     {
         return [
             'student_id.required' => 'Student ID is required',
-            'student_id.integer' => 'Student ID must be an integer',
+            'student_id.string' => 'Student ID must be a string',
             'student_id.exists' => 'Student ID does not exist',
             'guardian_id.required' => 'Guardian ID is required',
-            'guardian_id.integer' => 'Guardian ID must be an integer',
+            'guardian_id.string' => 'Guardian ID must be a string',
             'guardian_id.exists' => 'Guardian ID does not exist',
             'temperature.required' => 'Temperature is required',
             'temperature.string' => 'Temperature must be a string',

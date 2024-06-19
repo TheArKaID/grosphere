@@ -52,7 +52,7 @@ class UpdateGuardianRequest extends FormRequest
             'photo' => 'nullable|string',
             'address' => 'nullable|string|max:255',
             'student_ids' => 'required|array',
-            'student_ids.*' => 'integer|exists:students,id',
+            'student_ids.*' => 'exists:students,id',
             'password' => ['nullable', 'confirmed', Password::min(8)->letters()->numbers()->mixedCase()]
         ];
     }
