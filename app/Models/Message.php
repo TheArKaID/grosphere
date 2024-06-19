@@ -53,4 +53,22 @@ class Message extends Model
     {
         return $this->belongsTo(User::class, 'sender_id');
     }
+    
+    /**
+     * Boot
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        if (auth()->check() && !auth()->user()->hasRole('superadmin')) {
+            static::addGlobalScope('agency', function ($builder) {
+                $builder->whereHas('sender', function ($query) {
+                    $query->where('agency_id', auth()->user()->agency_id);
+                })->orWhereHas('recipient', function ($query) {
+                    $query->where('agency_id', auth()->user()->agency_id);
+                });
+            });
+        }
+    }
 }
