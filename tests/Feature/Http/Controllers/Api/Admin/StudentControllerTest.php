@@ -28,7 +28,7 @@ class StudentControllerTest extends TestCase
             'gender' => rand(0, 1),
             'address' => $this->faker->address,
             'id_number' => (string)$this->faker->unique()->numberBetween(100000000, 999999999),
-            'birth_date' => $this->faker->date('d-m-Y'),
+            'birth_date' => $this->faker->date('Y-m-d'),
             'birth_place' => $this->faker->city,
             'password' => $password,
             'password_confirmation' => $password
@@ -96,7 +96,7 @@ class StudentControllerTest extends TestCase
         $student = [
             'name' => $this->faker->name,
             'birth_place' => $this->faker->city,
-            'birth_date' => $this->faker->date('d-m-Y'),
+            'birth_date' => $this->faker->date('Y-m-d'),
             'address' => $this->faker->address,
             'gender' => rand(0, 1)
         ];

@@ -25,7 +25,7 @@ class StoreAgendaRequest extends FormRequest
     {
         return [
             'detail' => 'required|string',
-            'date' => 'required|date_format:d-m-Y H:i',
+            'date' => 'required|date_format:Y-m-d H:i',
         ];
     }
 }

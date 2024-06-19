@@ -32,7 +32,7 @@ class LiveClassControllerTest extends TestCase
                 'tutor_id' => self::$tutorId,
                 'name' => $this->faker->name,
                 'description' => $this->faker->text,
-                'start_time' => $this->faker->dateTimeBetween('-10 minutes')->format('d-m-Y H:i:s'),
+                'start_time' => $this->faker->dateTimeBetween('-10 minutes')->format('Y-m-d H:i:s'),
                 'duration' => $this->faker->numberBetween(30, 60),
                 'mic_on' => '1',
                 'cam_on' => '1'

@@ -57,7 +57,7 @@ class ProfileControllerTest extends TestCase
             'name' => $this->faker->name,
             'email' => $this->faker->email,
             'address' => $this->faker->address,
-            'birth_date' => $this->faker->date('d-m-Y'),
+            'birth_date' => $this->faker->date('Y-m-d'),
             'birth_place' => $this->faker->city,
             'gender' => 1
         ];

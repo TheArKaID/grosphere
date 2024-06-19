@@ -90,7 +90,7 @@ class StudentController extends Controller
         $validated = $request->validate([
             'first_name' => 'string|max:255',
             'last_name' => 'string|max:255',
-            'birth_date' => 'nullable|date_format:d-m-Y',
+            'birth_date' => 'nullable|date_format:Y-m-d',
             'birth_place' => 'nullable|string|max:255',
             'gender' => 'nullable|numeric|between:0,1',
             'address' => 'nullable|string',

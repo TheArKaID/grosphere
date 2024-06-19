@@ -39,7 +39,7 @@ class StoreStudentRequest extends FormRequest
             'username' => 'required_without:email|nullable|max:255|unique:users,username',
             'password' => ['required', 'confirmed', Password::min(8)->letters()->numbers()->mixedCase()],
             'phone' => 'nullable|string|min:8|max:50',
-            'birth_date' => 'nullable|date_format:d-m-Y',
+            'birth_date' => 'nullable|date_format:Y-m-d',
             'birth_place' => 'nullable|string|max:100',
             'gender' => 'nullable|string|between:M,F',
             'address' => 'nullable|string',
