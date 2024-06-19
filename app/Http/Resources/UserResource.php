@@ -18,9 +18,10 @@ class UserResource extends JsonResource
         parent::wrap('users');
         return [
             'id' => $this->id,
-            'name' => $this->name,
+            'first_name' => $this->first_name,
+            'last_name' => $this->last_name,
             'email' => $this->email,
-            'roles' => $this->roles->pluck('name'),
+            'roles' => $this->roles->pluck('name')[0],
             'photo' => $this->getPhoto(),
             'detail' => $this->getDetail(),
         ];

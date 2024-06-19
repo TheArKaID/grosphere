@@ -24,8 +24,8 @@ use App\Http\Controllers\Api\Teacher\ClassSessionController as TeacherClassSessi
 use App\Http\Controllers\Api\Teacher\TeacherFileController;
 use App\Http\Controllers\Api\User\AgendaController;
 use App\Http\Controllers\Api\User\AnnouncementController as UserAnnouncementController;
+use App\Http\Controllers\Api\User\MessageController;
 use App\Http\Controllers\Api\User\ProfileController as UserProfileController;
-use App\Services\MailService;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -38,17 +38,6 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
-Route::get('get', function () {
-    $x = app()->make(MailService::class);
-
-    $y = $x->sendMail([
-        ['email' => 'arka.progammer@gmail.com',
-        'name' => 'Arka Programmer']
-    ], 'Test Email', '<h2>Halo, saya ArKa</h2>');
-
-    return $y;
-});
 
 Route::prefix('auth')->group(function () {
     // Route::post('register', [AuthController::class, 'register']);
@@ -181,6 +170,13 @@ Route::middleware(['auth:api'])->group(function () {
         Route::put('/', [UserProfileController::class, 'update'])->name('profile.update');
         Route::put('password', [UserProfileController::class, 'updatePassword'])->name('profile.update.password');
         Route::get('theme', [UserProfileController::class, 'getTheme'])->name('profile.theme');
+
+        // Route::get('messages', [MessageController::class, 'index'])->name('messages.index');
+        // Route::post('messages', [MessageController::class, 'store'])->name('messages.store');
+        Route::prefix('messages')->group(function () {
+            Route::get('recipient', [MessageController::class, 'getRecipients'])->name('messages.recipient');
+        });
+
     });
 
     Route::post('auth/logout', [AuthController::class, 'logout']);
