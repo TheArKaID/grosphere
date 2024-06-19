@@ -13,7 +13,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('agencies', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->string('name');
             $table->string('phone', 50)->nullable()->default(null);
             $table->string('email')->nullable()->default(null);
@@ -25,11 +25,6 @@ return new class extends Migration
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
         });
-        DB::table('agencies')->updateOrInsert(['id' => 1], [
-            'name' => 'Grosphere X',
-            'created_at' => now(),
-            'updated_at' => now()
-        ]);
     }
 
     /**

@@ -14,10 +14,10 @@ class CreateCourseStudentsTable extends Migration
     public function up()
     {
         Schema::create('course_students', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('course_work_id')->constrained();
-            $table->foreignId('student_id')->constrained();
-            $table->foreignId('subscription_id')->constrained();
+            $table->uuid('id')->primary();
+            $table->foreignUuid('course_work_id')->constrained();
+            $table->foreignUuid('student_id')->constrained();
+            $table->foreignUuid('subscription_id')->constrained();
             $table->tinyInteger('status')->default(1);
             $table->tinyInteger('type')->default(1);
             $table->timestamps();

@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('quizzes', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('class_session_id')->constrained();
+            $table->uuid('id')->primary();
+            $table->foreignUuid('class_session_id')->constrained();
             $table->string('title');
             $table->string('description')->nullable();
             $table->dateTime('start_date');

@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('chapters', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('curriculum_id')->constrained();
+            $table->uuid('id')->primary();
+            $table->foreignUuid('curriculum_id')->constrained();
             $table->string('name')->nullable();
             $table->text('description')->nullable()->default(null);
             $table->mediumText('content');

@@ -14,8 +14,8 @@ class CreateAgendasTable extends Migration
     public function up()
     {
         Schema::create('agendas', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->constrained();
+            $table->uuid('id')->primary();
+            $table->foreignUuid('user_id')->constrained();
             $table->text('detail');
             $table->dateTime('date');
             $table->timestamps();

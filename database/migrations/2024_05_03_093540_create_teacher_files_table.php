@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('teacher_files', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('teacher_id')->constrained('teachers')->cascadeOnDelete();
+            $table->uuid('id')->primary();
+            $table->foreignUuid('teacher_id')->constrained('teachers')->cascadeOnDelete();
             $table->string('name')->nullable()->default(null);
             $table->mediumText('content')->nullable()->default(null);
             $table->string('content_type')->nullable()->default(null);

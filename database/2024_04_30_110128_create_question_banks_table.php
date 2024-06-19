@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('question_banks', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->foreignId('course_work_id')->constrained();
             $table->string('title');
             $table->integer('difficulty');
