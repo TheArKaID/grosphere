@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('subscriptions', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('student_id')->constrained();
-            $table->foreignId('course_work_id')->constrained();
+            $table->uuid('id')->primary();
+            $table->foreignUuid('student_id')->constrained();
+            $table->foreignUuid('course_work_id')->constrained();
             $table->decimal('price', 15, 2);
             $table->enum('currency', ['idr', 'sgd'])->default('idr');
             $table->integer('active_days');

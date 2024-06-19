@@ -12,14 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('attendances', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('student_id')->constrained()->onDelete('cascade');
-            $table->foreignId('guardian_id')->nullable()->constrained()->nullOnDelete();
+            $table->uuid('id')->primary();
+            $table->foreignUuid('student_id')->constrained()->onDelete('cascade');
+            $table->foreignUuid('guardian_id')->nullable()->constrained()->nullOnDelete();
             $table->string('temperature');
             $table->text('remark')->nullable()->default(null);
             $table->enum('type', ['in', 'out']);
             $table->string('proof');
-            $table->foreignId('admin_id')->default(null)->nullable()->constrained()->nullOnDelete();
+            $table->foreignUuid('admin_id')->default(null)->nullable()->constrained()->nullOnDelete();
             $table->timestamps();
         });
     }

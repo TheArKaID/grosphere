@@ -12,10 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('student_classes', function (Blueprint $table) {
-            $table->unsignedBigInteger('student_id')->after('course_student_id');
-            $table->foreign('student_id')->references('id')->on('students');
-
-            $table->unsignedBigInteger('course_student_id')->nullable()->default(null)->change();
+            $table->foreignUuid('student_id')->after('course_student_id')->references('id')->on('students');
+            $table->foreignUuid('course_student_id')->nullable()->default(null)->change();
         });
     }
 
@@ -28,7 +26,7 @@ return new class extends Migration
             $table->dropForeign(['student_id']);
             $table->dropColumn('student_id');
 
-            $table->unsignedBigInteger('course_student_id')->nullable(false)->change();
+            $table->foreignUuid('course_student_id')->nullable(false)->change();
         });
     }
 };

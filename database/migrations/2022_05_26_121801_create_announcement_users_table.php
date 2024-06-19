@@ -14,9 +14,9 @@ class CreateAnnouncementUsersTable extends Migration
     public function up()
     {
         Schema::create('announcement_users', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('announcement_id')->constrained('announcements');
-            $table->foreignId('user_id')->constrained('users');
+            $table->uuid('id')->primary();
+            $table->foreignUuid('announcement_id')->constrained('announcements');
+            $table->foreignUuid('user_id')->constrained('users');
             $table->timestamps();
         });
     }

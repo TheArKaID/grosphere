@@ -14,8 +14,8 @@ class CreateCourseWorksTable extends Migration
     public function up()
     {
         Schema::create('course_works', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('curriculum_id')->nullable()->constrained();
+            $table->uuid('id')->primary();
+            $table->foreignUuid('curriculum_id')->nullable()->constrained();
             $table->string('subject');
             $table->integer('grade');
             $table->integer('term');
