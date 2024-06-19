@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\User;
 
 use App\Exceptions\MessageException;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreMessageRequest;
 use App\Http\Resources\UserResource;
 use App\Services\MessageService;
 use Illuminate\Http\Request;
@@ -41,12 +42,8 @@ class MessageController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'recipient_id' => 'required|uuid|exists:users,id',
-            'message' => 'required|string',
-            'attachments' => 'nullable|array',
-            'attachments.*' => 'file|mimes:jpg,jpeg,png,pdf,mp4|max:20480'
-        ]);
+        dd($request->all());
+        $data = $request->validated();
 
         $this->msgService->storeMessage($data);
 
@@ -57,6 +54,29 @@ class MessageController extends Controller
         ], 200);
     }
 
+    /**
+     * Show a message
+     * 
+     * @param Request $request
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function show(Request $request)
+    {
+
+    }
+
+    /**
+     * Update a message
+     * 
+     * @param Request $request
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function update(Request $request)
+    {
+
+    }
     /**
      * Get Users are allowed to send messages to
      * 

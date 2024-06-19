@@ -39,19 +39,19 @@ class UpdateStudentRequest extends FormRequest
                         $fail('The username field must be null when email is provided.');
                     }
                 },
-                'unique:users,email,' . $this->student->id
+                'unique:users,email,' . $this->student->user_id
             ],
             'username' => [
                 'nullable',
                 function ($attribute, $value, $fail) {
-                    if (!$attribute->email && !$value) {
+                    if (!$this->email && !$value) {
                         $fail('The username field is required when email is not provided.');
                     }
-                    if ($attribute->email && $value) {
+                    if ($this->email && $value) {
                         $fail('The username field must be null when email is provided.');
                     }
                 },
-                'required_without:email', 'unique:users,username,' . $this->student->id
+                'required_without:email', 'unique:users,username,' . $this->student->user_id
             ],
             'id_number' => 'nullable|string|max:25',
             'photo' => 'nullable|string',

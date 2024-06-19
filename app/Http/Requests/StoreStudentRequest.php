@@ -47,10 +47,10 @@ class StoreStudentRequest extends FormRequest
             'username' => [
                 'nullable',
                 function ($attribute, $value, $fail) {
-                    if (!$attribute->email && !$value) {
+                    if (!$this->email && !$value) {
                         $fail('The username field is required when email is not provided.');
                     }
-                    if ($attribute->email && $value) {
+                    if ($this->email && $value) {
                         $fail('The username field must be null when email is provided.');
                     }
                 },

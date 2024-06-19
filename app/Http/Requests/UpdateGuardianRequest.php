@@ -34,7 +34,7 @@ class UpdateGuardianRequest extends FormRequest
                         $fail('The username field must be null when email is provided.');
                     }
                 },
-                'unique:users,email,' . $this->guardian->id
+                'unique:users,email,' . $this->guardian->user_id
             ],
             'username' => [
                 'nullable',
@@ -46,7 +46,7 @@ class UpdateGuardianRequest extends FormRequest
                         $fail('The username field must be null when email is provided.');
                     }
                 },
-                'required_without:email', 'unique:users,username,' . $this->guardian->id
+                'required_without:email', 'unique:users,username,' . $this->guardian->user_id
             ],
             'phone' => 'nullable|string|min:8|max:50',
             'photo' => 'nullable|string',
