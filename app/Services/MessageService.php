@@ -16,7 +16,7 @@ class MessageService
      * 
      * @return Collection
      */
-    public function getRecipients(string $userId = null): Collection
+    public function getRecipients(string $userId = null, string $search = ''): Collection
     {
         if (!$userId) {
             $userId = Auth::id();
@@ -24,34 +24,36 @@ class MessageService
 
         $user = User::find($userId);
 
+        if (!$user) {
+            throw new MessageException('User not found');
+        }
+
+        $users = $search ? User::where(function ($query) use ($search) {
+            $query->where('first_name', 'like', "%$search%")->orWhere('last_name', 'like', "%$search%");
+        }) : User::query();
+
         switch ($user->roles()->first()?->name) {
             case 'superadmin':
-                return User::whereHas('roles', function ($query) {
-                    $query->whereIn('name', ['admin']);
-                })->get();
+                $userRecipients = ['admin'];
                 break;
             case 'admin':
-                return User::whereHas('roles', function ($query) {
-                    $query->whereIn('name', ['superadmin', 'guardian', 'student', 'teacher']);
-                })->get();
+                $userRecipients = ['superadmin', 'guardian', 'student', 'teacher'];
                 break;
             case 'guardian':
-                return User::whereHas('roles', function ($query) {
-                    $query->whereIn('name', ['admin', 'teacher']);
-                })->get();
+                $userRecipients = ['admin', 'teacher'];
                 break;
             case 'student':
-                return User::whereHas('roles', function ($query) {
-                    $query->whereIn('name', ['teacher']);
-                })->get();
+                $userRecipients = ['teacher'];
                 break;
             case 'teacher':
-                return User::whereHas('roles', function ($query) {
-                    $query->whereIn('name', ['admin', 'student', 'parent']);
-                })->get();
+                $userRecipients = ['admin', 'student', 'parent'];
                 break;
             default:
                 throw new MessageException('User not found');
         }
+
+        return  $users->whereHas('roles', function ($query) use ($userRecipients) {
+            $query->whereIn('name', $userRecipients);
+        })->get();
     }
 }
