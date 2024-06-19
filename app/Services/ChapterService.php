@@ -35,7 +35,7 @@ class ChapterService
     /**
      * Get One Chapter
      * 
-     * @param int $id
+     * @param string $id
      * 
      * @return Chapter
      */

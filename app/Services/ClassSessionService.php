@@ -48,7 +48,7 @@ class ClassSessionService
     /**
      * Get One ClassSession
      * 
-     * @param int $id
+     * @param string $id
      * 
      * @return ClassSession
      */
@@ -64,7 +64,7 @@ class ClassSessionService
     /**
      * Get Class Session detail for enrolled student
      * 
-     * @param int $id
+     * @param string $id
      * 
      * @return ClassSession
      */
@@ -85,7 +85,7 @@ class ClassSessionService
     /**
      * Check if student already enrolled
      * 
-     * @param int $id
+     * @param string $id
      * @param int $studentId
      * 
      * @return bool
@@ -100,7 +100,7 @@ class ClassSessionService
     /**
      * Check if the class session schedule is today
      * 
-     * @param int $id
+     * @param string $id
      * 
      * @return bool
      */
@@ -262,7 +262,7 @@ class ClassSessionService
     /**
      * End the class session
      * 
-     * @param int $id
+     * @param string $id
      * @param array $data
      * 
      * @return void

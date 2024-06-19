@@ -49,7 +49,7 @@ class ClassSessionController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(int $id)
+    public function show(string $id)
     {
         $classSession = new ClassSessionResource($this->classSessionService->getOne($id));
 
@@ -80,11 +80,11 @@ class ClassSessionController extends Controller
      * End the class session.
      * 
      * @param \Illuminate\Http\Request $request
-     * @param int $id
+     * @param string $id
      * 
      * @return \Illuminate\Http\JsonResponse
      */
-    public function end(Request $request, int $id)
+    public function end(Request $request, string $id)
     {
         $data = $request->validate([
             'summary' => 'required|string',

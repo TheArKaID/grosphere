@@ -36,7 +36,7 @@ class PaymentSubscriptionService
     /**
      * Get One Subscription
      * 
-     * @param int $id
+     * @param string $id
      * 
      * @return Subscription
      */

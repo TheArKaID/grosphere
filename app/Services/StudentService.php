@@ -154,12 +154,12 @@ class StudentService
 	/**
 	 * Update guardian_id
 	 * 
-	 * @param int $id
+	 * @param string $id
 	 * @param array $guardian_ids
 	 * 
 	 * @return Student
 	 */
-	public function syncGuardians(int $id, array $guardian_ids)
+	public function syncGuardians(string $id, array $guardian_ids)
 	{
 		$student = $this->getById($id);
 		$student->guardians()->sync($guardian_ids);
@@ -170,12 +170,12 @@ class StudentService
 	/**
 	 * Change Student's password
 	 * 
-	 * @param int $id
+	 * @param string $id
 	 * @param string $password
 	 * 
 	 * @return bool
 	 */
-	public function changePassword(int $id, string $password)
+	public function changePassword(string $id, string $password)
 	{
 		$student = $this->getById($id);
 
@@ -187,12 +187,12 @@ class StudentService
 	/**
 	 * Change Student's password by Student
 	 * 
-	 * @param int $id
+	 * @param string $id
 	 * @param array $data
 	 * 
 	 * @return bool
 	 */
-	public function changePasswordByStudent(int $id, array $data)
+	public function changePasswordByStudent(string $id, array $data)
 	{
 		$student = $this->getById($id);
 

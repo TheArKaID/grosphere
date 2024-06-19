@@ -65,7 +65,7 @@ class TeacherController extends Controller
      * @param int $teacher
      * @return \Illuminate\Http\Response
      */
-    public function show(int $id)
+    public function show(string $id)
     {
         $teacher = $this->teacherService->getById($id);
 
@@ -99,10 +99,10 @@ class TeacherController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param int $id
+     * @param string $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(int $id)
+    public function destroy(string $id)
     {
         $this->teacherService->delete($id);
 
@@ -116,11 +116,11 @@ class TeacherController extends Controller
      * Change Password
      * 
      * @param App\Http\Requests\UpdatePasswordRequest $request
-     * @param int $id
+     * @param string $id
      * 
      * @return \Illuminate\Http\Response
      */
-    public function changePassword(UpdatePasswordRequest $request, int $id)
+    public function changePassword(UpdatePasswordRequest $request, string $id)
     {
         $validated = $request->validated();
 

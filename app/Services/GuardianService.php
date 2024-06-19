@@ -61,10 +61,10 @@ class GuardianService
     /**
      * Get Guardian By Id
      * 
-     * @param int $id
+     * @param string $id
      * @return Guardian
      */
-    public function getById(int $id)
+    public function getById(string $id)
     {
         return $this->guardians->findOrFail($id);
     }
@@ -105,11 +105,11 @@ class GuardianService
     /**
      * Update Guardian
      * 
-     * @param int $id
+     * @param string $id
      * @param array $data
      * @return Guardian
      */
-    public function update(int $id, array $data)
+    public function update(string $id, array $data)
     {
         DB::beginTransaction();
 
@@ -133,10 +133,10 @@ class GuardianService
     /**
      * Delete Guardian
      * 
-     * @param int $id
+     * @param string $id
      * @return bool
      */
-    public function delete(int $id)
+    public function delete(string $id)
     {
         DB::beginTransaction();
 
@@ -166,12 +166,12 @@ class GuardianService
     /**
      * Change Guardian Password
      * 
-     * @param int $id
+     * @param string $id
      * @param string $password
      * 
      * @return bool
      */
-    public function changePassword(int $id, string $password)
+    public function changePassword(string $id, string $password)
     {
         $guardian = $this->getById($id);
 

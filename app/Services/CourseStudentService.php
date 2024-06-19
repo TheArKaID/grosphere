@@ -47,7 +47,7 @@ class CourseStudentService
     /**
      * Get Course Student
      * 
-     * @param int $id
+     * @param string $id
      * @return CourseStudent
      */
     public function getById($id)
@@ -58,7 +58,7 @@ class CourseStudentService
     /**
      * Get by id and tutor id
      * 
-     * @param int $id
+     * @param string $id
      * @param int $tutorId
      * 
      * @return CourseStudent
@@ -75,7 +75,7 @@ class CourseStudentService
     /**
      * Get by id and Student id
      * 
-     * @param int $id
+     * @param string $id
      * @param int $studentId
      * 
      * @return CourseStudent
@@ -121,7 +121,7 @@ class CourseStudentService
     /**
      * Update Course Student
      * 
-     * @param int $id
+     * @param string $id
      * @param array $data
      * @return CourseStudent
      */
@@ -136,7 +136,7 @@ class CourseStudentService
     /**
      * Delete Course Student
      * 
-     * @param int $id
+     * @param string $id
      * @return bool
      */
     public function delete($id)

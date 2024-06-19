@@ -37,7 +37,7 @@ class CourseWorkService
     /**
      * Get One CourseWork
      * 
-     * @param int $id
+     * @param string $id
      * 
      * @return CourseWork
      */

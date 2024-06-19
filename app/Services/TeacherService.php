@@ -61,10 +61,10 @@ class TeacherService
     /**
      * Get Teacher By Id
      * 
-     * @param int $id
+     * @param string $id
      * @return Teacher
      */
-    public function getById(int $id)
+    public function getById(string $id)
     {
         return $this->teacher->findOrFail($id);
     }
@@ -102,11 +102,11 @@ class TeacherService
     /**
      * Update Teacher
      * 
-     * @param int $id
+     * @param string $id
      * @param array $data
      * @return Teacher
      */
-    public function update(int $id, array $data)
+    public function update(string $id, array $data)
     {
         DB::beginTransaction();
 
@@ -128,10 +128,10 @@ class TeacherService
     /**
      * Delete Teacher
      * 
-     * @param int $id
+     * @param string $id
      * @return bool
      */
-    public function delete(int $id)
+    public function delete(string $id)
     {
         DB::beginTransaction();
 
@@ -148,12 +148,12 @@ class TeacherService
     /**
      * Change Teacher Password
      * 
-     * @param int $id
+     * @param string $id
      * @param string $password
      * 
      * @return bool
      */
-    public function changePassword(int $id, string $password)
+    public function changePassword(string $id, string $password)
     {
         $teacher = $this->getById($id);
 
@@ -165,12 +165,12 @@ class TeacherService
     /**
      * Change Teacher's password By Teacher
      * 
-     * @param int $id
+     * @param string $id
      * @param array $data
      * 
      * @return bool
      */
-    public function changePasswordByTeacher(int $id, array $data)
+    public function changePasswordByTeacher(string $id, array $data)
     {
         $teacher = $this->getById($id);
 
@@ -202,7 +202,7 @@ class TeacherService
     /**
      * Teacher leave Live Class
      * 
-     * @param int $id
+     * @param string $id
      * 
      * @return bool
      */
@@ -234,11 +234,11 @@ class TeacherService
     /**
      * Get Teacher File By Id
      * 
-     * @param int $id
+     * @param string $id
      * 
      * @return TeacherFile
      */
-    public function getTeacherFileById(int $id)
+    public function getTeacherFileById(string $id)
     {
         return $this->teacherFile->findOrFail($id);
     }

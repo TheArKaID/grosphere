@@ -36,7 +36,7 @@ class AgencyService
     /**
      * Get One Agency
      * 
-     * @param int $id
+     * @param string $id
      * 
      * @return Agency
      */
@@ -75,7 +75,7 @@ class AgencyService
     /**
      * Update Agency
      * 
-     * @param int $id
+     * @param string $id
      * @param array $data
      * 
      * @return Agency
@@ -108,7 +108,7 @@ class AgencyService
     /**
      * Delete Agency
      * 
-     * @param int $id
+     * @param string $id
      * 
      * @return \App\Models\Agency
      */

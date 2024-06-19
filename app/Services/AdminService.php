@@ -35,7 +35,7 @@ class AdminService
     /**
      * Get One Admin
      * 
-     * @param int $id
+     * @param string $id
      * 
      * @return Admin
      */
@@ -69,7 +69,7 @@ class AdminService
     /**
      * Update Admin
      * 
-     * @param int $id
+     * @param string $id
      * @param array $data
      * 
      * @return Admin
@@ -88,7 +88,7 @@ class AdminService
     /**
      * Delete Admin
      * 
-     * @param int $id
+     * @param string $id
      * 
      * @return \App\Models\Admin
      */

@@ -63,7 +63,7 @@ class StudentController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param int $id
+     * @param string $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -99,7 +99,7 @@ class StudentController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param int $id
+     * @param string $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
@@ -116,7 +116,7 @@ class StudentController extends Controller
      * Change Password 
      * 
      * @param App\Http\Requests\UpdatePasswordRequest $request
-     * @param int $id
+     * @param string $id
      * 
      * @return \Illuminate\Http\Response
      */
@@ -136,7 +136,7 @@ class StudentController extends Controller
      * Sync Guardians
      * 
      * @param \Illuminate\Http\Request $request
-     * @param int $id
+     * @param string $id
      * 
      * @return \Illuminate\Http\Response
      */

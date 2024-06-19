@@ -34,7 +34,7 @@ class CurriculumService
     /**
      * Get One Curriculum
      * 
-     * @param int $id
+     * @param string $id
      * 
      * @return Curriculum
      */

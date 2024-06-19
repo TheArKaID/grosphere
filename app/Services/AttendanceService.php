@@ -188,7 +188,7 @@ class AttendanceService
      * 
      * @return array
      */
-    function find(int $id, int $guardian_id = null) : array
+    function find(string $id, int $guardian_id = null) : array
     {
         $in = $this->attendance->where('type', 'in')->where(function ($query) use ($guardian_id) {
             if ($guardian_id) {

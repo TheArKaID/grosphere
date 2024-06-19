@@ -45,7 +45,7 @@ class UserService
 	/**
 	 * Get user by id
 	 *
-	 * @param int $id
+	 * @param string $id
 	 * @return User
 	 */
 	public function getById($id)
@@ -78,7 +78,7 @@ class UserService
 	/**
 	 * Update user
 	 *
-	 * @param int $id
+	 * @param string $id
 	 * @param array $data
 	 * @return App\Models\User
 	 */
@@ -103,7 +103,7 @@ class UserService
 	/**
 	 * Update user for specific role
 	 * 
-	 * @param int $id
+	 * @param string $id
 	 * @param array $data
 	 * 
 	 * @return Illuminate\Database\Eloquent\Model
@@ -134,7 +134,7 @@ class UserService
 	/**
 	 * Upload profile photo
 	 * 
-	 * @param int $id
+	 * @param string $id
 	 * @param string $role
 	 * @param string $photo
 	 * 
@@ -183,7 +183,7 @@ class UserService
 	/**
 	 * Delete user
 	 *
-	 * @param int $id
+	 * @param string $id
 	 * @return boolean
 	 */
 	public function deleteUser($id)
@@ -195,7 +195,7 @@ class UserService
 	/**
 	 * Change user password
 	 * 
-	 * @param int $id
+	 * @param string $id
 	 * @param string $password
 	 * 
 	 * @return User
@@ -211,7 +211,7 @@ class UserService
 	// /**
 	//  * User Join Live Class
 	//  * 
-	//  * @param int $id
+	//  * @param string $id
 	//  * 
 	//  * @return LiveUser
 	//  */
@@ -233,7 +233,7 @@ class UserService
 	// /**
 	//  * User leave Live Class
 	//  * 
-	//  * @param int $id
+	//  * @param string $id
 	//  * 
 	//  * @return bool
 	//  */
