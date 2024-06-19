@@ -114,7 +114,7 @@ class StudentController extends Controller
                         $fail('The username field must be null when email is provided.');
                     }
                 },
-                'unique:users,username,' . $student->id
+                'required_without:email', 'unique:users,username,' . $student->id
             ],
             'id_number' => 'nullable|string|max:25',
             'photo' => 'nullable|string',

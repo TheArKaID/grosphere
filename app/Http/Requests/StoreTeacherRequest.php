@@ -46,7 +46,7 @@ class StoreTeacherRequest extends FormRequest
                         $fail('The username field must be null when email is provided.');
                     }
                 },
-                'unique:users,username'
+                'required_without:email', 'unique:users,username'
             ],
             'password' => ['required', 'confirmed', Password::min(8)->letters()->numbers()->mixedCase()],
             'phone' => 'nullable|string|min:8|max:50',

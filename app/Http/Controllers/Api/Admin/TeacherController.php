@@ -111,7 +111,7 @@ class TeacherController extends Controller
                         $fail('The username field must be null when email is provided.');
                     }
                 },
-                'unique:users,username,' . $teacher->id
+                'required_without:email', 'unique:users,username,' . $teacher->id
             ],
             'password' => ['nullable', 'confirmed', Password::min(8)->letters()->numbers()->mixedCase()]
         ], [

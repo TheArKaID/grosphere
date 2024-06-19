@@ -105,7 +105,27 @@ class AgencyController extends Controller
         $data = $request->validate([
             'first_name' => 'required|string',
             'last_name' => 'required|string',
-            'email' => ['nullable', 'email', 'unique:users,email'],
+            'email' => [
+                'nullable', 'email',
+                function ($attribute, $value, $fail) {
+                    if ($value && $attribute->username) {
+                        $fail('The username field must be null when email is provided.');
+                    }
+                },
+                'unique:users,email'
+            ],
+            'username' => [
+                'nullable',
+                function ($attribute, $value, $fail) {
+                    if (!$attribute->email && !$value) {
+                        $fail('The username field is required when email is not provided.');
+                    }
+                    if ($attribute->email && $value) {
+                        $fail('The username field must be null when email is provided.');
+                    }
+                },
+                'required_without:email', 'unique:users,username'
+            ],
             'username' => 'required_without:email|nullable|max:255|unique:users,username',
             'password' => ['required', 'confirmed', 'string', Password::min(8)->letters()->numbers()->mixedCase()],
             'photo' => 'required|string',

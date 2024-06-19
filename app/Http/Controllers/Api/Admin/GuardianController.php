@@ -109,7 +109,7 @@ class GuardianController extends Controller
                         $fail('The username field must be null when email is provided.');
                     }
                 },
-                'unique:users,username,' . $guardian->id
+                'required_without:email', 'unique:users,username,' . $guardian->id
             ],
             'phone' => 'nullable|string|min:8|max:50',
             'photo' => 'nullable|string',
