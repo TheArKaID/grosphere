@@ -95,8 +95,27 @@ class StudentController extends Controller
             'gender' => 'nullable|numeric|between:0,1',
             'address' => 'nullable|string',
             'phone' => 'nullable|string|min:8|max:50',
-            'email' => 'sometimes|string|email|max:255|unique:users,email,' . $student->user_id,
-            'username' => 'sometimes|string|max:255|unique:users,username,' . $student->user_id,
+            'email' => [
+                'nullable', 'email',
+                function ($attribute, $value, $fail) {
+                    if ($value && $attribute->username) {
+                        $fail('The username field must be null when email is provided.');
+                    }
+                },
+                'unique:users,email,' . $student->id
+            ],
+            'username' => [
+                'nullable',
+                function ($attribute, $value, $fail) {
+                    if (!$attribute->email && !$value) {
+                        $fail('The username field is required when email is not provided.');
+                    }
+                    if ($attribute->email && $value) {
+                        $fail('The username field must be null when email is provided.');
+                    }
+                },
+                'unique:users,username,' . $student->id
+            ],
             'id_number' => 'nullable|string|max:25',
             'photo' => 'nullable|string',
             'password' => ['nullable', 'confirmed', Password::min(8)->letters()->numbers()->mixedCase()]

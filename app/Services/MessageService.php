@@ -28,7 +28,7 @@ class MessageService
             case 'superadmin':
                 return User::whereHas('roles', function ($query) {
                     $query->whereIn('name', ['admin']);
-                });
+                })->get();
                 break;
             case 'admin':
                 return User::whereHas('roles', function ($query) {
@@ -38,17 +38,17 @@ class MessageService
             case 'guardian':
                 return User::whereHas('roles', function ($query) {
                     $query->whereIn('name', ['admin', 'teacher']);
-                });
+                })->get();
                 break;
             case 'student':
                 return User::whereHas('roles', function ($query) {
                     $query->whereIn('name', ['teacher']);
-                });
+                })->get();
                 break;
             case 'teacher':
                 return User::whereHas('roles', function ($query) {
                     $query->whereIn('name', ['admin', 'student', 'parent']);
-                });
+                })->get();
                 break;
             default:
                 throw new MessageException('User not found');

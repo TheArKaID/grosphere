@@ -92,8 +92,27 @@ class TeacherController extends Controller
             'last_name' => 'nullable|string|max:255',
             'phone' => 'nullable|string|min:8|max:50',
             'photo' => 'nullable|string',
-            'email' => 'sometimes|email|string|max:255|unique:users,email,' . $teacher->user_id,
-            'username' => 'sometimes|string|max:255|unique:users,username,' . $teacher->user_id,
+            'email' => [
+                'nullable', 'email',
+                function ($attribute, $value, $fail) {
+                    if ($value && $attribute->username) {
+                        $fail('The username field must be null when email is provided.');
+                    }
+                },
+                'unique:users,email,' . $teacher->id
+            ],
+            'username' => [
+                'nullable',
+                function ($attribute, $value, $fail) {
+                    if (!$attribute->email && !$value) {
+                        $fail('The username field is required when email is not provided.');
+                    }
+                    if ($attribute->email && $value) {
+                        $fail('The username field must be null when email is provided.');
+                    }
+                },
+                'unique:users,username,' . $teacher->id
+            ],
             'password' => ['nullable', 'confirmed', Password::min(8)->letters()->numbers()->mixedCase()]
         ], [
             'password.confirmed' => 'Password confirmation does not match',

@@ -34,7 +34,7 @@ class StoreGuardianRequest extends FormRequest
             'address' => 'nullable|string|max:255',
             'photo' => 'required|string',
             'student_ids' => 'required|array',
-            'student_ids.*' => 'integer|exists:students,id',
+            'student_ids.*' => 'string|exists:students,id',
         ];
     }
 

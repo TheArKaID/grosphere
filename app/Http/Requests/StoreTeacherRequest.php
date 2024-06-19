@@ -27,8 +27,27 @@ class StoreTeacherRequest extends FormRequest
         return [
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'email' => ['nullable', 'email', 'unique:users,email'],
-            'username' => 'required_without:email|nullable|max:255|unique:users,username',
+            'email' => [
+                'nullable', 'email',
+                function ($attribute, $value, $fail) {
+                    if ($value && $this->username) {
+                        $fail('The username field must be null when email is provided.');
+                    }
+                },
+                'unique:users,email'
+            ],
+            'username' => [
+                'nullable',
+                function ($attribute, $value, $fail) {
+                    if (!$this->email && !$value) {
+                        $fail('The username field is required when email is not provided.');
+                    }
+                    if ($this->email && $value) {
+                        $fail('The username field must be null when email is provided.');
+                    }
+                },
+                'unique:users,username'
+            ],
             'password' => ['required', 'confirmed', Password::min(8)->letters()->numbers()->mixedCase()],
             'phone' => 'nullable|string|min:8|max:50',
             'photo' => 'required|string',

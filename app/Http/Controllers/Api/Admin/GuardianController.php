@@ -90,8 +90,27 @@ class GuardianController extends Controller
         $validated = $request->validate([
             'first_name' => 'nullable|string|max:255',
             'last_name' => 'nullable|string|max:255',
-            'email' => 'sometimes|string|email|max:255|unique:users,email,' . $guardian->user_id,
-            'username' => 'sometimes|string|max:255|unique:users,username,' . $guardian->user_id,
+            'email' => [
+                'nullable', 'email',
+                function ($attribute, $value, $fail) {
+                    if ($value && $attribute->username) {
+                        $fail('The username field must be null when email is provided.');
+                    }
+                },
+                'unique:users,email,' . $guardian->id
+            ],
+            'username' => [
+                'nullable',
+                function ($attribute, $value, $fail) {
+                    if (!$attribute->email && !$value) {
+                        $fail('The username field is required when email is not provided.');
+                    }
+                    if ($attribute->email && $value) {
+                        $fail('The username field must be null when email is provided.');
+                    }
+                },
+                'unique:users,username,' . $guardian->id
+            ],
             'phone' => 'nullable|string|min:8|max:50',
             'photo' => 'nullable|string',
             'address' => 'nullable|string|max:255',
