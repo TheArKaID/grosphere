@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignUuid('sender_id')->constrained('users');
             $table->foreignUuid('recipient_id')->constrained('users');
             $table->text('message');
+            $table->boolean('is_read')->default(false);
             $table->timestamps();
         });
     }

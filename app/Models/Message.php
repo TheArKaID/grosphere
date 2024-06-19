@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $sender_id
  * @property string $recipient_id
  * @property string $message
+ * @property bool $is_read 
  * @property string $created_at
  * @property string $updated_at
  * @property User $user
@@ -36,7 +37,7 @@ class Message extends Model
     /**
      * @var array
      */
-    protected $fillable = ['sender_id', 'recipient_id', 'message', 'created_at', 'updated_at'];
+    protected $fillable = ['sender_id', 'recipient_id', 'message', 'is_read', 'created_at', 'updated_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
