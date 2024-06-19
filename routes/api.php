@@ -171,11 +171,10 @@ Route::middleware(['auth:api'])->group(function () {
         Route::put('password', [UserProfileController::class, 'updatePassword'])->name('profile.update.password');
         Route::get('theme', [UserProfileController::class, 'getTheme'])->name('profile.theme');
 
-        // Route::get('messages', [MessageController::class, 'index'])->name('messages.index');
-        // Route::post('messages', [MessageController::class, 'store'])->name('messages.store');
         Route::prefix('messages')->group(function () {
             Route::get('recipient', [MessageController::class, 'getRecipients'])->name('messages.recipient');
         });
+        Route::apiResource('messages', MessageController::class)->except(['destroy', 'update']);
 
     });
 

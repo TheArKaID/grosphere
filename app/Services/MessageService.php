@@ -3,12 +3,20 @@
 namespace App\Services;
 
 use App\Exceptions\MessageException;
+use App\Models\Message;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class MessageService
 {
+    public function __construct(
+        private Message $model 
+    ) {}
+
     /**
      * Get Users are allowed to send messages to
      * 
@@ -55,5 +63,37 @@ class MessageService
         return  $users->whereHas('roles', function ($query) use ($userRecipients) {
             $query->whereIn('name', $userRecipients);
         })->get();
+    }
+
+    /**
+     * Store a new message
+     * 
+     * @param array $data
+     * 
+     * @return void
+     */
+    public function storeMessage(array $data): void
+    {
+        DB::beginTransaction();
+        $mId = null;
+        try {
+            $data['sender_id'] = Auth::id();
+            $m = $this->model->create($data);
+            $mId = $m->id;
+
+            if (isset($data['attachments']) && count($data['attachments'])) {
+                foreach ($data['attachments'] as $attachment) {
+                    Storage::disk('s3')->put('messages' . DIRECTORY_SEPARATOR . $m->id, $attachment);
+                }
+            }
+            DB::commit();
+        } catch (\Throwable $th) {
+            Log::error($th);
+            DB::rollBack();
+            if ($mId) {
+                Storage::disk('s3')->deleteDirectory('messages' . DIRECTORY_SEPARATOR . $mId);
+            }
+            throw new MessageException('Failed to send message');
+        }
     }
 }

@@ -36,21 +36,19 @@ class MessageController extends Controller
     /**
      * Store a new message
      * 
-     * @param Request $request
+     * @param StoreMessageRequest $request
      * 
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request)
+    public function store(StoreMessageRequest $request)
     {
-        dd($request->all());
         $data = $request->validated();
 
         $this->msgService->storeMessage($data);
 
         return response()->json([
             'status' => 200,
-            'message' => 'Message sent successfully',
-            'data' => ''
+            'message' => 'Message sent successfully'
         ], 200);
     }
 
