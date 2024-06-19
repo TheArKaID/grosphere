@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\User;
 
+use App\Exceptions\MessageException;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use App\Services\MessageService;
@@ -40,12 +41,16 @@ class MessageController extends Controller
      */
     public function getRecipients(Request $request)
     {
-        $users = $this->msgService->getRecipients();
+        $users = UserResource::collection($this->msgService->getRecipients(search: $request->get('search')));
+
+        if ($users->count() == 0) {
+            throw new MessageException('No available recipients');
+        }
 
         return response()->json([
             'status' => 200,
             'message' => 'Success',
-            'data' => UserResource::collection($users)
+            'data' => $users
         ], 200);
     }
 }
