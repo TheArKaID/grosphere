@@ -27,8 +27,8 @@ class StoreTeacherRequest extends FormRequest
         return [
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'email' => ['sometimes', 'email', 'unique:users,email'],
-            'username' => 'required_without:email|string|max:255|unique:users,username',
+            'email' => ['nullable', 'email', 'unique:users,email'],
+            'username' => 'required_without:email|nullable|max:255|unique:users,username',
             'password' => ['required', 'confirmed', Password::min(8)->letters()->numbers()->mixedCase()],
             'phone' => 'nullable|string|min:8|max:50',
             'photo' => 'required|string',

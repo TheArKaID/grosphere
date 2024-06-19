@@ -105,8 +105,8 @@ class AgencyController extends Controller
         $data = $request->validate([
             'first_name' => 'required|string',
             'last_name' => 'required|string',
-            'email' => ['sometimes', 'email', 'unique:users,email'],
-            'username' => 'required_without:email|string|max:255|unique:users,username',
+            'email' => ['nullable', 'email', 'unique:users,email'],
+            'username' => 'required_without:email|nullable|max:255|unique:users,username',
             'password' => ['required', 'confirmed', 'string', Password::min(8)->letters()->numbers()->mixedCase()],
             'photo' => 'required|string',
         ], [
