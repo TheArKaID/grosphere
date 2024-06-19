@@ -18,6 +18,78 @@ class MessageService
     ) {}
 
     /**
+     * Get all logged in user messages
+     * 
+     * @param string|null $userId
+     * 
+     * @return Collection
+     */
+    public function getMessages(string $userId = null): Collection
+    {
+        if (!$userId) {
+            $userId = Auth::id();
+        }
+
+        $user = User::find($userId);
+
+        if (!$user) {
+            throw new MessageException('User not found');
+        }
+
+        return $this->model->where('sender_id', $userId)->orWhere('recipient_id', $userId)->get();
+    }
+
+    /**
+     * Get User that already sent messages to me or I sent messages to
+     * 
+     * @param string|null $userId
+     * 
+     * @return mixed
+     */
+    public function getConversations(string $userId = null): mixed
+    {
+        if (!$userId) {
+            $userId = Auth::id();
+        }
+
+        $user = User::find($userId);
+
+        if (!$user) {
+            throw new MessageException('User not found');
+        }
+
+        // Retrieve all messages involving the user and eager load the related sender and recipient
+        $messages = $this->model->where('sender_id', $userId)
+            ->orWhere('recipient_id', $userId)
+            ->with(['sender', 'recipient'])
+            ->get();
+
+        // Extract unique conversations
+        $conversations = $messages->map(function ($message) use ($userId) {
+            return $message->sender_id == $userId ? $message->recipient : $message->sender;
+        })->unique('id');
+
+        // Get the last message and unread count for each conversation
+        $lastMessages = $conversations->map(function ($conversation) use ($messages, $userId) {
+            $conversationMessages = $messages->filter(function ($message) use ($conversation, $userId) {
+                return ($message->sender_id == $conversation->id && $message->recipient_id == $userId) ||
+                    ($message->sender_id == $userId && $message->recipient_id == $conversation->id);
+            });
+
+            $latestMessage = $conversationMessages->sortByDesc('created_at')->first();
+            $unreadCount = $conversationMessages->where('is_read', false)->count();
+
+            return [
+                'user' => $conversation,
+                'message' => $latestMessage,
+                'unread' => $unreadCount
+            ];
+        });
+
+        return $lastMessages;
+    }
+
+    /**
      * Get Users are allowed to send messages to
      * 
      * @param string|null $userId

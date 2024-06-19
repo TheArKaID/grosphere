@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\User;
 use App\Exceptions\MessageException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreMessageRequest;
+use App\Http\Resources\MessageSenderResource;
 use App\Http\Resources\UserResource;
 use App\Services\MessageService;
 use Illuminate\Http\Request;
@@ -12,9 +13,9 @@ use Illuminate\Http\Request;
 class MessageController extends Controller
 {
     public function __construct(
-        private MessageService $msgService
+        private MessageService $service
     ) {
-        $this->msgService = $msgService;
+        $this->service = $service;
     }
 
     /**
@@ -26,10 +27,12 @@ class MessageController extends Controller
      */
     public function index(Request $request)
     {
+        $messages = MessageSenderResource::collection($this->service->getConversations());
+
         return response()->json([
             'status' => 200,
             'message' => 'Success',
-            'data' => ''
+            'data' => $messages
         ], 200);
     }
 
@@ -44,7 +47,7 @@ class MessageController extends Controller
     {
         $data = $request->validated();
 
-        $this->msgService->storeMessage($data);
+        $this->service->storeMessage($data);
 
         return response()->json([
             'status' => 200,
@@ -84,7 +87,7 @@ class MessageController extends Controller
      */
     public function getRecipients(Request $request)
     {
-        $users = UserResource::collection($this->msgService->getRecipients(search: $request->get('search')));
+        $users = UserResource::collection($this->service->getRecipients(search: $request->get('search', '')));
 
         if ($users->count() == 0) {
             throw new MessageException('No available recipients');
