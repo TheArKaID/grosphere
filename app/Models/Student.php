@@ -101,6 +101,16 @@ class Student extends Model
     }
 
     /**
+     * The classGroups that belong to the Student
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function classGroups(): BelongsToMany
+    {
+        return $this->belongsToMany(ClassGroup::class)->using(ClassGroupStudent::class)->withTimestamps();
+    }
+
+    /**
      * Boot
      */
     protected static function boot()
