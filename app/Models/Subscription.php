@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * @property integer $id
- * @property integer $student_id
- * @property integer $course_work_id
+ * @property string $id
+ * @property string $student_id
+ * @property string $course_work_id
  * @property string $currency
  * @property integer $price
  * @property integer $active_days

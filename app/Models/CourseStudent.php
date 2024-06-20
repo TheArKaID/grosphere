@@ -7,9 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * @property integer $id
- * @property integer $course_work_id
- * @property integer $student_id
+ * @property string $id
+ * @property string $course_work_id
+ * @property string $student_id
  * @property boolean $status
  * @property integer $type
  * @property string $created_at
@@ -32,7 +32,7 @@ class CourseStudent extends Model
      * 
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = 'string';
 
     /**
      * @var array

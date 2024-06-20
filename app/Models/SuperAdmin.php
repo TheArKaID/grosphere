@@ -7,8 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * @property integer $id
- * @property integer $user_id
+ * @property string $id
+ * @property string $user_id
  * @property string $created_at
  * @property string $updated_at
  * @property User $user
@@ -22,7 +22,7 @@ class SuperAdmin extends Model
      * 
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = 'string';
 
     /**
      * @var array

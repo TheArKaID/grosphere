@@ -9,9 +9,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 /**
- * @property integer $id
- * @property integer $student_id
- * @property integer $guardian_id
+ * @property string $id
+ * @property string $student_id
+ * @property string $guardian_id
  * @property string $temperature
  * @property string $remark
  * @property string $type

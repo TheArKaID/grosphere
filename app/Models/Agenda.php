@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * @property integer $id
- * @property integer $user_id
+ * @property string $id
+ * @property string $user_id
  * @property string $detail
  * @property string $date
  * @property string $created_at
@@ -23,7 +23,7 @@ class Agenda extends Model
      * 
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = 'string';
 
     /**
      * @var array

@@ -8,9 +8,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * @property integer $id
- * @property integer $user_id
- * @property integer $agency_id
+ * @property string $id
+ * @property string $user_id
+ * @property string $agency_id
  * @property string $created_at
  * @property string $updated_at
  * @property User $user
@@ -24,7 +24,7 @@ class Admin extends Model
      * 
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = 'string';
 
     /**
      * @var array

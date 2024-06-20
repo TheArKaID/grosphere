@@ -7,8 +7,8 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * @property integer $id
- * @property integer $teacher_id
+ * @property string $id
+ * @property string $teacher_id
  * @property string $name
  * @property string $content
  * @property string $content_type

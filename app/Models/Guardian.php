@@ -9,8 +9,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 /**
- * @property integer $id
- * @property integer $user_id
+ * @property string $id
+ * @property string $user_id
  * @property string $address
  * @property string $created_at
  * @property string $updated_at

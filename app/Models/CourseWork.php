@@ -7,9 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * @property integer $id
- * @property integer $agency_id
- * @property integer $curriculum_id
+ * @property string $id
+ * @property string $agency_id
+ * @property string $curriculum_id
  * @property string $subject
  * @property integer $grade
  * @property integer $term

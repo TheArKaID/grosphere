@@ -7,9 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
- * @property integer $id
- * @property integer $course_work_id
- * @property integer $teacher_id
+ * @property string $id
+ * @property string $course_work_id
+ * @property string $teacher_id
  * @property string $title
  * @property string $description
  * @property string $date

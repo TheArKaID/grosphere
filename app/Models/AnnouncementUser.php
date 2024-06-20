@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * @property integer $id
- * @property integer $announcement_id
- * @property integer $user_id
+ * @property string $id
+ * @property string $announcement_id
+ * @property string $user_id
  * @property string $created_at
  * @property string $updated_at
  * @property Announcement $announcement
@@ -23,7 +23,7 @@ class AnnouncementUser extends Model
      * 
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = 'string';
 
     /**
      * @var array

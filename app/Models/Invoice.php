@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * @property integer $id
- * @property integer $subscription_id
+ * @property string $id
+ * @property string $subscription_id
  * @property string $invoice_number
  * @property string $invoice_file
  * @property integer $price

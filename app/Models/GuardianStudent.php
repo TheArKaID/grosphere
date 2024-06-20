@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
 /**
- * @property integer $id
- * @property integer $guardian_id
- * @property integer $student_id
+ * @property string $id
+ * @property string $guardian_id
+ * @property string $student_id
  * @property string $created_at
  * @property string $updated_at
  * @property Guardian $guardian

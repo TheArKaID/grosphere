@@ -7,10 +7,10 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * @property integer $id
- * @property integer $course_student_id
- * @property integer $student_id
- * @property integer $class_session_id
+ * @property string $id
+ * @property string $course_student_id
+ * @property string $student_id
+ * @property string $class_session_id
  * @property string $present_at
  * @property string $rating
  * @property string $remark
