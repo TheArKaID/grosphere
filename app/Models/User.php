@@ -14,8 +14,8 @@ use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 use Spatie\Permission\Traits\HasRoles;
 
 /**
- * @property integer $id
- * @property integer $agency_id
+ * @property string $id
+ * @property string $agency_id
  * @property string $first_name
  * @property string $last_name
  * @property string $email
@@ -42,7 +42,7 @@ class User extends Authenticatable implements JWTSubject
      * 
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = 'string';
 
     /**
      * @var array
