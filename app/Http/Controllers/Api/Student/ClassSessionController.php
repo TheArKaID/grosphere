@@ -100,7 +100,7 @@ class ClassSessionController extends Controller
         ], 200);
     }
 
-    public function enroll(Request $request, int $classSessionId)
+    public function enroll(Request $request, string $classSessionId)
     {
         $this->studentService->enrollStudentToClass($classSessionId);
 

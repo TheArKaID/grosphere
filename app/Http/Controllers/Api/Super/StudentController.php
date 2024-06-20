@@ -48,7 +48,7 @@ class StudentController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(int $agencyId, int $studentId)
+    public function show(string $agencyId, string $studentId)
     {
         $student = $this->studentService->getById($studentId)->load(['user', 'courseStudents.studentClasses', 'subscriptions']);
         return response()->json([

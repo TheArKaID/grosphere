@@ -39,10 +39,10 @@ class CourseStudentController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $courseStudentId
+     * @param  string  $courseStudentId
      * @return \Illuminate\Http\Response
      */
-    public function show(int $courseStudentId)
+    public function show(string $courseStudentId)
     {
         $courseStudent = $this->courseStudentService->getById($courseStudentId);
 

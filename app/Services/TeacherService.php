@@ -355,11 +355,11 @@ class TeacherService
      * Check if teacher reach max file size
      * 
      * @param string $teacherId
-     * @param int $fileSize
+     * @param string $fileSize
      * 
      * @return bool
      */
-    public function isReachMaxFileSize(string $teacherId, int $fileSize)
+    public function isReachMaxFileSize(string $teacherId, string $fileSize)
     {
         // 2MB is for safety
         return ($this->getTotalFileSize($teacherId) + $fileSize + 2 * 1024 *1024) > $this->getMaxFileSize();

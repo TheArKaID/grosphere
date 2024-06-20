@@ -52,7 +52,7 @@ class AttendanceController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(int $attendance)
+    public function show(string $attendance)
     {
         return response()->json([
             'status' => 200,
