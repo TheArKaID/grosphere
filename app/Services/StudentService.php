@@ -218,11 +218,11 @@ class StudentService
 	/**
 	 * Get All Student by Guardian
 	 * 
-	 * @param int $guardian_id
+	 * @param string $guardian_id
 	 * 
 	 * @return \Illuminate\Database\Eloquent\Collection
 	 */
-	public function getByGuardian(int $guardian_id)
+	public function getByGuardian(string $guardian_id)
 	{
 		return $this->student->with('user')->whereHas('guardians', function ($query) use ($guardian_id) {
 			$query->where('guardian_id', $guardian_id);
@@ -285,12 +285,12 @@ class StudentService
 	/**
 	 * Enroll Student to Class
 	 * 
-	 * @param int $student_id
-	 * @param int $class_id
+	 * @param string $student_id
+	 * @param string $class_id
 	 * 
 	 * @return void
 	 */
-	public function enrollStudentToClass(int $class_id)
+	public function enrollStudentToClass(string $class_id)
 	{
 		$classService = App::make(ClassSessionService::class);
 		$class = $classService->getOne($class_id);

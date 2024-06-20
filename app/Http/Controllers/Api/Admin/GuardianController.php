@@ -138,7 +138,7 @@ class GuardianController extends Controller
      * Change Guardian Password
      * 
      * @param App\Http\Requests\UpdatePasswordRequest $request
-     * @param int $guardian_id
+     * @param string $guardian_id
      * 
      * @return \Illuminate\Http\Response
      */

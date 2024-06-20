@@ -174,11 +174,11 @@ class AgencyService
      * Delete Admin User
      * 
      * @param Agency $agency
-     * @param int $adminId
+     * @param string $adminId
      * 
      * @return void
      */
-    public function deleteAdmin(Agency $agency, int $adminId)
+    public function deleteAdmin(Agency $agency, string $adminId)
     {
         $admin = Admin::findOrFail($adminId);
         if ($admin->user->hasRole('admin') && $admin->user->agency_id == $agency->id) {

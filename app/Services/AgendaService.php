@@ -71,7 +71,7 @@ class AgendaService
     /**
      * Delete Agenda
      * 
-     * @param int $agendaId
+     * @param string $agendaId
      * 
      * @return \App\Models\Agenda
      */

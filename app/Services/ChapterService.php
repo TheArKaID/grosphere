@@ -47,12 +47,12 @@ class ChapterService
     /**
      * Create Chapter
      * 
-     * @param int $curriculum_id
+     * @param string $curriculum_id
      * @param array $data
      * 
      * @return \App\Models\Chapter
      */
-    public function create(int $curriculum_id, array $data)
+    public function create(string $curriculum_id, array $data)
     {
         $data['curriculum_id'] = $curriculum_id;
         

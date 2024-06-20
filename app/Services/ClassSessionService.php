@@ -86,7 +86,7 @@ class ClassSessionService
      * Check if student already enrolled
      * 
      * @param string $id
-     * @param int $studentId
+     * @param string $studentId
      * 
      * @return bool
      */
@@ -112,7 +112,7 @@ class ClassSessionService
     /**
      * Check if there is already a schedule on the day of the selected class schedule for the student
      * 
-     * @param int $studentId
+     * @param string $studentId
      * @param string $date
      * 
      * @return bool

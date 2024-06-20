@@ -156,7 +156,7 @@ class CourseWorkService
      * Remove Teacher from CourseWork
      * 
      * @param CourseWork $courseWork
-     * @param int $teacherId
+     * @param string $teacherId
      * 
      * @return CourseWork
      */

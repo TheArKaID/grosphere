@@ -183,11 +183,11 @@ class GuardianService
     /**
      * Get Guardians by Student ID
      * 
-     * @param int $student_id
+     * @param string $student_id
      * 
      * @return Collection
      */
-    public function getByStudentId(int $student_id)
+    public function getByStudentId(string $student_id)
     {
         return $this->guardians->whereHas('students', function ($query) use ($student_id) {
             $query->where('student_id', $student_id);
@@ -197,12 +197,12 @@ class GuardianService
     /**
      * Check if the guardian is the student's guardian
      * 
-     * @param int $guardian_id
-     * @param int $student_id
+     * @param string $guardian_id
+     * @param string $student_id
      * 
      * @return bool
      */
-    public function isGuardian(int $guardian_id, int $student_id)
+    public function isGuardian(string $guardian_id, string $student_id)
     {
         return $this->guardians->where('id', $guardian_id)->whereHas('students', function ($query) use ($student_id) {
             $query->where('student_id', $student_id);

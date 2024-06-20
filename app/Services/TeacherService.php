@@ -182,7 +182,7 @@ class TeacherService
     // /**
     //  * Teacher Join Live Class
     //  * 
-    //  * @param int $liveClassId
+    //  * @param string $liveClassId
     //  * 
     //  * @return LiveUser|string
     //  */
@@ -222,11 +222,11 @@ class TeacherService
     /**
      * Get All Teacher File
      * 
-     * @param int $teacherId
+     * @param string $teacherId
      * 
      * @return TeacherFile
      */
-    public function getAllTeacherFile(int $teacherId)
+    public function getAllTeacherFile(string $teacherId)
     {
         return $this->teacherFile->where('teacher_id', $teacherId)->get();
     }
@@ -246,12 +246,12 @@ class TeacherService
     /**
      * Create Teacher File
      * 
-     * @param int $teacherId
+     * @param string $teacherId
      * @param array $data
      * 
      * @return TeacherFile
      */
-    public function createTeacherFile(int $teacherId, array $data)
+    public function createTeacherFile(string $teacherId, array $data)
     {
         try {
             $data['teacher_id'] = $teacherId;
@@ -354,12 +354,12 @@ class TeacherService
     /**
      * Check if teacher reach max file size
      * 
-     * @param int $teacherId
+     * @param string $teacherId
      * @param int $fileSize
      * 
      * @return bool
      */
-    public function isReachMaxFileSize(int $teacherId, int $fileSize)
+    public function isReachMaxFileSize(string $teacherId, int $fileSize)
     {
         // 2MB is for safety
         return ($this->getTotalFileSize($teacherId) + $fileSize + 2 * 1024 *1024) > $this->getMaxFileSize();
@@ -368,11 +368,11 @@ class TeacherService
     /**
      * Get total of teacher file size
      * 
-     * @param int $teacherId
+     * @param string $teacherId
      * 
      * @return int
      */
-    public function getTotalFileSize(int $teacherId)
+    public function getTotalFileSize(string $teacherId)
     {
         return $this->teacherFile->where('teacher_id', $teacherId)->sum('file_size');
     }
@@ -380,11 +380,11 @@ class TeacherService
     /**
      * Get total of teacher file size
      * 
-     * @param int $teacherId
+     * @param string $teacherId
      * 
      * @return int
      */
-    public function getTotalFileSizeMb(int $teacherId)
+    public function getTotalFileSizeMb(string $teacherId)
     {
         return round($this->getTotalFileSize($teacherId) / 1024 / 1024, 2);
     }

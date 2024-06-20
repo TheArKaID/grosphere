@@ -79,11 +79,11 @@ class PaymentSubscriptionService
     /**
      * Get All Subscriptions by Guardian
      * 
-     * @param int $guardianId
+     * @param string $guardianId
      * 
      * @return Collection
      */
-    public function getByGuardian(int $guardianId): Collection
+    public function getByGuardian(string $guardianId): Collection
     {
         return Subscription::whereHas('student', function ($query) use ($guardianId) {
             $query->whereHas('guardians', function ($query) use ($guardianId) {

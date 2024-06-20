@@ -116,11 +116,11 @@ class AgencyController extends Controller
      * Delete Admin User
      * 
      * @param Agency $agency
-     * @param int $adminId
+     * @param string $adminId
      * 
      * @return \Illuminate\Http\JsonResponse
      */
-    public function deleteAdmin(Agency $agency, int $adminId)
+    public function deleteAdmin(Agency $agency, string $adminId)
     {
         $this->agencyService->deleteAdmin($agency, $adminId);
 

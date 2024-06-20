@@ -59,7 +59,7 @@ class CourseStudentService
      * Get by id and tutor id
      * 
      * @param string $id
-     * @param int $tutorId
+     * @param string $tutorId
      * 
      * @return CourseStudent
      */
@@ -76,7 +76,7 @@ class CourseStudentService
      * Get by id and Student id
      * 
      * @param string $id
-     * @param int $studentId
+     * @param string $studentId
      * 
      * @return CourseStudent
      */
@@ -88,8 +88,8 @@ class CourseStudentService
     /**
      * Get Course Student by course work id and student id
      * 
-     * @param int $courseWorkId
-     * @param int $studentId
+     * @param string $courseWorkId
+     * @param string $studentId
      * @param bool $throwException
      * 
      * @return CourseStudent
@@ -108,8 +108,8 @@ class CourseStudentService
     /**
      * Get All Course Student by course work id and student id
      * 
-     * @param int $courseWorkId
-     * @param int $studentId
+     * @param string $courseWorkId
+     * @param string $studentId
      * 
      * @return CourseStudent
      */

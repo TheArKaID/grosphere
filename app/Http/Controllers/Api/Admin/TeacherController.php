@@ -62,7 +62,7 @@ class TeacherController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param int $teacher
+     * @param string $teacher
      * @return \Illuminate\Http\Response
      */
     public function show(string $id)
