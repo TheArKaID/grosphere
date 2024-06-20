@@ -18,7 +18,7 @@ class AdminResource extends JsonResource
         parent::wrap('admins');
         return $this->resource ? [
             'id' => $this->id,
-            'file_name' => $this->user->file_name,
+            'first_name' => $this->user->first_name,
             'last_name' => $this->user->last_name,
             'email' => $this->user->email,
             'phone' => $this->user->phone,
