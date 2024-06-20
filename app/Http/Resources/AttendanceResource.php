@@ -17,13 +17,14 @@ class AttendanceResource extends JsonResource
     {
         parent::wrap('attendance');
 
+        $verificator = $this->admin?->user;
         return $this->resource ? [
             'id' => $this->id,
             'temperature' => $this->temperature,
             'remark' => $this->remark,
             'type' => $this->type,
             'proof' => $this->proof,
-            'verificator' => $this->admin?->user?->name,
+            'verificator' => $verificator?->first_name . ' ' . $verificator?->last_name,
             'created_at' => Carbon::parse($this->created_at)->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::parse($this->updated_at)->format('Y-m-d H:i:s'),
             'student' => new StudentResource($this->whenLoaded('student')),
