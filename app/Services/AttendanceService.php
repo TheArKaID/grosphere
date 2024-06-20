@@ -130,7 +130,7 @@ class AttendanceService
         $fileName = 'attendances/' . $data['student_id'] . '_' . now()->format('Y-m-d') . '_' . $data['type'] . '.' . explode('/', explode(':', substr($proof, 0, strpos($proof, ';')))[1])[1];
 
         $data['proof'] = '';
-        $data['admin_id'] = auth()->user()->id;
+        $data['admin_id'] = auth()->user()->detail->id;
         $attendance = $this->attendance->create($data);
 
         // Proof is image base64 encoded
