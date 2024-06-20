@@ -27,7 +27,7 @@ class CourseStudentResource extends JsonResource
                 'type' => $this->courseWork->class->type,
                 'tutor' => [
                     'id' => $this->courseWork->class->tutor->id,
-                    'name' => $this->courseWork->class->tutor->user->name
+                    'name' => $this->courseWork->class->tutor->user->name . ' ' . $this->courseWork->class->tutor->user->last_name,
                 ],
                 'category' => [
                     'id' => $this->courseWork->courseCategory->id,

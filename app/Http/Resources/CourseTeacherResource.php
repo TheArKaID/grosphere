@@ -21,7 +21,8 @@ class CourseTeacherResource extends JsonResource
             'status' => $this->status,
             'detail' => $this->whenLoaded('teacher') ? [
                 'id' => $this->teacher->id,
-                'name' => $this->teacher->user->name,
+                'first_name' => $this->teacher->user->first_name,
+                'last_name' => $this->teacher->user->last_name,
                 'email' => $this->teacher->user->email,
                 'phone' => $this->teacher->user->phone,
                 'status' => $this->teacher->user->status,

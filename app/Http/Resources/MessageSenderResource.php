@@ -15,7 +15,6 @@ class MessageSenderResource extends JsonResource
      */
     public function toArray($request)
     {
-        // dd($this['user']->roles());
         parent::wrap('message_senders');
         return $this->resource ? [
             'id' => $this['user']->id,
