@@ -132,7 +132,7 @@ class DashboardService
             return [
                 'id' => $attendance->id,
                 'student_id' => $attendance->student_id,
-                'student' => $attendance->student->user->name,
+                'student' => $attendance->student->user->first_name . ' ' . $attendance->student->user->last_name,
                 'guardian' => $attendance->guardian,
                 'in' => Carbon::make($attendance->created_at)->format('Y-m-d H:i:s'),
                 'out' => $attendance->out
