@@ -180,13 +180,16 @@ class AgencyService
      */
     public function deleteAdmin(Agency $agency, string $adminId)
     {
+        DB::beginTransaction();
+
+        $userService = app()->make(UserService::class);
+
         $admin = Admin::findOrFail($adminId);
-        if ($admin->user->hasRole('admin') && $admin->user->agency_id == $agency->id) {
-            $admin->user->delete();
-        }
-        // Failed to delete admin
-        else {
-            
-        }
+        $user_id = $admin->user_id;
+
+        $admin->delete();
+        $userService->deleteUser($user_id);
+
+        DB::commit();
     }
 }

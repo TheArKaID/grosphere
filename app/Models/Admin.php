@@ -69,7 +69,7 @@ class Admin extends Model
         parent::boot();
 
         static::deleting(function ($admin) {
-            $admin->attendances()->delete();
+            // $admin->attendances()->delete();
         });
     }
 }
