@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('messages', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('sender_id')->constrained('users');
-            $table->foreignUuid('recipient_id')->constrained('users');
+            $table->foreignUuid('sender_id')->nullable()->constrained('users')->nullOnDelete();
+            $table->foreignUuid('recipient_id')->nullable()->constrained('users')->nullOnDelete();
             $table->text('message');
             $table->boolean('is_read')->default(false);
             $table->timestamps();
