@@ -23,7 +23,8 @@ class StoreMessageRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'recipient_id' => 'required|uuid|exists:users,id',
+            'recipient_ids' => 'required|array',
+            'recipient_ids.*' => 'required|exists:users,id',
             'message' => 'required|string',
             'attachments' => 'nullable|array',
             'attachments.*' => 'file|mimes:jpg,jpeg,png,pdf,mp4|max:20480'

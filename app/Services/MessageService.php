@@ -179,33 +179,36 @@ class MessageService
     }
 
     /**
-     * Store a new message
+     * Store new messages
      * 
      * @param array $data
      * 
      * @return void
      */
-    public function storeMessage(array $data): void
+    public function storeMessages(array $data): void
     {
         DB::beginTransaction();
-        $mId = null;
         try {
             $data['sender_id'] = Auth::id();
-            $m = $this->model->create($data);
-            $mId = $m->id;
+            $recipients = $data['recipient_ids'];
+            unset($data['recipient_ids']);
+            foreach ($recipients as $recipientId) {
+                $data['recipient_id'] = $recipientId;
+                $m = $this->model->create($data);
 
-            if (isset($data['attachments']) && count($data['attachments'])) {
-                foreach ($data['attachments'] as $attachment) {
-                    Storage::disk('s3')->put('messages' . DIRECTORY_SEPARATOR . $m->id, $attachment);
+                if (isset($data['attachments']) && count($data['attachments'])) {
+                    foreach ($data['attachments'] as $attachment) {
+                        // TODO: Use queue to upload attachments
+                        Storage::disk('s3')->put('messages' . DIRECTORY_SEPARATOR . $m->id, $attachment);
+                    }
                 }
             }
+
             DB::commit();
         } catch (\Throwable $th) {
             Log::error($th);
             DB::rollBack();
-            if ($mId) {
-                Storage::disk('s3')->deleteDirectory('messages' . DIRECTORY_SEPARATOR . $mId);
-            }
+
             throw new MessageException('Failed to send message');
         }
     }
