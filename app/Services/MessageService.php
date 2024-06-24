@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Events\NewMessage;
 use App\Exceptions\MessageException;
 use App\Models\Message;
 use App\Models\User;
@@ -159,6 +160,8 @@ class MessageService
                 }
             }
             DB::commit();
+
+            NewMessage::dispatch($m);
         } catch (\Throwable $th) {
             Log::error($th);
             DB::rollBack();
