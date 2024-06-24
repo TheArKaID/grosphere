@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property string $id
@@ -45,6 +46,16 @@ class Teacher extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Get all of the classGroups for the Teacher
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function classGroups(): HasMany
+    {
+        return $this->hasMany(ClassGroup::class);
     }
 
     /**
