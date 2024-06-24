@@ -87,6 +87,57 @@ class MessageService
             ];
         });
 
+        $classGroupConversations = $this->getClassGroupConversations($userId);
+
+        return $lastMessages->merge($classGroupConversations);
+    }
+
+    /**
+     * Get all Class Group as Conversations
+     * 
+     * @param string|null $userId
+     * 
+     * @return mixed
+     */
+    public function getClassGroupConversations(string $userId = null): mixed
+    {
+        if (!$userId) {
+            $userId = Auth::id();
+        }
+        
+        $user = User::find($userId);
+
+        if (!$user) {
+            throw new MessageException('User not found');
+        }
+
+        $role = $user->roles()->first()?->name;
+        if ($role == 'admin') {
+            $classGroups = app()->make(ClassGroupService::class)->getAll();
+        } else {
+            $classGroups = $user->detail->classGroups;
+        }
+
+        // Retrieve last message for each class group in the Message model
+        $lastMessages = $classGroups->map(function ($classGroup) use ($userId) {
+            $message = $this->model->where('recipient_group_id', $classGroup->id)
+                ->orWhere('sender_id', $userId)
+                ->where('recipient_id', $classGroup->teacher_id)
+                ->orderBy('created_at', 'desc')
+                ->first();
+
+            $unreadCount = $this->model->where('recipient_group_id', $classGroup->id)
+                ->where('recipient_id', $userId)
+                ->where('is_read', false)
+                ->count();
+
+            return [
+                'user' => $classGroup,
+                'message' => $message,
+                'unread' => $unreadCount
+            ];
+        });
+// dd($lastMessages);
         return $lastMessages;
     }
 

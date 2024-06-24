@@ -17,7 +17,7 @@ class MessageSenderResource extends JsonResource
     {
         parent::wrap('message_senders');
         $user = $this['user'] ?? null;
-        return $this->resource ? ($user ? [
+        return $user ? ($user->first_name ? [
             'id' => $user->id,
             'name' => $user->first_name . ' ' . $user->last_name,
             'role' => $user->roles()->first()->name,
@@ -26,6 +26,14 @@ class MessageSenderResource extends JsonResource
             'message_date' => $this['message']->created_at->format('Y-m-d H:i:s'),
             'unread' => $this['unread']
         ] : [
+            'id' => $user->id,
+            'name' => $user->name,
+            'role' => 'class-group',
+            'photo' => null,
+            'message' => $this['message'] ? $this['message']->message : 'No message yet',
+            'message_date' => $this['message']?->created_at?->format('Y-m-d H:i:s') ?? $user->created_at->format('Y-m-d H:i:s'),
+            'unread' => $this['unread']
+        ]) : [
             'id' => '-',
             'name' => '-',
             'role' => '-',
@@ -33,7 +41,7 @@ class MessageSenderResource extends JsonResource
             'message' => $this['message'] ? $this['message']->message : 'No message yet',
             'message_date' => $this['message']->created_at->format('Y-m-d H:i:s'),
             'unread' => $this['unread']
-        ]) : [];
+        ];
     }
 
     function getPhoto() {
