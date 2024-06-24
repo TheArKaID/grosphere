@@ -138,7 +138,8 @@ class MessageService
             $query->where('first_name', 'like', "%$search%")->orWhere('last_name', 'like', "%$search%");
         }) : User::query();
 
-        switch ($user->roles()->first()?->name) {
+        $role = $user->roles()->first()?->name;
+        switch ($role) {
             case 'superadmin':
                 $userRecipients = ['admin'];
                 break;
@@ -158,9 +159,23 @@ class MessageService
                 throw new MessageException('User not found');
         }
 
-        return  $users->whereHas('roles', function ($query) use ($userRecipients) {
+        $users = $users->whereHas('roles', function ($query) use ($userRecipients) {
             $query->whereIn('name', $userRecipients);
         })->get();
+
+        $classGroups = (function (User $user, string $role) {
+            switch ($role) {
+                case 'admin':
+                    return app()->make(ClassGroupService::class)->getAll();
+                    break;
+                
+                default:
+                    return $user->detail->classGroups;
+                    break;
+            }
+        })($user, $role);
+
+        return $users->merge($classGroups);
     }
 
     /**
