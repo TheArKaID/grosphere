@@ -36,6 +36,25 @@ class ClassGroupService
     }
 
     /**
+     * Get one ClassGroup
+     * 
+     * @param string $classGroupId
+     * @param bool $throw
+     * 
+     * @return ClassGroup
+     */
+    public function getOne(string $classGroupId, bool $throw = true)
+    {
+        $classGroup = $this->model->find($classGroupId);
+
+        if (!$classGroup && $throw) {
+            throw ValidationException::withMessages(['class_group' => 'Class Group not found.']);
+        }
+
+        return $classGroup;
+    }
+
+    /**
      * Search ClassGroups
      * 
      * @param string $search

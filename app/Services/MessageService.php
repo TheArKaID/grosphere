@@ -244,7 +244,17 @@ class MessageService
             $recipients = $data['recipient_ids'];
             unset($data['recipient_ids']);
             foreach ($recipients as $recipientId) {
-                $data['recipient_id'] = $recipientId;
+                $type = $this->recipientExists($recipientId);
+                if (!$type) {
+                    throw new MessageException('Recipient not found');
+                }
+                if ($type == 'user') {
+                    $data['recipient_id'] = $recipientId;
+                    $data['recipient_group_id'] = null;
+                } else {
+                    $data['recipient_group_id'] = $recipientId;
+                    $data['recipient_id'] = null;
+                }
                 $m = $this->model->create($data);
 
                 if (isset($data['attachments']) && count($data['attachments'])) {
@@ -260,7 +270,20 @@ class MessageService
             Log::error($th);
             DB::rollBack();
 
-            throw new MessageException('Failed to send message');
+            throw new MessageException($th->getMessage());
         }
+    }
+
+    /**
+     * Check if recipient exists
+     * 
+     * @param string $recipientId
+     * 
+     * @return bool|string
+     */
+    public function recipientExists(string $recipientId): bool|string
+    {
+        // Recipient could be user or class group
+        return User::find($recipientId) ? 'user' : (app()->make(ClassGroupService::class)->getOne($recipientId, false) ? 'class_group' : false);
     }
 }
