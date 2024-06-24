@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreMessageRequest;
 use App\Http\Resources\MessageDetailResource;
 use App\Http\Resources\MessageSenderResource;
-use App\Http\Resources\UserResource;
+use App\Http\Resources\RecipientResource;
 use App\Services\MessageService;
 use Illuminate\Http\Request;
 
@@ -93,7 +93,7 @@ class MessageController extends Controller
      */
     public function getRecipients(Request $request)
     {
-        $users = UserResource::collection($this->service->getRecipients(search: $request->get('search')));
+        $users = RecipientResource::collection($this->service->getRecipients(search: $request->get('search')));
 
         if ($users->count() == 0) {
             throw new MessageException('No available recipients');
