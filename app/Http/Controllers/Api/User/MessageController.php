@@ -87,7 +87,7 @@ class MessageController extends Controller
      */
     public function getRecipients(Request $request)
     {
-        $users = UserResource::collection($this->service->getRecipients(search: $request->get('search', '')));
+        $users = UserResource::collection($this->service->getRecipients(search: $request->get('search')));
 
         if ($users->count() == 0) {
             throw new MessageException('No available recipients');

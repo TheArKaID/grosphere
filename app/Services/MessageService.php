@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Events\NewMessage;
 use App\Exceptions\MessageException;
 use App\Models\Message;
 use App\Models\User;
@@ -94,10 +93,11 @@ class MessageService
      * Get Users are allowed to send messages to
      * 
      * @param string|null $userId
+     * @param string|null $search
      * 
      * @return Collection
      */
-    public function getRecipients(string $userId = null, string $search = ''): Collection
+    public function getRecipients(string $userId = null, string|null $search = null): Collection
     {
         if (!$userId) {
             $userId = Auth::id();
@@ -160,8 +160,6 @@ class MessageService
                 }
             }
             DB::commit();
-
-            NewMessage::dispatch($m);
         } catch (\Throwable $th) {
             Log::error($th);
             DB::rollBack();
