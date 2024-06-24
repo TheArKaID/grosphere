@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\User;
 use App\Exceptions\MessageException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreMessageRequest;
+use App\Http\Resources\MessageDetailResource;
 use App\Http\Resources\MessageSenderResource;
 use App\Http\Resources\UserResource;
 use App\Services\MessageService;
@@ -59,12 +60,17 @@ class MessageController extends Controller
      * Show a message
      * 
      * @param Request $request
+     * @param string $message
      * 
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show(Request $request)
+    public function show(Request $request, string $message)
     {
-
+        return response()->json([
+            'status' => 200,
+            'message' => 'Success',
+            'data' => MessageDetailResource::collection($this->service->getConversation($message))
+        ], 200);
     }
 
     /**

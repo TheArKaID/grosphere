@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Storage;
 
-class MessageSenderResource extends JsonResource
+class MessageDetailResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,24 +16,28 @@ class MessageSenderResource extends JsonResource
     public function toArray($request)
     {
         parent::wrap('message_senders');
-        $user = $this['user'] ?? null;
-        return $this->resource ? ($user ? [
-            'id' => $user->id,
-            'name' => $user->first_name . ' ' . $user->last_name,
-            'role' => $user->roles()->first()->name,
-            'photo' => $this->getPhoto(),
-            'message' => $this['message'] ? $this['message']->message : 'No message yet',
-            'message_date' => $this['message']->created_at->format('Y-m-d H:i:s'),
-            'unread' => $this['unread']
-        ] : [
-            'id' => '-',
-            'name' => '-',
-            'role' => '-',
-            'photo' => '-',
-            'message' => $this['message'] ? $this['message']->message : 'No message yet',
-            'message_date' => $this['message']->created_at->format('Y-m-d H:i:s'),
-            'unread' => $this['unread']
-        ]) : [];
+        return $this->resource ? [
+            'id' => $this['id'],
+            'message' => $this['message'],
+            'is_me' => $this['sender_id'] === auth()->id(),
+            'is_read' => $this['is_read'],
+            'created_at' => $this['created_at'],
+            'attachments' => $this->getAttachments($this['id']),
+        ] : [];
+    }
+
+    function getAttachments(string $messageId) {
+        if ($files = Storage::disk('s3')->files('messages/' . $messageId)) {
+            return array_map(function ($file) {
+                // Return the data type and url file 
+                return [
+                    'type' => Storage::disk('s3')->mimeType($file),
+                    'url' => Storage::disk('s3')->url($file)
+                ];
+            }, $files);
+        } else {
+            return [];
+        }
     }
 
     function getPhoto() {

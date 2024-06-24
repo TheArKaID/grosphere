@@ -72,8 +72,9 @@ class MessageService
         // Get the last message and unread count for each conversation
         $lastMessages = $conversations->map(function ($conversation) use ($messages, $userId) {
             $conversationMessages = $messages->filter(function ($message) use ($conversation, $userId) {
-                return ($message->sender_id == $conversation->id && $message->recipient_id == $userId) ||
-                    ($message->sender_id == $userId && $message->recipient_id == $conversation->id);
+                // Recipient could be null if the user has been deleted
+                return ($message->sender_id == $conversation?->id && $message->recipient_id == $userId) ||
+                    ($message->sender_id == $userId && $message->recipient_id == $conversation?->id);
             });
 
             $latestMessage = $conversationMessages->sortByDesc('created_at')->first();
@@ -89,6 +90,30 @@ class MessageService
         return $lastMessages;
     }
 
+    /**
+     * Get detail Conversation between logged in user and another user
+     * 
+     * @param string $userId
+     * 
+     * @return mixed
+     */
+    public function getConversation(string $userId): mixed
+    {
+        $user = User::find($userId);
+
+        if (!$user) {
+            throw new MessageException('User not found');
+        }
+
+        $messages = $this->model->orderBy('created_at', 'desc')
+        ->where(function ($query) use ($userId) {
+            $query->where('sender_id', Auth::id())->where('recipient_id', $userId);
+        })->orWhere(function ($query) use ($userId) {
+            $query->where('sender_id', $userId)->where('recipient_id', Auth::id());
+        })->get();
+
+        return $messages;
+    }
     /**
      * Get Users are allowed to send messages to
      * 
