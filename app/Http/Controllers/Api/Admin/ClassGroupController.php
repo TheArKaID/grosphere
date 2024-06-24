@@ -23,7 +23,7 @@ class ClassGroupController extends Controller
     {
         $classGroups = ClassGroupResource::collection($this->service->getAll());
 
-        if ($classGroups->count()) {
+        if ($classGroups->count() == 0) {
             throw new ModelGetEmptyException('ClassGroups');
         }
 
