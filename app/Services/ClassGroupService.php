@@ -122,6 +122,7 @@ class ClassGroupService
         $classGroup = $this->model->findOrFail($classGroupId);
         $classGroup->update($data);
 
+        $classGroup->students()->sync($data['students']);
         DB::commit();
 
         return $classGroup;
