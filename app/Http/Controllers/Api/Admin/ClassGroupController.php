@@ -21,7 +21,7 @@ class ClassGroupController extends Controller
      */
     public function index()
     {
-        $classGroups = ClassGroupResource::collection($this->service->getAll());
+        $classGroups = ClassGroupResource::collection($this->service->getAll()->load(['teacher']));
 
         if ($classGroups->count() == 0) {
             throw new ModelGetEmptyException('ClassGroups');
