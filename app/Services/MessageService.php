@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Events\NewMessage;
 use App\Exceptions\MessageException;
 use App\Models\Message;
 use App\Models\User;
@@ -256,6 +257,8 @@ class MessageService
                     $data['recipient_id'] = null;
                 }
                 $m = $this->model->create($data);
+
+                NewMessage::dispatch($m);
 
                 if (isset($data['attachments']) && count($data['attachments'])) {
                     foreach ($data['attachments'] as $attachment) {
