@@ -48,7 +48,7 @@ class StoreTeacherRequest extends FormRequest
                 },
                 'required_without:email', 'unique:users,username'
             ],
-            'password' => ['required', 'confirmed', Password::min(8)->letters()->numbers()->mixedCase()],
+            'password' => ['required', 'confirmed', Password::min(8)],
             'phone' => 'nullable|string|min:8|max:50',
             'photo' => 'required|string',
         ];

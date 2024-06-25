@@ -56,7 +56,7 @@ class StoreStudentRequest extends FormRequest
                 },
                 'required_without:email', 'unique:users,username'
             ],
-            'password' => ['required', 'confirmed', Password::min(8)->letters()->numbers()->mixedCase()],
+            'password' => ['required', 'confirmed', Password::min(8)],
             'phone' => 'nullable|string|min:8|max:50',
             'birth_date' => 'nullable|date_format:Y-m-d',
             'birth_place' => 'nullable|string|max:100',

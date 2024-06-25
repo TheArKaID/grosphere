@@ -47,7 +47,7 @@ class StoreAdminRequest extends FormRequest
                 'required_without:email', 'unique:users,username'
             ],
             'username' => 'required_without:email|nullable|max:255|unique:users,username',
-            'password' => ['required', 'confirmed', 'string', Password::min(8)->letters()->numbers()->mixedCase()],
+            'password' => ['required', 'confirmed', 'string', Password::min(8)],
             'photo' => 'required|string',
         ];
     }

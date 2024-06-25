@@ -50,7 +50,7 @@ class UpdateTeacherRequest extends FormRequest
                 },
                 'required_without:email', 'unique:users,username,' . $this->teacher->user_id
             ],
-            'password' => ['nullable', 'confirmed', Password::min(8)->letters()->numbers()->mixedCase()]
+            'password' => ['nullable', 'confirmed', Password::min(8)]
         ];
     }
 

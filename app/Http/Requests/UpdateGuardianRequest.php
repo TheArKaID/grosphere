@@ -53,7 +53,7 @@ class UpdateGuardianRequest extends FormRequest
             'address' => 'nullable|string|max:255',
             'student_ids' => 'required|array',
             'student_ids.*' => 'exists:students,id',
-            'password' => ['nullable', 'confirmed', Password::min(8)->letters()->numbers()->mixedCase()]
+            'password' => ['nullable', 'confirmed', Password::min(8)]
         ];
     }
 

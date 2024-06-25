@@ -55,7 +55,7 @@ class UpdateStudentRequest extends FormRequest
             ],
             'id_number' => 'nullable|string|max:25',
             'photo' => 'nullable|string',
-            'password' => ['nullable', 'confirmed', Password::min(8)->letters()->numbers()->mixedCase()]
+            'password' => ['nullable', 'confirmed', Password::min(8)]
         ];
     }
 
