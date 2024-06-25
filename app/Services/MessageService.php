@@ -157,7 +157,7 @@ class MessageService
             throw new MessageException('User not found');
         }
 
-        $messages = $this->model->orderBy('created_at', 'desc')
+        $messages = $this->model->orderBy('created_at', 'asc')
         ->where(function ($query) use ($userId) {
             $query->where('sender_id', Auth::id())->where('recipient_id', $userId);
         })->orWhere(function ($query) use ($userId) {
