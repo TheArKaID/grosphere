@@ -62,7 +62,7 @@ class AnnouncementController extends Controller
      */
     public function show($id)
     {
-        $announcement = new AnnouncementResource($this->annoucementService->getById($id));
+        $announcement = new AnnouncementResource($this->annoucementService->getOne($id));
 
         return response()->json([
             'status' => 200,
