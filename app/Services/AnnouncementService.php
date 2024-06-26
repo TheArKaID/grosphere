@@ -49,8 +49,9 @@ class AnnouncementService
      */
     public function create(array $data)
     {
-        $data['agency_id'] = auth()->user()->agency_id;
-        $data['admin_id'] = auth()->id();
+        $admin = auth()->user();
+        $data['agency_id'] = $admin->agency_id;
+        $data['admin_id'] = $admin->detail->id;
         return $this->model->create($data);
     }
 
