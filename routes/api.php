@@ -87,7 +87,11 @@ Route::middleware(['auth:api'])->group(function () {
             Route::put('password', [TeacherController::class, 'changePassword'])->name('teachers.change-password');
         });
 
-        // Route::resource('announcements', AnnouncementController::class)->except(['edit', 'create']);
+        Route::apiResource('announcements', AnnouncementController::class);
+
+        Route::prefix('announcements/{announcement_id}')->group(function () {
+            Route::put('status', [AnnouncementController::class, 'toggleStatus'])->name('announcements.toggle-status');
+        });
 
         Route::prefix('payments')->group(function () {
             Route::post('/', [PaymentController::class, 'store'])->name('payments.store');

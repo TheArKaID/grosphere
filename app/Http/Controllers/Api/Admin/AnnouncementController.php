@@ -10,11 +10,9 @@ use App\Services\AnnouncementService;
 
 class AnnouncementController extends Controller
 {
-    protected $annoucementService;
-
-    public function __construct(AnnouncementService $annoucementService)
-    {
-        $this->annoucementService = $annoucementService;
+    public function __construct(
+        protected AnnouncementService $annoucementService
+    ) {
     }
 
     /**
@@ -27,7 +25,7 @@ class AnnouncementController extends Controller
         $announcements = AnnouncementResource::collection($this->annoucementService->getAll());
 
         if ($announcements->count() == 0) {
-            throw new ModelGetEmptyException("Announcement");
+            throw new ModelGetEmptyException("Announcements");
         }
 
         return response()->json([
@@ -106,6 +104,24 @@ class AnnouncementController extends Controller
         return response()->json([
             'status' => 200,
             'message' => 'Announcement Deleted Successfully'
+        ], 200);
+    }
+
+    /**
+     * Toggle the status of the specified resource.
+     * 
+     * @param string $announcement_id
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function toggleStatus($announcement_id)
+    {
+        $announcement = new AnnouncementResource($this->annoucementService->toggleStatus($announcement_id));
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Announcement Status Toggled Successfully',
+            'data' => $announcement
         ], 200);
     }
 }
