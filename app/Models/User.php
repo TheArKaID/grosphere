@@ -68,16 +68,6 @@ class User extends Authenticatable implements JWTSubject
     // }
 
     /**
-     * Get all of the announcementUsers for the User
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function announcementUsers(): HasMany
-    {
-        return $this->hasMany(AnnouncementUser::class);
-    }
-
-    /**
      * Get all of the agendas for the User
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

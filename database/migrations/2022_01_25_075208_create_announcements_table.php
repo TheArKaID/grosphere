@@ -15,10 +15,10 @@ class CreateAnnouncementsTable extends Migration
     {
         Schema::create('announcements', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('name');
-            $table->text('message');
-            $table->tinyInteger('to')->default(1);
-            $table->dateTime('show_until')->nullable()->default(null);
+            $table->foreignUuid('agency_id')->constrained('agencies')->cascadeOnDelete();
+            $table->string('title');
+            $table->text('content');
+            $table->tinyInteger('status')->default(1);
             $table->timestamps();
         });
     }
