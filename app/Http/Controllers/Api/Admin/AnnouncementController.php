@@ -45,12 +45,11 @@ class AnnouncementController extends Controller
     {
         $validated = $request->validated();
 
-        $announcement = new AnnouncementResource($this->service->create($validated));
+        new AnnouncementResource($this->service->create($validated));
 
         return response()->json([
             'status' => 200,
-            'message' => 'Announcement Created Successfully',
-            'data' => $announcement
+            'message' => 'Announcement Created Successfully'
         ], 200);
     }
 
