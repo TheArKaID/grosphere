@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 /**
  * @property string $id
  * @property string $agency_id
+ * @property string $admin_id
  * @property string $title
  * @property string $content
  * @property boolean $status
@@ -29,7 +30,7 @@ class Announcement extends Model
     /**
      * @var array
      */
-    protected $fillable = ['agency_id', 'title', 'content', 'status', 'created_at', 'updated_at'];
+    protected $fillable = ['agency_id', 'admin_id', 'title', 'content', 'status', 'created_at', 'updated_at'];
 
     /**
      * boot on deleting

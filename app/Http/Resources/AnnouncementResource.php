@@ -15,7 +15,7 @@ class AnnouncementResource extends JsonResource
      */
     public function toArray($request)
     {
-        parent::wrap('annoucements');
+        parent::wrap('announcements');
 
         return $this->resource ? [
             'id' => $this->id,
