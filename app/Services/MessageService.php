@@ -258,7 +258,7 @@ class MessageService
                 }
                 $m = $this->model->create($data);
 
-                NewMessage::dispatch($m);
+                NewMessage::dispatch($m, $type);
 
                 if (isset($data['attachments']) && count($data['attachments'])) {
                     foreach ($data['attachments'] as $attachment) {

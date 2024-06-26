@@ -20,17 +20,28 @@ class NewMessage implements ShouldBroadcast, ShouldDispatchAfterCommit
      * Create a new event instance.
      */
     public function __construct(
-        protected Message $message
+        protected Message $message,
+        protected string $recipientType
     ) { }
 
     /**
      * Get the channels the event should broadcast on.
      *
-     * @return Channel
+     * @return array
      */
-    public function broadcastOn(): Channel
+    public function broadcastOn(): array
     {
-        return new PrivateChannel('App.Models.User.' . $this->message->recipient_id);
+        if ($this->recipientType === 'group') {
+            foreach ($this->message->recipient->students as $student) {
+                $channels[] = new PrivateChannel('App.Models.User.' . $student->user_id);
+            }
+        }
+        else if ($this->recipientType === 'user')
+            $channels = [
+                new PrivateChannel('App.Models.User.' . $this->message->recipient_id)
+            ];
+
+        return $channels;
     }
 
     /**
