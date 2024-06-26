@@ -21,7 +21,7 @@ class AnnouncementResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'content' => $this->content,
-            'status' => $this->status
+            'status' => (boolean)$this->status
         ] : [];
     }
 }
