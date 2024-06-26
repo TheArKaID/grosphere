@@ -28,7 +28,7 @@ class AgencyController extends Controller
         $agencies = AgencyResource::collection($this->agencyService->getAll());
 
         if (count($agencies) == 0) {
-            throw new ModelGetEmptyException('No agencies found');
+            // throw new ModelGetEmptyException('No agencies found');
         }
 
         return response()->json([

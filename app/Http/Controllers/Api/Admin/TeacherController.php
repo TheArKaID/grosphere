@@ -31,7 +31,7 @@ class TeacherController extends Controller
         $teachers = new TeacherCollection($this->teacherService->getAll());
 
         if ($teachers->count() == 0) {
-            throw new ModelGetEmptyException("Teacher");
+            // throw new ModelGetEmptyException("Teacher");
         }
 
         return response()->json([

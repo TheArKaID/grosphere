@@ -27,7 +27,7 @@ class ClassSessionController extends Controller
         $classSessions = ClassSessionResource::collection($this->classSessionService->getAll());
 
         if ($classSessions->count() == 0) {
-           throw new ModelGetEmptyException('ClassSessions');
+           // throw new ModelGetEmptyException('ClassSessions');
         }
 
         return response()->json([

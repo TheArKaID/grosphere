@@ -28,7 +28,7 @@ class CourseWorkController extends Controller
         $courseWork = CourseWorkResource::collection($this->courseWorkService->getAll());
 
         if ($courseWork->count() == 0) {
-            throw new ModelGetEmptyException("CourseWork");
+            // throw new ModelGetEmptyException("CourseWork");
         }
 
         return response()->json([

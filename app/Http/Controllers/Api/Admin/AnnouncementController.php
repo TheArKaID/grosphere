@@ -25,7 +25,7 @@ class AnnouncementController extends Controller
         $announcements = AnnouncementResource::collection($this->service->getAll());
 
         if ($announcements->count() == 0) {
-            throw new ModelGetEmptyException("Announcements");
+            // throw new ModelGetEmptyException("Announcements");
         }
 
         return response()->json([

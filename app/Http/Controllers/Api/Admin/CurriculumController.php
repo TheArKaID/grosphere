@@ -28,7 +28,7 @@ class CurriculumController extends Controller
         $curriculums = CurriculumResource::collection($this->curriculumService->getAll());
         
         if ($curriculums->count() == 0) {
-            throw new ModelGetEmptyException("Curriculum");
+            // throw new ModelGetEmptyException("Curriculum");
         }
 
         return response()->json([

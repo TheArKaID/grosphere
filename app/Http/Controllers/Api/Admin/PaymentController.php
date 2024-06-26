@@ -27,7 +27,7 @@ class PaymentController extends Controller
         $subscriptions = SubscriptionResource::collection($this->subscriptionService->getAll());
 
         if ($subscriptions->count() == 0) {
-            throw new ModelGetEmptyException("Payment Subscription");
+            // throw new ModelGetEmptyException("Payment Subscription");
         }
 
         return response()->json([

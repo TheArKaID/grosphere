@@ -27,7 +27,7 @@ class AgendaController extends Controller
         $agendas = AgendaResource::collection($this->agendaService->getAll());
 
         if ($agendas->count() == 0) {
-            throw new ModelGetEmptyException("Agenda");
+            // throw new ModelGetEmptyException("Agenda");
         }
 
         return response()->json([

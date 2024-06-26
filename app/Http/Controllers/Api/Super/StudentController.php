@@ -27,7 +27,7 @@ class StudentController extends Controller
         $students = StudentResource::collection($this->studentService->getAll());
 
         if ($students->count() == 0) {
-            throw new ModelGetEmptyException("Student");
+            // throw new ModelGetEmptyException("Student");
         }
 
         return response()->json([

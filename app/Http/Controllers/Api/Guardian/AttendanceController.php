@@ -27,7 +27,7 @@ class AttendanceController extends Controller
         $attendances = AttendanceResource::collection($this->attendanceService->pair(auth()->user()->detail->id));
 
         if ($attendances->count() == 0) {
-            throw new ModelGetEmptyException("Attendance");
+            // throw new ModelGetEmptyException("Attendance");
         }
 
         return response()->json([

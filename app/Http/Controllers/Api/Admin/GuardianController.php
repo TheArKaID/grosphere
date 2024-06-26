@@ -31,7 +31,7 @@ class GuardianController extends Controller
         $guardians = GuardianResource::collection($this->guardianService->getAll());
 
         if ($guardians->count() == 0) {
-            throw new ModelGetEmptyException("Guardian");
+            // throw new ModelGetEmptyException("Guardian");
         }
 
         return response()->json([

@@ -30,7 +30,7 @@ class StudentController extends Controller
         $students = StudentResource::collection($this->studentService->getByGuardian(auth()->user()->detail->id));
 
         if (!$students->count()) {
-            throw new ModelGetEmptyException("Student's Guardian");
+            // throw new ModelGetEmptyException("Student's Guardian");
         }
 
         return response()->json([
@@ -86,7 +86,7 @@ class StudentController extends Controller
         $subscriptions = SubscriptionResource::collection($this->subscriptionsService->getByGuardian(auth()->user()->detail->id)->load(['student']));
 
         if (!$subscriptions->count()) {
-            throw new ModelGetEmptyException("Subscription's Guardian");
+            // throw new ModelGetEmptyException("Subscription's Guardian");
         }
 
         return response()->json([

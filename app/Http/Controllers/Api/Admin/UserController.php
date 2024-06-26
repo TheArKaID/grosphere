@@ -27,7 +27,7 @@ class UserController extends Controller
         $users = UserResource::collection($this->userService->getAll());
 
         if ($users->count() == 0) {
-            throw new ModelGetEmptyException("User");
+            // throw new ModelGetEmptyException("User");
         }
 
         return response()->json([

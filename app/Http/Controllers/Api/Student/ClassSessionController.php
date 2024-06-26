@@ -32,7 +32,7 @@ class ClassSessionController extends Controller
         $classSessions = ClassSessionResource::collection($this->classSessionService->getAll());
 
         if ($classSessions->count() == 0) {
-            throw new ModelGetEmptyException('Class Sessions');
+            // throw new ModelGetEmptyException('Class Sessions');
         }
 
         return response()->json([
@@ -79,7 +79,7 @@ class ClassSessionController extends Controller
         $classSessions = ClassSessionResource::collection($this->studentService->getAllStudentClassSessions());
 
         if ($classSessions->count() == 0) {
-            throw new ModelGetEmptyException('Student Classes');
+            // throw new ModelGetEmptyException('Student Classes');
         }
 
         return response()->json([

@@ -29,7 +29,7 @@ class ChapterController extends Controller
         $chapters = ChapterResource::collection($this->chapterService->getAll($curriculum->id));
 
         if ($chapters->count() == 0) {
-            throw new ModelGetEmptyException("Chapter");
+            // throw new ModelGetEmptyException("Chapter");
         }
 
         return response()->json([

@@ -26,7 +26,7 @@ class CourseStudentController extends Controller
         $courseStudents = CourseStudentResource::collection($this->courseStudentService->getAll());
 
         if (count($courseStudents) == 0) {
-            throw new ModelGetEmptyException('CourseStudent');
+            // throw new ModelGetEmptyException('CourseStudent');
         }
 
         return response()->json([
