@@ -21,7 +21,8 @@ class AnnouncementResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'content' => $this->content,
-            'status' => (boolean)$this->status
+            'status' => (boolean)$this->status,
+            'created_at' => Carbon::parse($this->created_at)->format('Y-m-d H:i:s')
         ] : [];
     }
 }
