@@ -2,17 +2,16 @@
 
 namespace App\Http\Controllers\Api\User;
 
+use App\Exceptions\ModelGetEmptyException;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\AnnouncementResource;
 use App\Services\AnnouncementService;
 
 class AnnouncementController extends Controller
 {
-    protected $annoucementService;
-
-    public function __construct(AnnouncementService $annoucementService)
-    {
-        $this->annoucementService = $annoucementService;
+    public function __construct(
+        protected AnnouncementService $service
+    ) {
     }
 
     /**
@@ -22,7 +21,11 @@ class AnnouncementController extends Controller
      */
     public function index()
     {
-        $announcements = AnnouncementResource::collection($this->annoucementService->getAllForUser());
+        $announcements = AnnouncementResource::collection($this->service->getAll());
+
+        if($announcements->count() == 0) {
+            throw new ModelGetEmptyException("Announcements");
+        }
 
         return response()->json([
             'status' => 200,
@@ -32,13 +35,13 @@ class AnnouncementController extends Controller
     }
 
     /**
-     * @param int $annoucementid
+     * @param int $announcementid
      * 
      * @return \Illuminate\Http\Response
      */
-    public function show($annoucementid)
+    public function show($announcementid)
     {
-        $announcements = new AnnouncementResource($this->annoucementService->getByIdForUser($annoucementid));
+        $announcements = new AnnouncementResource($this->service->getOne($announcementid));
 
         return response()->json([
             'status' => 200,

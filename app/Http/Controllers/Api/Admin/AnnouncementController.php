@@ -11,7 +11,7 @@ use App\Services\AnnouncementService;
 class AnnouncementController extends Controller
 {
     public function __construct(
-        protected AnnouncementService $annoucementService
+        protected AnnouncementService $service
     ) {
     }
 
@@ -22,7 +22,7 @@ class AnnouncementController extends Controller
      */
     public function index()
     {
-        $announcements = AnnouncementResource::collection($this->annoucementService->getAll());
+        $announcements = AnnouncementResource::collection($this->service->getAll());
 
         if ($announcements->count() == 0) {
             throw new ModelGetEmptyException("Announcements");
@@ -45,7 +45,7 @@ class AnnouncementController extends Controller
     {
         $validated = $request->validated();
 
-        $announcement = new AnnouncementResource($this->annoucementService->create($validated));
+        $announcement = new AnnouncementResource($this->service->create($validated));
 
         return response()->json([
             'status' => 200,
@@ -62,7 +62,7 @@ class AnnouncementController extends Controller
      */
     public function show($id)
     {
-        $announcement = new AnnouncementResource($this->annoucementService->getOne($id));
+        $announcement = new AnnouncementResource($this->service->getOne($id));
 
         return response()->json([
             'status' => 200,
@@ -82,7 +82,7 @@ class AnnouncementController extends Controller
     {
         $validated = $request->validated();
 
-        $announcement = new AnnouncementResource($this->annoucementService->update($id, $validated));
+        $announcement = new AnnouncementResource($this->service->update($id, $validated));
 
         return response()->json([
             'status' => 200,
@@ -99,7 +99,7 @@ class AnnouncementController extends Controller
      */
     public function destroy($id)
     {
-        $this->annoucementService->delete($id);
+        $this->service->delete($id);
 
         return response()->json([
             'status' => 200,
@@ -116,7 +116,7 @@ class AnnouncementController extends Controller
      */
     public function toggleStatus($announcement_id)
     {
-        $announcement = new AnnouncementResource($this->annoucementService->toggleStatus($announcement_id));
+        $announcement = new AnnouncementResource($this->service->toggleStatus($announcement_id));
 
         return response()->json([
             'status' => 200,
