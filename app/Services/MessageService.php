@@ -4,13 +4,13 @@ namespace App\Services;
 
 use App\Events\NewMessage;
 use App\Exceptions\MessageException;
+use App\Jobs\StoreFileMessage;
 use App\Models\Message;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 
 class MessageService
 {
@@ -262,8 +262,7 @@ class MessageService
 
                 if (isset($data['attachments']) && count($data['attachments'])) {
                     foreach ($data['attachments'] as $attachment) {
-                        // TODO: Use queue to upload attachments
-                        Storage::disk('s3')->put('messages' . DIRECTORY_SEPARATOR . $m->id, $attachment);
+                        StoreFileMessage::dispatch($m, $attachment)->afterCommit();
                     }
                 }
             }
