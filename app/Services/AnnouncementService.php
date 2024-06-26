@@ -17,14 +17,15 @@ class AnnouncementService
      */
     public function getAll()
     {
+        $model = $this->model;
         if (request()->has('search')) {
             $search = request()->get('search');
-            $this->model = $this->search($search);
+            $model = $this->search($search);
         }
         if (request()->has('page') && request()->get('page') == 'all') {
-            return $this->model->get();
+            return $model->get();
         }
-        return $this->model->paginate(request('size', 10));
+        return $model->paginate(request('size', 10));
     }
 
     /**
