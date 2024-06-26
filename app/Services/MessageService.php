@@ -62,12 +62,12 @@ class MessageService
         // Retrieve all messages involving the user and eager load the related sender and recipient
         $messages = $this->model->where('sender_id', $userId)
             ->orWhere('recipient_id', $userId)
-            ->with(['sender', 'recipient'])
+            ->with(['sender'])
             ->get();
 
         // Extract unique conversations
         $conversations = $messages->map(function ($message) use ($userId) {
-            return $message->sender_id == $userId ? $message->recipient : $message->sender;
+            return $message->sender_id == $userId ? $message->getRecipient() : $message->sender;
         })->unique('id');
 
         // Get the last message and unread count for each conversation

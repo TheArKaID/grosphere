@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Laravel\Reverb\Loggers\Log;
 
 /**
  * @property string $id
@@ -41,11 +43,32 @@ class Message extends Model
     protected $fillable = ['sender_id', 'recipient_id', 'recipient_group_id', 'message', 'is_read', 'created_at', 'updated_at'];
 
     /**
+     * Get the recipientUser that owns the Message
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function recipient()
+    public function recipientUser(): BelongsTo
     {
-        return $this->recipient_group_id ? $this->belongsTo(ClassGroup::class, 'recipient_group_id') : $this->belongsTo(User::class, 'recipient_id');
+        return $this->belongsTo(User::class, 'recipient_id');
+    }
+
+    /**
+     * Get the recipientGroup that owns the Message
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function recipientGroup(): BelongsTo
+    {
+        return $this->belongsTo(ClassGroup::class, 'recipient_group_id');
+    }
+
+    public function getRecipient()
+    {
+        if ($this->recipient_group_id) {
+            return $this->recipientGroup;
+        } else {
+            return $this->recipientUser;
+        }
     }
 
     /**
@@ -67,8 +90,12 @@ class Message extends Model
             static::addGlobalScope('agency', function ($builder) {
                 $builder->whereHas('sender', function ($query) {
                     $query->where('agency_id', auth()->user()->agency_id);
-                })->orWhereHas('recipient', function ($query) {
-                    $query->where('agency_id', auth()->user()->agency_id);
+                })->orWhere(function ($query) {
+                    $query->whereHas('recipientUser', function ($query) {
+                        $query->where('agency_id', auth()->user()->agency_id);
+                    })->orWhereHas('recipientGroup', function ($query) {
+                        $query->where('agency_id', auth()->user()->agency_id);
+                    });;
                 });
             });
         }
