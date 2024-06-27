@@ -26,10 +26,6 @@ class AttendanceController extends Controller
     {
         $attendances = AttendanceResource::collection($this->attendanceService->pair());
 
-        if ($attendances->count() == 0) {
-            // throw new ModelGetEmptyException("Attendance");
-        }
-
         return response()->json([
             'status' => 200,
             'message' => 'All attendance',
@@ -75,5 +71,21 @@ class AttendanceController extends Controller
     public function destroy(Attendance $attendance)
     {
         //
+    }
+
+    /**
+     * Get All groups of all student attendance.
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function showGroup()
+    {
+        $attendances = $this->attendanceService->allGroups();
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'All attendance',
+            'data' => ($attendances)
+        ], 201);
     }
 }

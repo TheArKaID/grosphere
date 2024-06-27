@@ -113,9 +113,14 @@ Route::middleware(['auth:api'])->group(function () {
         
         Route::apiResource('class-sessions', ClassSessionController::class);
 
-        Route::post('attendances', [AttendanceController::class, 'store'])->name('attendances.store');
-        Route::get('attendances', [AttendanceController::class, 'index'])->name('attendances.index');
-        Route::get('attendances/{attendance}', [AttendanceController::class, 'show'])->name('attendances.index');
+        Route::prefix('attendances')->group(function () {
+            Route::post('', [AttendanceController::class, 'store'])->name('attendances.store');
+            Route::get('', [AttendanceController::class, 'index'])->name('attendances.index');
+            Route::get('groups', [AttendanceController::class, 'showGroup'])->name('attendances.group');
+            
+            Route::get('{attendance}', [AttendanceController::class, 'show'])->name('attendances.index');
+            
+        });
 
         Route::apiResource('class-groups', ClassGroupController::class);
     });

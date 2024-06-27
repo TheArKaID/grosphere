@@ -207,4 +207,84 @@ class AttendanceService
             'out' => $out ? AttendanceResource::make($out) : null
         ];
     }
+
+    /**
+     * Get All groups of all student attendance.
+     * 
+     * @return array|Collection
+     */
+    function allGroups() : array|\Illuminate\Database\Eloquent\Collection
+    {
+        request()->merge(['page' => 'all']);
+        $classGroups = app()->make(ClassGroupService::class)->getAll();
+
+        // TODO: Load students.leaveRequests
+        $classGroups->load(['students.attendances' => fn($q) => [
+            ($date = request()->get('date') ?? now()) ? $q->whereDate('created_at', $date)->whereType('in') : $q
+        ]]);
+
+        // Count the total of students in each class group
+        $classGroups->map(function ($classGroup) {
+            $totalAttendance = 0;
+            $classGroup->totalStudent = $classGroup->students->count();
+            $classGroup->students->map(function ($student) use (&$totalAttendance) {
+                $totalAttendance = $totalAttendance + ($student->attendances->count() > 0 ? 1 : 0);
+            });
+            $classGroup->totalAttendance = $totalAttendance;
+            $totalAttendance = 0;
+            unset($classGroup->students);
+            return $classGroup;
+        });
+        
+        return $classGroups;
+    }
+
+    /**
+     * Get All pairs of all student attendance.
+     * 
+     * @return array
+     */
+    function allPairs()
+    {
+        $students = $this->attendance->with(['admin'])->whereType('in')->get();
+
+        return $students;
+        $pairs = [];
+        foreach ($students as $student) {
+            $pairs[] = [
+                'in' => $student->where('type', 'in')->first(),
+                'out' => $student->where('type', 'out')->first()
+            ];
+        }
+
+        return $pairs;
+    }
+
+    /**
+     * Get Attendance record by student id.
+     * Return all in and out attendance records.
+     * 
+     * @param string $student_id
+     * 
+     * @return array
+     */
+    function findByStudent(string $student_id) : array
+    {
+        $in = $this->attendance->where('student_id', $student_id)
+            ->where('type', 'in')
+            ->latest()
+            ->get()
+            ->load(['student.user', 'guardian']);
+
+        $out = $this->attendance->where('student_id', $student_id)
+            ->where('type', 'out')
+            ->latest()
+            ->get()
+            ->load(['student.user', 'guardian']);
+
+        return [
+            'in' => AttendanceResource::collection($in),
+            'out' => AttendanceResource::collection($out)
+        ];
+    }
 }
