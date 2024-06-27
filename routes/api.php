@@ -117,7 +117,8 @@ Route::middleware(['auth:api'])->group(function () {
             Route::post('', [AttendanceController::class, 'store'])->name('attendances.store');
             Route::get('', [AttendanceController::class, 'index'])->name('attendances.index');
             Route::get('groups', [AttendanceController::class, 'showGroup'])->name('attendances.group');
-            
+            Route::get('groups/{classGroup}', [AttendanceController::class, 'showGroupDetail'])->name('attendances.group.detail');
+
             Route::get('{attendance}', [AttendanceController::class, 'show'])->name('attendances.index');
             
         });

@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Http\Resources\AttendanceResource;
 use App\Models\Attendance;
+use App\Models\ClassGroup;
 use Doctrine\DBAL\Query;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\Builder;
@@ -237,6 +238,57 @@ class AttendanceService
         });
         
         return $classGroups;
+    }
+
+    /**
+     * Get detail of the class group for attendance
+     * 
+     * @param string $classGroup
+     * 
+     * @return ClassGroup
+     */
+    function groupDetail(string $classGroup) : ClassGroup
+    {
+        $classGroup = app()->make(ClassGroupService::class)->getOne($classGroup);
+
+        $classGroup->load(['students.attendances' => fn($q) => [
+            ($date = request()->get('date') ?? now()) ? $q->whereDate('created_at', $date) : $q
+        ]]);
+
+        // TODO: Include LeaveRequest
+        $classGroup->students->map(function ($student) {
+            $student->in = $student->attendances->where('type', 'in')->first()?->created_at;
+            $student->out = $student->attendances->where('type', 'out')->first()?->created_at;
+            unset($student->attendances);
+            unset($student->pivot);
+        });
+
+        return $classGroup;
+    }
+
+    /**
+     * Get Student First in and Last out attendance.
+     * 
+     * @param string $student_id
+     * 
+     * @return array
+     */
+    function firstLastPair(string $student_id) : array
+    {
+        $in = $this->attendance->where('student_id', $student_id)
+            ->where('type', 'in')
+            ->oldest()
+            ->first();
+
+        $out = $this->attendance->where('student_id', $student_id)
+            ->where('type', 'out')
+            ->latest()
+            ->first();
+
+        return [
+            'in' => $in,
+            'out' => $out
+        ];
     }
 
     /**

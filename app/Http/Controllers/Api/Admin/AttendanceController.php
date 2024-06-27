@@ -8,6 +8,7 @@ use App\Http\Requests\StoreAttendanceRequest;
 use App\Http\Requests\UpdateAttendanceRequest;
 use App\Http\Resources\AttendanceResource;
 use App\Models\Attendance;
+use App\Models\ClassGroup;
 use App\Services\AttendanceService;
 
 class AttendanceController extends Controller
@@ -81,6 +82,24 @@ class AttendanceController extends Controller
     public function showGroup()
     {
         $attendances = $this->attendanceService->allGroups();
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'All attendance',
+            'data' => ($attendances)
+        ], 201);
+    }
+
+    /**
+     * Get detail of the class group for attendance
+     * 
+     * @param ClassGroup $classGroup
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function showGroupDetail(ClassGroup $classGroup)
+    {
+        $attendances = $this->attendanceService->groupDetail($classGroup->id);
 
         return response()->json([
             'status' => 200,
