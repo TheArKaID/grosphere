@@ -1,55 +1,178 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Create The Application
-|--------------------------------------------------------------------------
-|
-| The first thing we will do is create a new Laravel application instance
-| which serves as the "glue" for all the components of Laravel, and is
-| the IoC container for the system binding all of the various parts.
-|
-*/
+use App\Exceptions\AgoraException;
+use App\Exceptions\EndClassSessionException;
+use App\Exceptions\JoinClassSessionException;
+use App\Exceptions\MailException;
+use App\Exceptions\MessageException;
+use App\Exceptions\ModelGetEmptyException;
+use App\Exceptions\RegisterStudentClassException;
+use App\Exceptions\TeacherFileException;
+use Illuminate\Auth\AuthenticationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Foundation\Application;
+use Illuminate\Foundation\Configuration\Exceptions;
+use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Validation\ValidationException;
+use PHPOpenSourceSaver\JWTAuth\Exceptions\JWTException;
+use Spatie\Permission\Exceptions\UnauthorizedException;
+use Spatie\Permission\Middleware\PermissionMiddleware;
+use Spatie\Permission\Middleware\RoleMiddleware;
+use Spatie\Permission\Middleware\RoleOrPermissionMiddleware;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-$app = new Illuminate\Foundation\Application(
-    $_ENV['APP_BASE_PATH'] ?? dirname(__DIR__)
-);
+return Application::configure(basePath: dirname(__DIR__))
+    ->withRouting(
+        web: __DIR__.'/../routes/web.php',
+        api: __DIR__.'/../routes/api.php',
+        commands: __DIR__.'/../routes/console.php',
+        health: '/up',
+    )
+    ->withMiddleware(function (Middleware $middleware) {
+        $middleware->alias([
+            'permission' => PermissionMiddleware::class,
+            'role' => RoleMiddleware::class,
+            'role_or_permission' => RoleOrPermissionMiddleware::class,
+        ]);
+    })
+    ->withExceptions(function (Exceptions $exceptions) {
+        $exceptions->renderable(function (NotFoundHttpException $e, $request) {
+            if ($request->is('api/*')) {
+                if ($e->getPrevious() instanceof ModelNotFoundException) {
+                    return response()->json([
+                        'status' => 400,
+                        'message' => 'Failed. ' . explode('\\', $e->getPrevious()->getModel())[2] . ' not found'
+                    ], 400);
+                }
 
-/*
-|--------------------------------------------------------------------------
-| Bind Important Interfaces
-|--------------------------------------------------------------------------
-|
-| Next, we need to bind some important interfaces into the container so
-| we will be able to resolve them when needed. The kernels serve the
-| incoming requests to this application from both the web and CLI.
-|
-*/
+                if ($e->getPrevious() instanceof ModelGetEmptyException) {
+                    return response()->json([
+                        'status' => 400,
+                        'message' => 'Failed. No ' . $e->getPrevious()->getMessage() . ' found'
+                    ], 400);
+                }
+                return response()->json([
+                    'status' => 404,
+                    'message' => 'Target not found'
+                ], 404);
+            }
+        });
 
-$app->singleton(
-    Illuminate\Contracts\Http\Kernel::class,
-    App\Http\Kernel::class
-);
+        $exceptions->renderable(function (AuthenticationException $e, $request) {
+            if ($request->is('api/*')) {
+                return response()->json([
+                    'status' => 403,
+                    'message' => 'Not authenticated'
+                ], 403);
+            }
+        });
 
-$app->singleton(
-    Illuminate\Contracts\Console\Kernel::class,
-    App\Console\Kernel::class
-);
+        $exceptions->renderable(function (UnauthorizedException $e, $request) {
+            if ($request->is('api/*')) {
+                return response()->json([
+                    'status' => 403,
+                    'message' => 'Not authenticated'
+                ], 403);
+            }
+        });
 
-$app->singleton(
-    Illuminate\Contracts\Debug\ExceptionHandler::class,
-    App\Exceptions\Handler::class
-);
+        $exceptions->renderable(function (ValidationException $e, $request) {
+            if ($request->is('api/*')) {
+                return response()->json([
+                    'status' => 400,
+                    'message' => "Validation failed",
+                    'errors' => $e->validator->getMessageBag()
+                ], 400);
+            }
+        });
 
-/*
-|--------------------------------------------------------------------------
-| Return The Application
-|--------------------------------------------------------------------------
-|
-| This script returns the application instance. The instance is given to
-| the calling script so we can separate the building of the instances
-| from the actual running of the application and sending responses.
-|
-*/
+        $exceptions->renderable(function (JWTException $e, $request) {
+            if ($request->is('api/*')) {
+                return response()->json([
+                    'status' => 403,
+                    'message' => 'Cannot verify token'
+                ], 403);
+            }
+        });
 
-return $app;
+        $exceptions->renderable(function (AgoraException $e, $request) {
+            if ($request->is('api/*')) {
+                $response = [
+                    'status' => 400,
+                    'message' => 'Failed Creating Meeting Room'                    
+                ];
+                if(config('app.debug')) {
+                    $response['errors'] = collect(json_decode($e->getMessage()))->pluck('message');
+                }
+                return response()->json($response, 404);
+            }
+        });
+
+        $exceptions->renderable(function (JoinClassSessionException $e, $request) {
+            if ($request->is('api/*')) {
+                return response()->json([
+                    'status' => 400,
+                    'message' => $e->getMessage()
+                ], 400);
+            }
+        });
+
+        $exceptions->renderable(function (RegisterStudentClassException $e, $request) {
+            if ($request->is('api/*')) {
+                return response()->json([
+                    'status' => 400,
+                    'message' => $e->getMessage()
+                ], 400);
+            }
+        });
+        
+        $exceptions->renderable(function (EndClassSessionException $e, $request) {
+            if ($request->is('api/*')) {
+                return response()->json([
+                    'status' => 400,
+                    'message' => $e->getMessage()
+                ], 400);
+            }
+        });
+
+        $exceptions->renderable(function (TeacherFileException $e, $request) {
+            if ($request->is('api/*')) {
+                return response()->json([
+                    'status' => 400,
+                    'message' => $e->getMessage()
+                ], 400);
+            }
+        });
+
+        $exceptions->renderable(function (MailException $e, $request) {
+            if ($request->is('api/*')) {
+                return response()->json([
+                    'status' => 400,
+                    'message' => $e->getMessage()
+                ], 400);
+            }
+        });
+
+        $exceptions->renderable(function (MessageException $e, $request) {
+            if ($request->is('api/*')) {
+                return response()->json([
+                    'status' => 400,
+                    'message' => $e->getMessage()
+                ], 400);
+            }
+        });
+
+        $exceptions->renderable(function (Throwable $e, $request) {
+            if ($request->is('api/*')) {
+                if (config('app.debug')) {
+                    return response($e, 500);
+                }
+
+                $response = [
+                    'status' => 500,
+                    'message' => 'Internal server error'
+                ];
+                return response()->json($response, 500);
+            }
+        });
+    })->create();
