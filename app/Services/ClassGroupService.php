@@ -144,4 +144,18 @@ class ClassGroupService
 
         DB::commit();
     }
+
+    /**
+     * Check if student is in class group
+     * 
+     * @param string $classGroupId
+     * @param string $studentId
+     * 
+     * @return bool
+     */
+    public function checkStudent(string $classGroupId, string $studentId)
+    {
+        $classGroup = $this->model->findOrFail($classGroupId);
+        return $classGroup->students()->where('student_id', $studentId)->exists();
+    }
 }

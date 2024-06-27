@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Http\Resources\AttendanceResource;
 use App\Models\Attendance;
 use App\Models\ClassGroup;
+use App\Models\Student;
 use Doctrine\DBAL\Query;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\Builder;
@@ -267,76 +268,34 @@ class AttendanceService
     }
 
     /**
-     * Get Student First in and Last out attendance.
+     * Get the attendance record by student id.
      * 
-     * @param string $student_id
+     * @param ClassGroup $group_id
+     * @param Student $student_id
      * 
-     * @return array
+     * @return Student
      */
-    function firstLastPair(string $student_id) : array
+    function detailStudentInGroup(ClassGroup $group, Student $student) : Student
     {
-        $in = $this->attendance->where('student_id', $student_id)
-            ->where('type', 'in')
-            ->oldest()
-            ->first();
-
-        $out = $this->attendance->where('student_id', $student_id)
-            ->where('type', 'out')
-            ->latest()
-            ->first();
-
-        return [
-            'in' => $in,
-            'out' => $out
-        ];
-    }
-
-    /**
-     * Get All pairs of all student attendance.
-     * 
-     * @return array
-     */
-    function allPairs()
-    {
-        $students = $this->attendance->with(['admin'])->whereType('in')->get();
-
-        return $students;
-        $pairs = [];
-        foreach ($students as $student) {
-            $pairs[] = [
-                'in' => $student->where('type', 'in')->first(),
-                'out' => $student->where('type', 'out')->first()
-            ];
+        $classGroupService = app()->make(ClassGroupService::class);
+        if (!$classGroupService->checkStudent($group->id, $student->id)) {
+            throw ValidationException::withMessages(['student' => 'Student not found in the class group.']);
         }
 
-        return $pairs;
-    }
+        $student->load(['attendances' => fn($q) => [
+            ($date = request()->get('date') ?? now()) ? $q->whereDate('created_at', $date)->whereType('in') : $q
+        ]]);
 
-    /**
-     * Get Attendance record by student id.
-     * Return all in and out attendance records.
-     * 
-     * @param string $student_id
-     * 
-     * @return array
-     */
-    function findByStudent(string $student_id) : array
-    {
-        $in = $this->attendance->where('student_id', $student_id)
-            ->where('type', 'in')
-            ->latest()
-            ->get()
-            ->load(['student.user', 'guardian']);
+        $attendances = $student->attendances;
 
-        $out = $this->attendance->where('student_id', $student_id)
-            ->where('type', 'out')
-            ->latest()
-            ->get()
-            ->load(['student.user', 'guardian']);
+        unset($student->attendances);
 
-        return [
-            'in' => AttendanceResource::collection($in),
-            'out' => AttendanceResource::collection($out)
-        ];
+        // TODO: Include LeaveRequest
+        $attendances = $attendances->map(function ($attendance) {
+            return $this->find($attendance->id);
+        });
+
+        $student->attendances = $attendances;
+        return $student;
     }
 }

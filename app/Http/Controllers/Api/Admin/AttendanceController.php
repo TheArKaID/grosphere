@@ -9,6 +9,7 @@ use App\Http\Requests\UpdateAttendanceRequest;
 use App\Http\Resources\AttendanceResource;
 use App\Models\Attendance;
 use App\Models\ClassGroup;
+use App\Models\Student;
 use App\Services\AttendanceService;
 
 class AttendanceController extends Controller
@@ -105,6 +106,25 @@ class AttendanceController extends Controller
             'status' => 200,
             'message' => 'All attendance',
             'data' => ($attendances)
+        ], 201);
+    }
+
+    /**
+     * Get detail of student on the group for attendance
+     * 
+     * @param ClassGroup $classGroup
+     * @param Student $student
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function showStudentDetail(ClassGroup $classGroup, Student $student)
+    {
+        $attendances = $this->attendanceService->detailStudentInGroup($classGroup, $student);
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'All attendance',
+            'data' => $attendances
         ], 201);
     }
 }
