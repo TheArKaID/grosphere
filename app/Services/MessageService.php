@@ -61,10 +61,12 @@ class MessageService
         }
 
         // Retrieve all messages involving the user and eager load the related sender and recipient
-        $messages = $this->model->where('sender_id', $userId)
-            ->orWhere('recipient_id', $userId)
-            ->with(['sender'])
-            ->get();
+        $messages = $this->model->where(function ($query) use ($userId) {
+            $query->where('sender_id', $userId)
+            ->orWhere('recipient_id', $userId);
+        })->where('recipient_group_id', null)
+        ->with(['sender'])
+        ->get();
 
         // Extract unique conversations
         $conversations = $messages->map(function ($message) use ($userId) {
@@ -122,12 +124,6 @@ class MessageService
             $classGroups = $user->detail->classGroups;
         }
 
-        // Exlcude some class groups that id in $excludes
-        if (count($excludes)) {
-            $classGroups = $classGroups->filter(function ($classGroup) use ($excludes) {
-                return !in_array($classGroup->id, $excludes);
-            });
-        }
         // Retrieve last message for each class group in the Message model
         $lastMessages = $classGroups?->map(function ($classGroup) use ($userId) {
             $message = $this->model->where('recipient_group_id', $classGroup->id)
