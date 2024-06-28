@@ -154,23 +154,23 @@ class MessageService
     /**
      * Get detail Conversation between logged in user and another user
      * 
-     * @param string $userId
+     * @param string $id
      * 
      * @return mixed
      */
-    public function getConversation(string $userId): mixed
+    public function getConversation(string $id): mixed
     {
-        $user = User::find($userId);
+        $user = User::find($id);
 
         if (!$user) {
-            throw new MessageException('User not found');
+            app()->make(ClassGroupService::class)->getOne($id, true);
         }
 
         $messages = $this->model->orderBy('created_at', 'asc')
-        ->where(function ($query) use ($userId) {
-            $query->where('sender_id', Auth::id())->where('recipient_id', $userId);
-        })->orWhere(function ($query) use ($userId) {
-            $query->where('sender_id', $userId)->where('recipient_id', Auth::id());
+        ->where(function ($query) use ($id) {
+            $query->where('sender_id', Auth::id())->where('recipient_id', $id);
+        })->orWhere(function ($query) use ($id) {
+            $query->where('sender_id', $id)->where('recipient_id', Auth::id());
         })->get();
 
         return $messages;

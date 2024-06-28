@@ -60,16 +60,16 @@ class MessageController extends Controller
      * Show a message
      * 
      * @param Request $request
-     * @param string $message
+     * @param string $messageId
      * 
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show(Request $request, string $message)
+    public function show(Request $request, string $messageId)
     {
         return response()->json([
             'status' => 200,
             'message' => 'Success',
-            'data' => MessageDetailResource::collection($this->service->getConversation($message))
+            'data' => MessageDetailResource::collection($this->service->getConversation($messageId))
         ], 200);
     }
 
