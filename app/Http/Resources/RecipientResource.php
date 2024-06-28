@@ -21,7 +21,7 @@ class RecipientResource extends JsonResource
             'id' => $this->id,
             'name' => $this->first_name . ' ' . $this->last_name,
             'type' => 'user',
-            'roles' => $this->roles->pluck('name')[0],
+            'role' => $this->roles->pluck('name')[0],
             'photo' => $this->getPhoto()
         ] : [
             'id' => $this->id,
