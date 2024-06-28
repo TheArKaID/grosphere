@@ -192,7 +192,7 @@ Route::middleware(['auth:api'])->group(function () {
 
         Route::prefix('announcements')->group(function () {
             Route::put('', [UserAnnouncementController::class, 'index'])->name('announcements.index');
-            Route::put('{announcement_id)', [UserAnnouncementController::class, 'show'])->name('announcements.show');
+            Route::put('{announcement_id}', [UserAnnouncementController::class, 'show'])->name('announcements.show');
         });
     });
 
