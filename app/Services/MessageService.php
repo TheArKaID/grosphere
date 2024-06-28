@@ -90,7 +90,9 @@ class MessageService
 
         $classGroupConversations = $this->getClassGroupConversations($userId);
 
-        return $lastMessages->merge($classGroupConversations);
+        if ($classGroupConversations)
+            return $lastMessages->merge($classGroupConversations);
+        return $lastMessages;
     }
 
     /**
@@ -120,7 +122,7 @@ class MessageService
         }
 
         // Retrieve last message for each class group in the Message model
-        $lastMessages = $classGroups->map(function ($classGroup) use ($userId) {
+        $lastMessages = $classGroups?->map(function ($classGroup) use ($userId) {
             $message = $this->model->where('recipient_group_id', $classGroup->id)
                 ->orWhere('sender_id', $userId)
                 ->where('recipient_id', $classGroup->teacher_id)
@@ -138,7 +140,7 @@ class MessageService
                 'unread' => $unreadCount
             ];
         });
-// dd($lastMessages);
+
         return $lastMessages;
     }
 
@@ -227,7 +229,7 @@ class MessageService
             }
         })($user, $role);
 
-        return $users->merge($classGroups);
+        return $classGroups ? $users->merge($classGroups) : $users;
     }
 
     /**
