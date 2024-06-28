@@ -261,6 +261,7 @@ class AttendanceService
         $classGroup->students->map(function ($student) use (&$students) {
             $temp = $student;
             $student = [];
+            $student['id'] = $temp->id;
             $student['in'] = $temp->attendances->where('type', 'in')->first()?->created_at;
             $student['out'] = $temp->attendances->where('type', 'out')->first()?->created_at;
             $student['first_name'] = $temp->user->first_name;
