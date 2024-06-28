@@ -18,6 +18,13 @@ class MessageDetailResource extends JsonResource
         parent::wrap('message_senders');
         return $this->resource ? [
             'id' => $this['id'],
+            'sender' => [
+                'id' => $this['sender_id'],
+                'first_name' => $this['sender']->first_name,
+                'last_name' => $this['sender']->last_name,
+               // 'role' => $this['sender']->roles()->first()->name,
+                'photo' => $this->getPhoto()
+            ],
             'message' => $this['message'],
             'is_me' => $this['sender_id'] === auth()->id(),
             'is_read' => $this['is_read'],
@@ -41,18 +48,18 @@ class MessageDetailResource extends JsonResource
     }
 
     function getPhoto() {
-        switch ($this['user']->roles[0]->name) {
+        switch ($this['sender']->roles[0]->name) {
             case 'student':
-                return Storage::disk('s3')->url('students/' . $this['user']->detail->id . '.png');
+                return Storage::disk('s3')->url('students/' . $this['sender']->detail->id . '.png');
                 break;
             case 'teacher':
-                return Storage::disk('s3')->url('teachers/' . $this['user']->detail->id . '.png');
+                return Storage::disk('s3')->url('teachers/' . $this['sender']->detail->id . '.png');
                 break;
             case 'guardian':
-                return Storage::disk('s3')->url('guardians/' . $this['user']->detail->id . '.png');
+                return Storage::disk('s3')->url('guardians/' . $this['sender']->detail->id . '.png');
                 break;
             case 'admin':
-                return Storage::disk('s3')->url('admins/' . $this['user']->detail->id . '.png');
+                return Storage::disk('s3')->url('admins/' . $this['sender']->detail->id . '.png');
                 break;
             default:
                 return asset('images/user/profile.png');
