@@ -252,17 +252,26 @@ class AttendanceService
     {
         $classGroup = app()->make(ClassGroupService::class)->getOne($classGroup);
 
-        $classGroup->load(['students.attendances' => fn($q) => [
+        $classGroup->load(['students.user', 'students.attendances' => fn($q) => [
             ($date = request()->get('date') ?? now()) ? $q->whereDate('created_at', $date) : $q
         ]]);
 
+        $students = [];
         // TODO: Include LeaveRequest
-        $classGroup->students->map(function ($student) {
-            $student->in = $student->attendances->where('type', 'in')->first()?->created_at;
-            $student->out = $student->attendances->where('type', 'out')->first()?->created_at;
-            unset($student->attendances);
-            unset($student->pivot);
+        $classGroup->students->map(function ($student) use (&$students) {
+            $temp = $student;
+            $student = [];
+            $student['in'] = $temp->attendances->where('type', 'in')->first()?->created_at;
+            $student['out'] = $temp->attendances->where('type', 'out')->first()?->created_at;
+            $student['first_name'] = $temp->user->first_name;
+            $student['last_name'] = $temp->user->last_name;
+            // TODO: Also Check LeaveRequest
+            $student['status'] = $temp->attendances->count() > 0 ? 'Attend' : 'Absent';
+            $students[] = $student;
         });
+
+        unset($classGroup->students);
+        $classGroup->students = $students;
 
         return $classGroup;
     }
@@ -282,7 +291,7 @@ class AttendanceService
             throw ValidationException::withMessages(['student' => 'Student not found in the class group.']);
         }
 
-        $student->load(['attendances' => fn($q) => [
+        $student->load(['user', 'attendances' => fn($q) => [
             ($date = request()->get('date') ?? now()) ? $q->whereDate('created_at', $date)->whereType('in') : $q
         ]]);
 
@@ -296,6 +305,9 @@ class AttendanceService
         });
 
         $student->attendances = $attendances;
+        $student->first_name = $student->user->first_name;
+        $student->last_name = $student->user->last_name;
+        unset($student->user);
         return $student;
     }
 }
