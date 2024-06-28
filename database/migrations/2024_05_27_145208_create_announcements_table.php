@@ -16,7 +16,7 @@ class CreateAnnouncementsTable extends Migration
         Schema::create('announcements', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->foreignUuid('agency_id')->constrained('agencies')->cascadeOnDelete();
-            $table->foreignUuid('admin_id')->constrained('admins')->nullOnDelete();
+            $table->foreignUuid('admin_id')->nullable()->constrained('admins')->nullOnDelete();
             $table->string('title');
             $table->text('content');
             $table->tinyInteger('status')->default(1);
