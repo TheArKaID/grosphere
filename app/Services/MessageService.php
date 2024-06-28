@@ -8,6 +8,7 @@ use App\Jobs\StoreFileMessage;
 use App\Models\Message;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection as SupportCollection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -88,11 +89,9 @@ class MessageService
             ];
         });
 
-        $classGroupConversations = $this->getClassGroupConversations($userId);
+        $classGroupConversations = $this->getClassGroupConversations($userId, $conversations->pluck('id')->toArray());
 
-        if ($classGroupConversations)
-            return $lastMessages->merge($classGroupConversations);
-        return $lastMessages;
+        return $classGroupConversations ? $lastMessages->merge($classGroupConversations) : $lastMessages;
     }
 
     /**
@@ -102,12 +101,12 @@ class MessageService
      * 
      * @return mixed
      */
-    public function getClassGroupConversations(string $userId = null): mixed
+    public function getClassGroupConversations(string $userId = null, array $excludes = []): mixed
     {
         if (!$userId) {
             $userId = Auth::id();
         }
-        
+
         $user = User::find($userId);
 
         if (!$user) {
@@ -121,6 +120,12 @@ class MessageService
             $classGroups = $user->detail->classGroups;
         }
 
+        // Exlcude some class groups that id in $excludes
+        if (count($excludes)) {
+            $classGroups = $classGroups->filter(function ($classGroup) use ($excludes) {
+                return !in_array($classGroup->id, $excludes);
+            });
+        }
         // Retrieve last message for each class group in the Message model
         $lastMessages = $classGroups?->map(function ($classGroup) use ($userId) {
             $message = $this->model->where('recipient_group_id', $classGroup->id)
