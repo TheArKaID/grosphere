@@ -202,6 +202,7 @@ class AttendanceService
         $out = $this->attendance->where('student_id', $in->student_id)
             ->where('type', 'out')
             ->whereDate('created_at', $in->created_at)
+            ->where('created_at', '>', $in->created_at)
             ->first()?->setHidden(['out'])?->load(['student.user', 'guardian']);
 
         return [
@@ -253,7 +254,7 @@ class AttendanceService
         $classGroup = app()->make(ClassGroupService::class)->getOne($classGroup);
 
         $classGroup->load(['students.user', 'students.attendances' => fn($q) => [
-            ($date = request()->get('date') ?? now()) ? $q->whereDate('created_at', $date) : $q
+            ($date = request()->get('date') ?? now()) ? $q->whereDate('created_at', $date)->latest() : $q->latest()
         ]]);
 
         $students = [];
@@ -261,9 +262,13 @@ class AttendanceService
         $classGroup->students->map(function ($student) use (&$students) {
             $temp = $student;
             $student = [];
+            $id = $temp->attendances->where('type', 'in')->first()?->id;
+// dd(collect($this->find($id)));
+            $student = $id
+                ? collect($this->find($id))->transform(fn($inout) => $inout?->created_at)->toArray()
+                : ['in' => null, 'out' => null];
+
             $student['id'] = $temp->id;
-            $student['in'] = $temp->attendances->where('type', 'in')->first()?->created_at;
-            $student['out'] = $temp->attendances->where('type', 'out')->first()?->created_at;
             $student['first_name'] = $temp->user->first_name;
             $student['last_name'] = $temp->user->last_name;
             // TODO: Also Check LeaveRequest
@@ -272,6 +277,7 @@ class AttendanceService
         });
 
         unset($classGroup->students);
+
         $classGroup->students = $students;
 
         return $classGroup;

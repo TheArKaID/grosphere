@@ -104,8 +104,8 @@ class AttendanceController extends Controller
 
         return response()->json([
             'status' => 200,
-            'message' => 'All attendance',
-            'data' => ($attendances)
+            'message' => 'All Student in a Group Attendance',
+            'data' => $attendances
         ], 201);
     }
 
@@ -123,7 +123,7 @@ class AttendanceController extends Controller
 
         return response()->json([
             'status' => 200,
-            'message' => 'All attendance',
+            'message' => 'A Student in a Group Attendance',
             'data' => $attendances
         ], 201);
     }
