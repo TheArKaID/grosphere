@@ -167,6 +167,8 @@ class MessageService
             $query->where('sender_id', Auth::id())->where('recipient_id', $id);
         })->orWhere(function ($query) use ($id) {
             $query->where('sender_id', $id)->where('recipient_id', Auth::id());
+        })->orWhere(function ($query) use ($id) {
+            $query->where('recipient_group_id', $id);
         })->get();
 
         return $messages;
