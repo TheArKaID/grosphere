@@ -22,7 +22,7 @@ class MessageDetailResource extends JsonResource
                 'id' => $this['sender_id'],
                 'first_name' => $this['sender']->first_name,
                 'last_name' => $this['sender']->last_name,
-               // 'role' => $this['sender']->roles()->first()->name,
+                'role' => $this['sender']->roles[0]->name,
                 'photo' => $this->getPhoto()
             ],
             'message' => $this['message'],
