@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\Front\SearchStudentController;
 use App\Http\Controllers\Api\Guardian\AttendanceController as GuardianAttendanceController;
+use App\Http\Controllers\Api\Guardian\LeaveRequestController;
 use App\Http\Controllers\Api\Guardian\StudentController as GuardianStudentController;
 use App\Http\Controllers\Api\Student\ClassSessionController as StudentClassSessionController;
 use App\Http\Controllers\Api\Student\CourseStudentController;
@@ -155,6 +156,8 @@ Route::middleware(['auth:api'])->group(function () {
 
         Route::get('attendances', [GuardianAttendanceController::class, 'index'])->name('attendances.index');
         Route::get('attendances/{attendance}', [GuardianAttendanceController::class, 'show'])->name('attendances.index');
+
+        Route::resource('leave-request', LeaveRequestController::class);
     });
 
     Route::name('student.')->middleware(['role:student'])->prefix('student')->group(function () {

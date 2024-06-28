@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * @property string $id
@@ -65,5 +66,20 @@ class LeaveRequest extends Model
     public function leaveRequestTag(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(LeaveRequestTag::class, 'tag_id');
+    }
+
+    /**
+     * Boot on delete
+     * Delete S3 Storage
+     * 
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($leaveRequest) {
+            Storage::disk('s3')->delete('leave-requests/' . $leaveRequest->id . '.png');
+        });
     }
 }
