@@ -91,7 +91,9 @@ class MessageService
 
         $classGroupConversations = $this->getClassGroupConversations($userId, $conversations->pluck('id')->toArray());
 
-        return $classGroupConversations ? $lastMessages->merge($classGroupConversations) : $lastMessages;
+        $lastMessage = $classGroupConversations ? $lastMessages->merge($classGroupConversations) : $lastMessages;
+
+        return $lastMessage->sortByDesc('message.created_at');
     }
 
     /**
