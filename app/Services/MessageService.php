@@ -212,7 +212,7 @@ class MessageService
                 $userRecipients = ['teacher'];
                 break;
             case 'teacher':
-                $userRecipients = ['admin', 'student', 'parent'];
+                $userRecipients = ['admin', 'student', 'parent', 'guardian'];
                 break;
             default:
                 throw new MessageException('User not found');
