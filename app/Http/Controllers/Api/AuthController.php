@@ -56,13 +56,21 @@ class AuthController extends Controller
      */
     public function login(LoginUserRequest $request)
     {
-        $validated = $request->validated();
+        $origin = $request->headers->get('origin');
 
+        $validated = $request->validated();
+        
         $user = $this->userService->login($validated);
         if (!$user) {
             return response()->json([
                 'status' => 401,
                 'message' => 'Email/Username or password is wrong'
+            ], 401);
+        }
+        if ($user->agency->website != $origin) {
+            return response()->json([
+                'status' => 401,
+                'message' => 'Unauthorized'
             ], 401);
         }
         $token = auth()->login($user);
