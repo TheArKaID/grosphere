@@ -14,7 +14,7 @@ use App\Http\Controllers\Api\Admin\StudentController;
 use App\Http\Controllers\Api\Admin\TeacherController;
 use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\Front\SearchStudentController;
+use App\Http\Controllers\Api\FrontController;
 use App\Http\Controllers\Api\Guardian\AttendanceController as GuardianAttendanceController;
 use App\Http\Controllers\Api\Guardian\LeaveRequestController;
 use App\Http\Controllers\Api\Guardian\StudentController as GuardianStudentController;
@@ -48,7 +48,8 @@ Route::prefix('auth')->group(function () {
     Route::post('refresh', [AuthController::class, 'refresh']);
 });
 Route::name('front')->prefix('front')->group(function () {
-    Route::post('student/search', [SearchStudentController::class, 'index'])->name('student.search');
+    Route::post('student/search', [FrontController::class, 'searchStudent'])->name('student.search');
+    Route::get('theme', [FrontController::class, 'getTheme'])->name('theme.index');
 });
 Route::middleware(['auth:api'])->group(function () {
     Route::name('superadmin.')->middleware(['role:superadmin'])->prefix('superadmin')->group(function () {
