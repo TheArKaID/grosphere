@@ -18,8 +18,7 @@ class AnnouncementService
     public function getAll()
     {
         $model = $this->model;
-        if (request()->has('search')) {
-            $search = request()->get('search');
+        if ($search = request()->get('search')) {
             $model = $this->search($search);
         }
         if (request()->has('page') && request()->get('page') == 'all') {

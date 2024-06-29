@@ -24,8 +24,7 @@ class CourseWorkService
      */
     public function getAll()
     {
-        if (request()->has('search')) {
-            $search = request()->get('search');
+        if ($search = request()->get('search')) {
             $this->courseWork = $this->search($search);
         }
         if (request()->has('page') && request()->get('page') == 'all') {

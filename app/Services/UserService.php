@@ -30,13 +30,13 @@ class UserService
 	 */
 	public function getAll()
 	{
+		if ($search = request()->get('search')) {
+			$this->user = $this->user->where('first_name', 'like', '%' . $search . '%')
+				->orWhere('last_name', 'like', '%' . $search . '%')
+				->orWhere('email', 'like', '%' . $search . '%')
+				->orWhere('username', 'like', '%' . $search . '%');
+		}
 		if (request()->has('page') && request()->get('page') == 'all') {
-			if (request()->has('search')) {
-				$this->user = $this->user->where('first_name', 'like', '%' . request()->get('search') . '%')
-					->orWhere('last_name', 'like', '%' . request()->get('search') . '%')
-					->orWhere('email', 'like', '%' . request()->get('search') . '%')
-					->orWhere('username', 'like', '%' . request()->get('search') . '%');
-			}
 			return $this->user->get();
 		}
 		return $this->user->paginate(request('size', 10));

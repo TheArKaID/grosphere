@@ -22,8 +22,7 @@ class ChapterService
      */
     public function getAll(int $curriculum_id)
     {
-        if (request()->has('search')) {
-            $search = request()->get('search');
+        if ($search = request()->get('search')) {
             $this->chapter = $this->search($search);
         }
         if (request()->has('page') && request()->get('page') == 'all') {

@@ -23,8 +23,7 @@ class ClassGroupService
      */
     public function getAll(string $teacher_id = '')
     {
-        if (request()->has('search')) {
-            $search = request()->get('search');
+        if ($search = request()->get('search')) {
             $this->model = $this->search($search);
         }
 

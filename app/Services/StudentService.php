@@ -34,13 +34,13 @@ class StudentService
 				$query->agency();
 			});
 		}
-		if (request()->has('search')) {
-			$this->student = $this->student->whereHas('user', function ($query) {
-				$query->where('first_name', 'like', '%' . request()->get('search') . '%')
-					->orWhere('last_name', 'like', '%' . request()->get('search') . '%')
-					->orWhere('email', 'like', '%' . request()->get('search') . '%')
-					->orWhere('username', 'like', '%' . request()->get('search') . '%')
-					->orWhere('phone', 'like', '%' . request()->get('search') . '%');
+		if ($search = request()->get('search')) {
+			$this->student = $this->student->whereHas('user', function ($query) use ($search) {
+				$query->where('first_name', 'like', '%' . $search . '%')
+					->orWhere('last_name', 'like', '%' . $search . '%')
+					->orWhere('email', 'like', '%' . $search . '%')
+					->orWhere('username', 'like', '%' . $search . '%')
+					->orWhere('phone', 'like', '%' . $search . '%');
 			});
 		}
 		if (request()->has('page') && request()->get('page') == 'all') {
