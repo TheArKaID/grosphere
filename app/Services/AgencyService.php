@@ -55,21 +55,28 @@ class AgencyService
     public function create($data)
     {
         DB::beginTransaction();
+        try {
+            $agency = $this->agency->create($data);
+    
+            if ($logo = $data['logo'] ?? false) {
+                $logo = base64_decode(substr($logo, strpos($logo, ",")+1));
+                Storage::disk('s3')->put('agencies/' . $agency->id . '.png', $logo);
+            }
+    
+            if ($smallLogo = $data['logo_sm'] ?? false) {
+                $smallLogo = base64_decode(substr($smallLogo, strpos($smallLogo, ",")+1));
+                Storage::disk('s3')->put('agencies/' . $agency->id . '-sm.png', $smallLogo);
+            }
+    
+            Storage::put('agencies/' . $agency->id, json_encode($data));
 
-        $agency = $this->agency->create($data);
-
-        if ($logo = $data['logo'] ?? false) {
-            $logo = base64_decode(substr($logo, strpos($logo, ",")+1));
-            Storage::disk('s3')->put('agencies/' . $agency->id . '.png', $logo);
+            DB::commit();
+            return $agency;
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            throw $th;
         }
 
-        if ($smallLogo = $data['logo_sm'] ?? false) {
-            $smallLogo = base64_decode(substr($smallLogo, strpos($smallLogo, ",")+1));
-            Storage::disk('s3')->put('agencies/' . $agency->id . '-sm.png', $smallLogo);
-        }
-
-        DB::commit();
-        return $agency;
     }
 
     /**
