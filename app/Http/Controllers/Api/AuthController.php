@@ -56,7 +56,7 @@ class AuthController extends Controller
      */
     public function login(LoginUserRequest $request)
     {
-        $origin = $request->headers->get('origin');
+        $origin = $request->headers->get('origin', 'https://postman.grosphere.sg');
 
         $validated = $request->validated();
         
@@ -67,12 +67,15 @@ class AuthController extends Controller
                 'message' => 'Email/Username or password is wrong'
             ], 401);
         }
-        if ($user->agency->website != $origin) {
+
+        // If debug is false, check if the origin is contains the agency website
+        if ((!config('app.debug')) && str_contains($origin, $user->agency->website)) {
             return response()->json([
                 'status' => 401,
                 'message' => 'Unauthorized'
             ], 401);
         }
+
         $token = auth()->login($user);
         return response()->json([
             'status' => 200,
