@@ -310,9 +310,7 @@ class AttendanceService
         $attendances = $attendances->map(function ($attendance) {
             $a = ($x = $this->find($attendance->id)) != [] ? (function ($y) {
                 unset($y['in']['student']);
-                unset($y['in']['guardian']);
                 unset($y['out']['student']);
-                unset($y['out']['guardian']);
                 return $y;
             })($x) : [];
 
