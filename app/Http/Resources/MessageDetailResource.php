@@ -23,6 +23,15 @@ class MessageDetailResource extends JsonResource
                 'first_name' => $this['sender']->first_name,
                 'last_name' => $this['sender']->last_name,
                 'role' => $this['sender']->roles[0]->name,
+                'students' => $this->when($this['sender']->roles[0]->name === 'guardian', function () {
+                    return $this['sender']->detail->students->map(function ($student) {
+                        return [
+                            'id' => $student->id,
+                            'first_name' => $student->user->first_name,
+                            'last_name' => $student->user->last_name,
+                        ];
+                    });
+                }),
                 'photo' => $this->getPhoto()
             ],
             'message' => $this['message'],

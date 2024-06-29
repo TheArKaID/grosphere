@@ -118,10 +118,16 @@ class MessageService
         }
 
         $role = $user->roles()->first()?->name;
-        if ($role == 'admin') {
-            $classGroups = app()->make(ClassGroupService::class)->getAll();
-        } else {
-            $classGroups = $user->detail->classGroups;
+        switch ($role) {
+            case 'admin':
+                $classGroups = app()->make(ClassGroupService::class)->getAll();
+                break;
+            case 'guardian':
+                $classGroups = app()->make(ClassGroupService::class)->getByGuardian($user->detail->id);
+                break;
+            default:
+                $classGroups = $user->detail->classGroups;
+                break;
         }
 
         // Retrieve last message for each class group in the Message model
@@ -227,7 +233,9 @@ class MessageService
                 case 'admin':
                     return app()->make(ClassGroupService::class)->getAll();
                     break;
-                
+                case 'guardian':
+                    return app()->make(ClassGroupService::class)->getByGuardian($user->detail->id);
+                    break;
                 default:
                     return $user->detail->classGroups;
                     break;

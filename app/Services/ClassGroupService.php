@@ -161,4 +161,20 @@ class ClassGroupService
         $classGroup = $this->model->findOrFail($classGroupId);
         return $classGroup->students()->where('student_id', $studentId)->exists();
     }
+
+    /**
+     * Get Class Groups by Guardian id of Students
+     * 
+     * @param string $guardianId
+     * 
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getByGuardian(string $guardianId)
+    {
+        return $this->model->whereHas('students', function ($query) use ($guardianId) {
+            $query->whereHas('guardians', function ($query) use ($guardianId) {
+                $query->where('guardian_id', $guardianId);
+            });
+        })->get();
+    }
 }
