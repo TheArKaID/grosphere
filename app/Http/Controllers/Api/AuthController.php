@@ -59,7 +59,7 @@ class AuthController extends Controller
         $origin = $request->headers->get('origin', 'https://postman.grosphere.sg');
 
         $validated = $request->validated();
-        
+
         $user = $this->userService->login($validated);
         if (!$user) {
             return response()->json([
@@ -69,10 +69,10 @@ class AuthController extends Controller
         }
 
         // If debug is false, check if the origin is contains the agency website
-        if ((!config('app.debug')) && str_contains($origin, $user->agency->website)) {
+        if (!config('app.debug') && $user->roles()->first()->name != 'superadmin' && !str_contains($origin, $user->agency->website)) {
             return response()->json([
                 'status' => 401,
-                'message' => 'Unauthorized'
+                'message' => 'Unauthorized Origin'
             ], 401);
         }
 
