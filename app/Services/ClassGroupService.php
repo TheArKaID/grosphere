@@ -21,11 +21,15 @@ class ClassGroupService
      * 
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getAll()
+    public function getAll(string $teacher_id = '')
     {
         if (request()->has('search')) {
             $search = request()->get('search');
             $this->model = $this->search($search);
+        }
+
+        if ($teacher_id) {
+            $this->model = $this->model->where('teacher_id', $teacher_id);
         }
 
         if (request()->has('page') && request()->get('page') == 'all') {

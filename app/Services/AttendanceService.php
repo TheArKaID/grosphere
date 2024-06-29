@@ -216,10 +216,10 @@ class AttendanceService
      * 
      * @return array|Collection
      */
-    function allGroups() : array|\Illuminate\Database\Eloquent\Collection
+    function allGroups(string $teacher_id = '') : array|\Illuminate\Database\Eloquent\Collection
     {
         request()->merge(['page' => 'all']);
-        $classGroups = app()->make(ClassGroupService::class)->getAll();
+        $classGroups = app()->make(ClassGroupService::class)->getAll($teacher_id);
 
         // TODO: Load students.leaveRequests
         $classGroups->load(['students.attendances' => fn($q) => [
@@ -263,7 +263,7 @@ class AttendanceService
             $temp = $student;
             $student = [];
             $id = $temp->attendances->where('type', 'in')->first()?->id;
-// dd(collect($this->find($id)));
+
             $student = $id
                 ? collect($this->find($id))->transform(fn($inout) => $inout?->created_at)->toArray()
                 : ['in' => null, 'out' => null];
@@ -286,8 +286,8 @@ class AttendanceService
     /**
      * Get the attendance record by student id.
      * 
-     * @param ClassGroup $group_id
-     * @param Student $student_id
+     * @param ClassGroup $group
+     * @param Student $student
      * 
      * @return Student
      */

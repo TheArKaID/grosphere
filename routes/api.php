@@ -22,6 +22,7 @@ use App\Http\Controllers\Api\Student\ClassSessionController as StudentClassSessi
 use App\Http\Controllers\Api\Student\CourseStudentController;
 use App\Http\Controllers\Api\Super\AgencyController;
 use App\Http\Controllers\Api\Super\StudentController as SuperStudentController;
+use App\Http\Controllers\Api\Teacher\AttendanceController as TeacherAttendanceController;
 use App\Http\Controllers\Api\Teacher\ClassSessionController as TeacherClassSessionController;
 use App\Http\Controllers\Api\Teacher\TeacherFileController;
 use App\Http\Controllers\Api\User\AgendaController;
@@ -140,6 +141,13 @@ Route::middleware(['auth:api'])->group(function () {
             Route::get('{class_session}', [TeacherClassSessionController::class, 'show'])->name('class-sessions.show');
             Route::post('{class_session}/end', [TeacherClassSessionController::class, 'end'])->name('class-sessions.end');
         });
+
+        Route::prefix('class-groups')->group(function () {
+            Route::get('', [TeacherAttendanceController::class, 'showGroup'])->name('class-groups');
+            Route::get('{classGroup}', [TeacherAttendanceController::class, 'showGroupDetail'])->name('class-groups.detail');
+            Route::get('{classGroup}/{student}', [TeacherAttendanceController::class, 'showStudentDetail'])->name('class-groups.detail.student');
+        });
+
     });
 
     Route::name('guardian.')->middleware(['role:guardian'])->prefix('guardian')->group(function () {
