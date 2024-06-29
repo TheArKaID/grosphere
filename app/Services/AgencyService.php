@@ -68,7 +68,7 @@ class AgencyService
                 Storage::disk('s3')->put('agencies/' . $agency->id . '-sm.png', $smallLogo);
             }
     
-            Storage::put('agencies/' . $agency->id, json_encode($data));
+            Storage::put('agencies/' . $agency->website, json_encode($data));
 
             DB::commit();
             return $agency;
