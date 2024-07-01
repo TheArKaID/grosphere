@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\AgencyThemeResource;
 use App\Http\Resources\StudentFrontSearchResource;
 use App\Services\FrontService;
 use App\Services\StudentService;
@@ -45,7 +46,7 @@ class FrontController extends Controller
      */
     public function getTheme(Request $request)
     {
-        $theme = $this->service->getTheme($request->header('origin', 'postman.grosphere.sg'));
+        $theme = AgencyThemeResource::make($this->service->getTheme($request->header('origin', 'postman.grosphere.sg')));
 
         return response()->json([
             'status' => 200,
