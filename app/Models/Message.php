@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Reverb\Loggers\Log;
 
 /**
@@ -79,6 +80,16 @@ class Message extends Model
         return $this->belongsTo(User::class, 'sender_id');
     }
     
+    /**
+     * Get all of the attachments for the Message
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function attachments(): HasMany
+    {
+        return $this->hasMany(FileMessage::class);
+    }
+
     /**
      * Boot
      */
