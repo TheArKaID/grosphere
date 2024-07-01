@@ -95,7 +95,9 @@ class AgencyService
         $data = array_filter($data, function ($value) {
             return $value !== null;
         });
+        $data['website'] = strtolower($data['website']);
         $agency = $this->getOne($id);
+        $old_website = $agency->website;
         $agency->update($data);
 
         if ($logo = $data['logo'] ?? false) {
@@ -106,6 +108,13 @@ class AgencyService
         if ($smallLogo = $data['logo_sm'] ?? false) {
             $smallLogo = base64_decode(substr($smallLogo, strpos($smallLogo, ",")+1));
             Storage::disk('s3')->put('agencies/' . $agency->id . '-sm.png', $smallLogo);
+        }
+
+        // Move agencies/website to agencies/website_old
+        if (Storage::exists('agencies/' . $old_website) && isset($data['website']) && $data['website'] !== $old_website) {
+            // Storage::move('agencies/' . $old_website, 'agencies/' . $old_website . '_old');
+            Storage::delete('agencies/' . $old_website);
+            Storage::put('agencies/' . $agency->website, json_encode($data));
         }
 
         DB::commit();
