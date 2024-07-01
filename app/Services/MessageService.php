@@ -175,7 +175,9 @@ class MessageService
             $query->where('sender_id', $id)->where('recipient_id', Auth::id());
         })->orWhere(function ($query) use ($id) {
             $query->where('recipient_group_id', $id);
-        })->get();
+        });
+        $messages->update(['is_read' => 1]);
+        $messages = $messages->get();
 
         return $messages;
     }
@@ -270,6 +272,7 @@ class MessageService
                 } else {
                     $data['recipient_group_id'] = $recipientId;
                     $data['recipient_id'] = null;
+                    $data['is_read'] = true;
                 }
                 $m = $this->model->create($data);
 
