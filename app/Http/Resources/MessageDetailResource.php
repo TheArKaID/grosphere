@@ -38,22 +38,15 @@ class MessageDetailResource extends JsonResource
             'is_me' => $this['sender_id'] === auth()->id(),
             'is_read' => $this['is_read'],
             'created_at' => $this['created_at'],
-            'attachments' => $this->getAttachments($this['id']),
+            'attachments' => $this->whenLoaded('attachments', function () {
+                return $this['attachments']->map(function ($attachment) {
+                    return [
+                        'type' => $attachment->type,
+                        'url' => $attachment->url
+                    ];
+                });
+            })
         ] : [];
-    }
-
-    function getAttachments(string $messageId) {
-        if ($files = Storage::disk('s3')->files('messages/' . $messageId)) {
-            return array_map(function ($file) {
-                // Return the data type and url file 
-                return [
-                    'type' => Storage::disk('s3')->mimeType($file),
-                    'url' => Storage::disk('s3')->url($file)
-                ];
-            }, $files);
-        } else {
-            return [];
-        }
     }
 
     function getPhoto() {

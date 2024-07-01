@@ -69,7 +69,7 @@ class MessageController extends Controller
         return response()->json([
             'status' => 200,
             'message' => 'Success',
-            'data' => MessageDetailResource::collection($this->service->getConversation($messageId))
+            'data' => MessageDetailResource::collection($this->service->getConversation($messageId)->load('attachments'))
         ], 200);
     }
 
