@@ -29,6 +29,6 @@ class FrontService
     public function getTheme(string $subdomain)
     {
 		$subdomain = explode('.', $subdomain)[0];
-		return $subdomain !== 'postman' ? Agency::where('website', $subdomain)->first() : Agency::first();
+		return ((!config('app.debug') && !str_contains($subdomain, 'localhost'))) ? Agency::where('website', $subdomain)->firstOrFail() : Agency::first();
 	}
 }
