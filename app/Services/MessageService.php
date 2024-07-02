@@ -81,7 +81,7 @@ class MessageService
             });
 
             $latestMessage = $conversationMessages->sortByDesc('created_at')->first();
-            $unreadCount = $conversationMessages->where('is_read', false)->count();
+            $unreadCount = $conversationMessages->where('is_read', false)->where('recipient_id', $userId)->count();
 
             return [
                 'user' => $conversation,
