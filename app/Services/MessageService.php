@@ -175,7 +175,9 @@ class MessageService
         })->orWhere(function ($query) use ($id) {
             $query->where('recipient_group_id', $id);
         });
-        $messages->update(['is_read' => 1]);
+
+        // Update the messages to read if logged in user not the sender
+        $messages->where('sender_id', '!=', Auth::id())->update(['is_read' => true]);
         $messages = $messages->get();
 
         return $messages;
