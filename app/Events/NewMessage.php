@@ -58,6 +58,10 @@ class NewMessage implements ShouldBroadcast, ShouldDispatchAfterCommit
      */
     public function broadcastWith(): array
     {
-        return $this->message->toArray();
+        return [
+            'sender_id' => $this->message->sender->id,
+            'name' => $this->message->sender->first_name . ' ' . $this->message->sender->last_name,
+            'message' => $this->message->message,
+        ];
     }
 }
