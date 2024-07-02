@@ -71,6 +71,7 @@ class Attendance extends Model
             ->where('student_id', $this->student_id)
             ->where('type', 'out')
             ->whereDate('created_at', $this->created_at)
+            ->where('created_at', '>', $this->created_at)
             ->first()?->created_at;
     }
 
