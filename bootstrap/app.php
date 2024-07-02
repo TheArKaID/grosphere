@@ -9,6 +9,7 @@ use App\Exceptions\ModelGetEmptyException;
 use App\Exceptions\RegisterStudentClassException;
 use App\Exceptions\TeacherFileException;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -179,4 +180,11 @@ return Application::configure(basePath: dirname(__DIR__))
                 return response()->json($response, 500);
             }
         });
-    })->create();
+    })
+    ->withSchedule(function (Schedule $schedule) {
+        $schedule->command('backup:run')
+            ->daily()
+            ->at('01:00')
+            ->timezone('Asia/Jakarta');
+    })
+    ->create();
