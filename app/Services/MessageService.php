@@ -167,6 +167,9 @@ class MessageService
             app()->make(ClassGroupService::class)->getOne($id, true);
         }
 
+        // Update the messages to read if logged in user not the sender
+        $this->model->where('sender_id', '!=', Auth::id())->update(['is_read' => true]);
+
         $messages = $this->model->orderBy('created_at', 'asc')
         ->where(function ($query) use ($id) {
             $query->where('sender_id', Auth::id())->where('recipient_id', $id);
@@ -176,8 +179,6 @@ class MessageService
             $query->where('recipient_group_id', $id);
         });
 
-        // Update the messages to read if logged in user not the sender
-        $messages->where('sender_id', '!=', Auth::id())->update(['is_read' => true]);
         $messages = $messages->get();
 
         return $messages;
