@@ -72,5 +72,10 @@ class Teacher extends Model
                 });
             });
         }
+
+        static::deleting(function ($teacher) {
+            $teacher->classSessions()->delete();
+            $teacher->courseTeachers()->delete();
+        });
     }
 }
