@@ -242,6 +242,8 @@ class User extends Authenticatable implements JWTSubject
         parent::boot();
 
         static::deleting(function ($user) {
+            $user->messageReceived()->delete();
+            $user->messageSent()->delete();
         });
 
         if (auth()->check() && !auth()->user()->hasRole('superadmin')) {
