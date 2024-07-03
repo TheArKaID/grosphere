@@ -261,6 +261,7 @@ class MessageService
         DB::beginTransaction();
         try {
             $data['sender_id'] = Auth::id();
+            $data['message'] = $data['message'] ?? '';
             $recipients = $data['recipient_ids'];
             unset($data['recipient_ids']);
             foreach ($recipients as $recipientId) {

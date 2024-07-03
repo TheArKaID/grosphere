@@ -25,7 +25,7 @@ class StoreMessageRequest extends FormRequest
         return [
             'recipient_ids' => 'required|array',
             'recipient_ids.*' => 'required|string',
-            'message' => 'required|string',
+            'message' => 'nullable|string',
             'attachments' => 'nullable|array',
             'attachments.*' => 'file|mimes:jpg,jpeg,png,pdf,mp4|max:20480'
         ];
