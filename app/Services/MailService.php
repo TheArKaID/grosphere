@@ -78,7 +78,7 @@ class MailService
             ]),
         ]);
 
-        return json_decode($response->getBody()->getContents())
+        return json_decode($response->getBody()->getContents());
     }
 
     /**
