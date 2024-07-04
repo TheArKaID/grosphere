@@ -3,21 +3,22 @@
 namespace App\Services;
 
 use App\Exceptions\MailException;
+use GuzzleHttp\Client;
 
 class MailService 
 {
     protected $config;
+    protected Client $client;
 
-    public function __construct(
-        protected \GuzzleHttp\Client $client
-    ) {
+    public function __construct() {
         $this->config = config('mail.mailers.mail-blast');
+        $this->client = new Client();
     }
 
     public function sendMail(array $recipients, string $subject, string $message)
     {
         if (($error = $this->validateMail($recipients, $subject, $message)) !== true) {
-            return new MailException($error);
+            throw new MailException($error);
         }
 
         $response = $this->client->request('POST', $this->config['host'] . '/email/send-mail', [
@@ -35,8 +36,9 @@ class MailService
                 ]
             ]),
         ]);
+        $res = json_decode($response->getBody()->getContents());
 
-        return json_decode($response->getBody()->getContents());
+        return $res;
     }
 
     /**
@@ -52,11 +54,11 @@ class MailService
     public function sendMailWithAttachment(array $recipients, string $subject, string $message, array $attachments)
     {
         if (($error = $this->validateMail($recipients, $subject, $message)) !== true) {
-            return new MailException($error);
+            throw new MailException($error);
         }
 
         if (($error = $this->validateAttachments($attachments)) !== true) {
-            return new MailException($error);
+            throw new MailException($error);
         }
 
         $response = $this->client->request('POST', $this->config['host'] . '/email/send-mail', [
@@ -68,7 +70,7 @@ class MailService
             'body' => json_encode([
                 'to' => $recipients,
                 'subject' => $subject,
-                'message' => [
+                'content' => [
                     'type' => 'text/html',
                     'value' => $message,
                 ],
@@ -76,7 +78,7 @@ class MailService
             ]),
         ]);
 
-        return json_decode($response->getBody()->getContents());
+        return json_decode($response->getBody()->getContents())
     }
 
     /**
