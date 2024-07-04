@@ -33,7 +33,7 @@ class NewMessage implements ShouldBroadcast, ShouldDispatchAfterCommit
     {
         $channels = [];
         if ($this->recipientType === 'group') {
-            foreach ($this->message->getRecipient()->students as $student) {
+            foreach ($this->message->recipientGroup?->students as $student) {
                 $channels[] = new PrivateChannel('App.Models.User.' . $student->user_id);
             }
         }
