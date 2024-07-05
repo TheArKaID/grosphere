@@ -6,6 +6,7 @@ use App\Events\NewMessage;
 use App\Exceptions\MessageException;
 use App\Jobs\MailNewMessage;
 use App\Models\Message;
+use App\Models\RecipientGroup;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
@@ -91,11 +92,16 @@ class MessageService
             ];
         });
 
-        $classGroupConversations = $this->getClassGroupConversations($userId, $conversations->pluck('id')->toArray());
+        if ($classGroupConversations = $this->getClassGroupConversations($userId)) {
+            $lastMessages = $lastMessages->merge($classGroupConversations);
+        }
+        
+        if ($recipientGroupConversations = $this->getRecipientGroupConversations($userId)) {
+            // dd($recipientGroupConversations);
+            $lastMessages = $lastMessages->merge($recipientGroupConversations);
+        }
 
-        $lastMessage = $classGroupConversations ? $lastMessages->merge($classGroupConversations) : $lastMessages;
-
-        return $lastMessage->sortByDesc('message.created_at');
+        return $lastMessages->sortByDesc('message.created_at');
     }
 
     /**
@@ -105,7 +111,7 @@ class MessageService
      * 
      * @return mixed
      */
-    public function getClassGroupConversations(string $userId = null, array $excludes = []): mixed
+    public function getClassGroupConversations(string $userId = null): mixed
     {
         if (!$userId) {
             $userId = Auth::id();
@@ -154,6 +160,47 @@ class MessageService
     }
 
     /**
+     * Get Recipient Groups as Conversations
+     * 
+     * @param string|null $userId
+     * 
+     * @return mixed
+     */
+    public function getRecipientGroupConversations(string $userId = null): mixed
+    {
+        if (!$userId) {
+            $userId = Auth::id();
+        }
+
+        $user = User::find($userId);
+
+        if (!$user) {
+            throw new MessageException('User not found');
+        }
+
+        $recipientGroups = RecipientGroup::where('user_id', $userId)->get();
+
+        $lastMessages = $recipientGroups->map(function ($recipientGroup) use ($userId) {
+            $message = $this->model->where('broadcast_id', $recipientGroup->id)
+                ->where('sender_id', $userId)
+                ->orderBy('created_at', 'desc')
+                ->first();
+
+            $unreadCount = $this->model->where('broadcast_id', $recipientGroup->id)
+                ->where('sender_id', $userId)
+                ->where('is_read', 0)
+                ->count();
+
+            return [
+                'user' => $recipientGroup,
+                'message' => $message,
+                'unread' => $unreadCount
+            ];
+        });
+
+        return $lastMessages;
+    }
+    /**
      * Get detail Conversation between logged in user and another user
      * 
      * @param string $id
@@ -162,10 +209,10 @@ class MessageService
      */
     public function getConversation(string $id): mixed
     {
-        $user = User::find($id);
-
-        if (!$user) {
-            app()->make(ClassGroupService::class)->getOne($id, true);
+        if (!User::find($id)) {
+            if (!app()->make(ClassGroupService::class)->getOne($id, false)) {
+                RecipientGroup::findOrFail($id);
+            }
         }
 
         // Update the messages to read if logged in user not the sender
@@ -178,6 +225,8 @@ class MessageService
             $query->where('sender_id', $id)->where('recipient_id', Auth::id());
         })->orWhere(function ($query) use ($id) {
             $query->where('recipient_group_id', $id);
+        })->orWhere(function ($query) use ($id) {
+            $query->where('sender_id', Auth::id())->where('broadcast_id', $id);
         });
 
         $messages = $messages->get();
@@ -264,7 +313,21 @@ class MessageService
             $data['sender_id'] = Auth::id();
             $data['message'] = $data['message'] ?? '';
             $recipients = $data['recipient_ids'];
+            $groupName = $data['group_name'] ?? now()->format('Y-m-d H:i:s');
             unset($data['recipient_ids']);
+            unset($data['group_name']);
+
+            $groupRecipients = $this->sendToRecipientGroup($recipients[0]);
+
+            if ($groupRecipients) {
+                $data['broadcast_id'] = $recipients[0];
+                $recipients = $groupRecipients->pluck('id')->toArray();
+            } else {
+                $type = $this->recipientExists($recipients[0]);
+                $groupRecipients = $this->createRecipientGroup($recipients, $type, $groupName);
+                $data['broadcast_id'] = $groupRecipients?->id;
+            }
+
             foreach ($recipients as $recipientId) {
                 $type = $this->recipientExists($recipientId);
                 if (!$type) {
@@ -287,20 +350,7 @@ class MessageService
                 }
 
                 if (isset($data['attachments']) && count($data['attachments'])) {
-                    foreach ($data['attachments'] as $attachment) {
-                        $path = 'messages' . DIRECTORY_SEPARATOR . $m->id;
-                        Storage::disk('s3')->put($path, $attachment);
-                    }
-                    $files = Storage::disk('s3')->files($path);
-                    
-                    $fileMessages = array_map(function ($file) {
-                        return [
-                            'url' => Storage::disk('s3')->url($file),
-                            'type' => Storage::disk('s3')->mimeType($file)
-                        ];
-                    }, $files);
-
-                    $m->attachments()->createMany($fileMessages);
+                    $this->storeAttactments($m, $data['attachments']);
                 }
             }
 
@@ -313,6 +363,40 @@ class MessageService
         }
     }
 
+    function createRecipientGroup(array $recipients, string $recipientType, string $groupName) : null|RecipientGroup {
+        if (count($recipients) > 1 && Auth::user()->roles()->first()->name == 'admin') {
+            $group = RecipientGroup::create([
+                'name' => $groupName,
+                'user_id' => Auth::id()
+            ]);
+
+            if ($recipientType == 'user') {
+                $group->recipientUsers()->attach($recipients);
+            } elseif ($recipientType == 'class_group') {
+                $group->recipientGroups()->attach($recipients);
+            }
+            return $group;
+        }
+        return null;
+    }
+
+    function storeAttactments(Message $message, array $attachments) : void {
+        foreach ($attachments as $attachment) {
+            $path = 'messages' . DIRECTORY_SEPARATOR . $message->id;
+            Storage::disk('s3')->put($path, $attachment);
+        }
+        $files = Storage::disk('s3')->files($path);
+        
+        $fileMessages = array_map(function ($file) {
+            return [
+                'url' => Storage::disk('s3')->url($file),
+                'type' => Storage::disk('s3')->mimeType($file)
+            ];
+        }, $files);
+
+        $message->attachments()->createMany($fileMessages);
+    }
+
     /**
      * Check if recipient exists
      * 
@@ -323,6 +407,16 @@ class MessageService
     public function recipientExists(string $recipientId): bool|string
     {
         // Recipient could be user or class group
-        return User::find($recipientId) ? 'user' : (app()->make(ClassGroupService::class)->getOne($recipientId, false) ? 'class_group' : false);
+        return User::find($recipientId) 
+            ? 'user' 
+            : (app()->make(ClassGroupService::class)->getOne($recipientId, false) 
+                ? 'class_group' 
+                : false);
+    }
+
+    function sendToRecipientGroup(string $id) : null|Collection {
+        $group = RecipientGroup::find($id);
+
+        return $group?->recipientUsers ?? $group?->recipientGroups;
     }
 }

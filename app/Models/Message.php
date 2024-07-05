@@ -13,6 +13,7 @@ use Laravel\Reverb\Loggers\Log;
  * @property string $sender_id
  * @property string $recipient_id
  * @property string $recipient_group_id
+ * @property string $broadcast_id
  * @property string $message
  * @property bool $is_read 
  * @property string $created_at
@@ -41,7 +42,7 @@ class Message extends Model
     /**
      * @var array
      */
-    protected $fillable = ['sender_id', 'recipient_id', 'recipient_group_id', 'message', 'is_read', 'created_at', 'updated_at'];
+    protected $fillable = ['sender_id', 'recipient_id', 'recipient_group_id', 'broadcast_id', 'message', 'is_read', 'created_at', 'updated_at'];
 
     /**
      * Get the recipientUser that owns the Message
@@ -80,6 +81,16 @@ class Message extends Model
         return $this->belongsTo(User::class, 'sender_id');
     }
     
+    /**
+     * Get the broadcast that owns the Message
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function broadcast(): BelongsTo
+    {
+        return $this->belongsTo(RecipientGroup::class, 'broadcast_id');
+    }
+
     /**
      * Get all of the attachments for the Message
      *
