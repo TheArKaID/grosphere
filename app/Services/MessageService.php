@@ -92,11 +92,16 @@ class MessageService
             ];
         });
 
-        $classGroupConversations = $this->getClassGroupConversations($userId, $conversations->pluck('id')->toArray());
+        if ($classGroupConversations = $this->getClassGroupConversations($userId)) {
+            $lastMessages = $lastMessages->merge($classGroupConversations);
+        }
+        
+        if ($recipientGroupConversations = $this->getRecipientGroupConversations($userId)) {
+            // dd($recipientGroupConversations);
+            $lastMessages = $lastMessages->merge($recipientGroupConversations);
+        }
 
-        $lastMessage = $classGroupConversations ? $lastMessages->merge($classGroupConversations) : $lastMessages;
-
-        return $lastMessage->sortByDesc('message.created_at');
+        return $lastMessages->sortByDesc('message.created_at');
     }
 
     /**
@@ -106,7 +111,7 @@ class MessageService
      * 
      * @return mixed
      */
-    public function getClassGroupConversations(string $userId = null, array $excludes = []): mixed
+    public function getClassGroupConversations(string $userId = null): mixed
     {
         if (!$userId) {
             $userId = Auth::id();
@@ -154,6 +159,47 @@ class MessageService
         return $lastMessages;
     }
 
+    /**
+     * Get Recipient Groups as Conversations
+     * 
+     * @param string|null $userId
+     * 
+     * @return mixed
+     */
+    public function getRecipientGroupConversations(string $userId = null): mixed
+    {
+        if (!$userId) {
+            $userId = Auth::id();
+        }
+
+        $user = User::find($userId);
+
+        if (!$user) {
+            throw new MessageException('User not found');
+        }
+
+        $recipientGroups = RecipientGroup::where('user_id', $userId)->get();
+
+        $lastMessages = $recipientGroups->map(function ($recipientGroup) use ($userId) {
+            $message = $this->model->where('broadcast_id', $recipientGroup->id)
+                ->where('sender_id', $userId)
+                ->orderBy('created_at', 'desc')
+                ->first();
+
+            $unreadCount = $this->model->where('broadcast_id', $recipientGroup->id)
+                ->where('sender_id', $userId)
+                ->where('is_read', 0)
+                ->count();
+
+            return [
+                'user' => $recipientGroup,
+                'message' => $message,
+                'unread' => $unreadCount
+            ];
+        });
+
+        return $lastMessages;
+    }
     /**
      * Get detail Conversation between logged in user and another user
      * 
