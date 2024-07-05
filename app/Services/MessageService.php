@@ -163,10 +163,10 @@ class MessageService
      */
     public function getConversation(string $id): mixed
     {
-        $user = User::find($id);
-
-        if (!$user) {
-            app()->make(ClassGroupService::class)->getOne($id, true);
+        if (!User::find($id)) {
+            if (!app()->make(ClassGroupService::class)->getOne($id, false)) {
+                RecipientGroup::findOrFail($id);
+            }
         }
 
         // Update the messages to read if logged in user not the sender
@@ -179,6 +179,8 @@ class MessageService
             $query->where('sender_id', $id)->where('recipient_id', Auth::id());
         })->orWhere(function ($query) use ($id) {
             $query->where('recipient_group_id', $id);
+        })->orWhere(function ($query) use ($id) {
+            $query->where('sender_id', Auth::id())->where('broadcast_id', $id);
         });
 
         $messages = $messages->get();
@@ -272,8 +274,14 @@ class MessageService
             $groupRecipients = $this->sendToRecipientGroup($recipients[0]);
 
             if ($groupRecipients) {
+                $data['broadcast_id'] = $recipients[0];
                 $recipients = $groupRecipients->pluck('id')->toArray();
+            } else {
+                $type = $this->recipientExists($recipients[0]);
+                $groupRecipients = $this->createRecipientGroup($recipients, $type, $groupName);
+                $data['broadcast_id'] = $groupRecipients?->id;
             }
+
             foreach ($recipients as $recipientId) {
                 $type = $this->recipientExists($recipientId);
                 if (!$type) {
@@ -300,8 +308,6 @@ class MessageService
                 }
             }
 
-            $this->createRecipientGroup($recipients, $type, $groupName);
-
             DB::commit();
         } catch (\Throwable $th) {
             Log::error($th->getMessage());
@@ -311,7 +317,7 @@ class MessageService
         }
     }
 
-    function createRecipientGroup(array $recipients, string $recipientType, string $groupName) : void {
+    function createRecipientGroup(array $recipients, string $recipientType, string $groupName) : null|RecipientGroup {
         if (count($recipients) > 1 && Auth::user()->roles()->first()->name == 'admin') {
             $group = RecipientGroup::create([
                 'name' => $groupName,
@@ -323,7 +329,9 @@ class MessageService
             } elseif ($recipientType == 'class_group') {
                 $group->recipientGroups()->attach($recipients);
             }
+            return $group;
         }
+        return null;
     }
 
     function storeAttactments(Message $message, array $attachments) : void {
