@@ -27,7 +27,8 @@ class StoreMessageRequest extends FormRequest
             'recipient_ids.*' => 'required|string',
             'message' => 'nullable|string',
             'attachments' => 'nullable|array',
-            'attachments.*' => 'file|mimes:jpg,jpeg,png,pdf,mp4|max:20480'
+            'attachments.*' => 'file|mimes:jpg,jpeg,png,pdf,mp4|max:20480',
+            'group_name' => 'nullable|string',
         ];
     }
 }
