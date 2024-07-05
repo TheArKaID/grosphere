@@ -44,7 +44,7 @@ class RecipientGroup extends Model
      */
     public function sender()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
     
     /**
@@ -69,5 +69,21 @@ class RecipientGroup extends Model
 
     function getRecipients(): array {
         return $this->recipientUsers->merge($this->recipientGroups->flatten()->toArray());
+    }
+
+    /**
+     * Boot
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        if (auth()->check() && !auth()->user()->hasRole('superadmin')) {
+            static::addGlobalScope('agency', function ($builder) {
+                $builder->whereHas('sender', function ($query) {
+                    $query->where('agency_id', auth()->user()->agency_id);
+                });
+            });
+        }
     }
 }
