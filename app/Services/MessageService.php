@@ -231,6 +231,9 @@ class MessageService
 
         $messages = $messages->get();
 
+        // remove message with the same timestamp
+        $messages = $messages->unique('created_at');
+
         return $messages;
     }
     /**
