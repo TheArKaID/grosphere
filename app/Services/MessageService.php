@@ -186,15 +186,15 @@ class MessageService
                 ->orderBy('created_at', 'desc')
                 ->first();
 
-            $unreadCount = $this->model->where('broadcast_id', $recipientGroup->id)
-                ->where('sender_id', $userId)
-                ->where('is_read', 0)
-                ->count();
+            // $unreadCount = $this->model->where('broadcast_id', $recipientGroup->id)
+            //     ->where('sender_id', $userId)
+            //     ->where('is_read', 0)
+            //     ->count();
 
             return [
                 'user' => $recipientGroup,
                 'message' => $message,
-                'unread' => $unreadCount
+                'unread' => 0
             ];
         });
 
