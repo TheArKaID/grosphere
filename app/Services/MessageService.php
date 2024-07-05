@@ -6,6 +6,7 @@ use App\Events\NewMessage;
 use App\Exceptions\MessageException;
 use App\Jobs\MailNewMessage;
 use App\Models\Message;
+use App\Models\RecipientGroup;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
@@ -264,7 +265,15 @@ class MessageService
             $data['sender_id'] = Auth::id();
             $data['message'] = $data['message'] ?? '';
             $recipients = $data['recipient_ids'];
+            $groupName = $data['group_name'] ?? now()->format('Y-m-d H:i:s');
             unset($data['recipient_ids']);
+            unset($data['group_name']);
+
+            $groupRecipients = $this->sendToRecipientGroup($recipients[0]);
+
+            if ($groupRecipients) {
+                $recipients = $groupRecipients->pluck('id')->toArray();
+            }
             foreach ($recipients as $recipientId) {
                 $type = $this->recipientExists($recipientId);
                 if (!$type) {
@@ -287,22 +296,11 @@ class MessageService
                 }
 
                 if (isset($data['attachments']) && count($data['attachments'])) {
-                    foreach ($data['attachments'] as $attachment) {
-                        $path = 'messages' . DIRECTORY_SEPARATOR . $m->id;
-                        Storage::disk('s3')->put($path, $attachment);
-                    }
-                    $files = Storage::disk('s3')->files($path);
-                    
-                    $fileMessages = array_map(function ($file) {
-                        return [
-                            'url' => Storage::disk('s3')->url($file),
-                            'type' => Storage::disk('s3')->mimeType($file)
-                        ];
-                    }, $files);
-
-                    $m->attachments()->createMany($fileMessages);
+                    $this->storeAttactments($m, $data['attachments']);
                 }
             }
+
+            $this->createRecipientGroup($recipients, $type, $groupName);
 
             DB::commit();
         } catch (\Throwable $th) {
@@ -311,6 +309,38 @@ class MessageService
 
             throw new MessageException($th->getMessage());
         }
+    }
+
+    function createRecipientGroup(array $recipients, string $recipientType, string $groupName) : void {
+        if (count($recipients) > 1 && Auth::user()->roles()->first()->name == 'admin') {
+            $group = RecipientGroup::create([
+                'name' => $groupName,
+                'user_id' => Auth::id()
+            ]);
+
+            if ($recipientType == 'user') {
+                $group->recipientUsers()->attach($recipients);
+            } elseif ($recipientType == 'class_group') {
+                $group->recipientGroups()->attach($recipients);
+            }
+        }
+    }
+
+    function storeAttactments(Message $message, array $attachments) : void {
+        foreach ($attachments as $attachment) {
+            $path = 'messages' . DIRECTORY_SEPARATOR . $message->id;
+            Storage::disk('s3')->put($path, $attachment);
+        }
+        $files = Storage::disk('s3')->files($path);
+        
+        $fileMessages = array_map(function ($file) {
+            return [
+                'url' => Storage::disk('s3')->url($file),
+                'type' => Storage::disk('s3')->mimeType($file)
+            ];
+        }, $files);
+
+        $message->attachments()->createMany($fileMessages);
     }
 
     /**
@@ -323,6 +353,16 @@ class MessageService
     public function recipientExists(string $recipientId): bool|string
     {
         // Recipient could be user or class group
-        return User::find($recipientId) ? 'user' : (app()->make(ClassGroupService::class)->getOne($recipientId, false) ? 'class_group' : false);
+        return User::find($recipientId) 
+            ? 'user' 
+            : (app()->make(ClassGroupService::class)->getOne($recipientId, false) 
+                ? 'class_group' 
+                : false);
+    }
+
+    function sendToRecipientGroup(string $id) : null|Collection {
+        $group = RecipientGroup::find($id);
+
+        return $group?->recipientUsers ?? $group?->recipientGroups;
     }
 }
