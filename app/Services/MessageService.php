@@ -357,8 +357,9 @@ class MessageService
                 }
             }
 
-            return $groupRecipients;
             DB::commit();
+
+            return $groupRecipients;
         } catch (\Throwable $th) {
             Log::error($th->getMessage());
             DB::rollBack();
