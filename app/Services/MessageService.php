@@ -307,9 +307,9 @@ class MessageService
      * 
      * @param array $data
      * 
-     * @return void
+     * @return mixed
      */
-    public function storeMessages(array $data): void
+    public function storeMessages(array $data): mixed
     {
         DB::beginTransaction();
         try {
@@ -357,6 +357,7 @@ class MessageService
                 }
             }
 
+            return $groupRecipients;
             DB::commit();
         } catch (\Throwable $th) {
             Log::error($th->getMessage());

@@ -48,11 +48,12 @@ class MessageController extends Controller
     {
         $data = $request->validated();
 
-        $this->service->storeMessages($data);
+        $response = $this->service->storeMessages($data);
 
         return response()->json([
             'status' => 200,
-            'message' => 'Message sent successfully'
+            'message' => 'Message sent successfully',
+            'data' => $response
         ], 200);
     }
 
