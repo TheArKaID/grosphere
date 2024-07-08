@@ -8,7 +8,7 @@
         "php": "^8.2",
         "laravel/framework": "^11.9",
         "laravel/pulse": "^1.2",
-        "laravel/reverb": "@beta",
+        "laravel/reverb": "^1.0",
         "laravel/tinker": "^2.9",
         "league/flysystem-aws-s3-v3": "^3.0",
         "php-open-source-saver/jwt-auth": "^2.2",
