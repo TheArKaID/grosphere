@@ -203,7 +203,7 @@ Route::middleware(['auth:api'])->group(function () {
         Route::apiResource('messages', MessageController::class)->except(['destroy', 'update']);
 
         Route::prefix('announcements')->group(function () {
-            Route::put('', [UserAnnouncementController::class, 'index'])->name('announcements.index');
+            Route::get('', [UserAnnouncementController::class, 'index'])->name('announcements.index');
             Route::put('{announcement_id}', [UserAnnouncementController::class, 'show'])->name('announcements.show');
         });
     });
