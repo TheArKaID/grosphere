@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
@@ -31,6 +32,16 @@ class Announcement extends Model
      * @var array
      */
     protected $fillable = ['agency_id', 'admin_id', 'title', 'content', 'status', 'created_at', 'updated_at'];
+
+    /**
+     * Get the admin that owns the Announcement
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function admin(): BelongsTo
+    {
+        return $this->belongsTo(Admin::class);
+    }
 
     /**
      * boot on deleting
