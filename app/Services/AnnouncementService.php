@@ -24,7 +24,7 @@ class AnnouncementService
         if (request()->has('page') && request()->get('page') == 'all') {
             return $model->get();
         }
-        return $model->paginate(request('size', 10));
+        return $model->with(['admin'])->paginate(request('size', 10));
     }
 
     /**
@@ -36,7 +36,7 @@ class AnnouncementService
      */
     public function getOne($id)
     {
-        return $this->model->findOrFail($id);
+        return $this->model->with(['admin'])->findOrFail($id);
     }
 
     /**
