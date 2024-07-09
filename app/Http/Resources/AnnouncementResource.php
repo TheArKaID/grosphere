@@ -22,6 +22,9 @@ class AnnouncementResource extends JsonResource
             'title' => $this->title,
             'content' => $this->content,
             'status' => (boolean) $this->status,
+            'creator' => $this->whenLoaded('admin', function () {
+                return $this->admin->user->first_name . ' ' . $this->admin->user->last_name;
+            }),
             'created_at' => Carbon::parse($this->created_at)->format('Y-m-d H:i:s')
         ] : [];
     }
