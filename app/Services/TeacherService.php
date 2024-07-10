@@ -33,7 +33,7 @@ class TeacherService
      */
     public function getAll()
     {
-        if ($search = request()->has('search')) {
+        if ($search = request()->get('search')) {
             $this->teacher = $this->teacher->whereHas('user', function ($query) use ($search) {
                 $query->where('first_name', 'like', '%' . $search . '%')
                     ->orWhere('last_name', 'like', '%' . $search . '%')
@@ -228,7 +228,15 @@ class TeacherService
      */
     public function getAllTeacherFile(string $teacherId)
     {
-        return $this->teacherFile->where('teacher_id', $teacherId)->get();
+        $this->teacherFile = $this->teacherFile->where('teacher_id', $teacherId);
+        if ($search = request()->get('search')) {
+            $this->teacherFile = $this->teacherFile->where('name', 'like', '%' . $search . '%');
+        }
+
+        if (request()->has('page') && request()->get('page') == 'all') {
+            return $this->teacherFile->get();
+        }
+        return $this->teacherFile->paginate(request('size', 10));
     }
 
     /**
