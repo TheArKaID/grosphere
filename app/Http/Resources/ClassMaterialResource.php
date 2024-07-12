@@ -25,8 +25,8 @@ class ClassMaterialResource extends JsonResource
                 return $this->classSession->only(['id', 'name']);
             }),
             'name' => $this->detail->name,
-            'content' => $this->content,
-            'content_type' => $this->content_type,
+            'content' => $this->detail->content,
+            'content_type' => $this->detail->content_type,
             'file_name' => $this->detail->file_name,
             'file_size' => $this->detail->file_size,
         ] : [];
