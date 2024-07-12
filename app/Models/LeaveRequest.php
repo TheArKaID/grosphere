@@ -78,6 +78,16 @@ class LeaveRequest extends Model
     {
         parent::boot();
 
+        if (auth()->check() && !auth()->user()->hasRole('superadmin')) {
+            static::addGlobalScope('agency', function ($builder) {
+                $builder->whereHas('student', function ($query) {
+                    $query->whereHas('user', function ($query) {
+                        $query->where('agency_id', auth()->user()->agency_id);
+                    });
+                });
+            });
+        }
+
         static::deleting(function ($leaveRequest) {
             Storage::disk('s3')->delete('leave-requests/' . $leaveRequest->id . '.png');
         });
