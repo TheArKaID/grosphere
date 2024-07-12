@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Teacher\Api;
+namespace App\Http\Controllers\Api\Teacher;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreClassMaterialRequest;
@@ -34,7 +34,7 @@ class ClassMaterialController extends Controller
      */
     public function store(StoreClassMaterialRequest $request)
     {
-        $classMaterial = $this->service->create($request->validated());
+        $classMaterial = $this->service->create($request->validated())->load(['detail']);
 
         return response()->json([
             'status' => 201,

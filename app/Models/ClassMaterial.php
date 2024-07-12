@@ -41,6 +41,6 @@ class ClassMaterial extends Model
      */
     public function detail(): BelongsTo
     {
-        return $this->belongsTo(TeacherFile::class);
+        return $this->belongsTo(TeacherFile::class, 'teacher_file_id');
     }
 }

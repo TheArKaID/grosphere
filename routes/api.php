@@ -23,13 +23,13 @@ use App\Http\Controllers\Api\Student\CourseStudentController;
 use App\Http\Controllers\Api\Super\AgencyController;
 use App\Http\Controllers\Api\Super\StudentController as SuperStudentController;
 use App\Http\Controllers\Api\Teacher\AttendanceController as TeacherAttendanceController;
+use App\Http\Controllers\Api\Teacher\ClassMaterialController;
 use App\Http\Controllers\Api\Teacher\ClassSessionController as TeacherClassSessionController;
 use App\Http\Controllers\Api\Teacher\TeacherFileController;
 use App\Http\Controllers\Api\User\AgendaController;
 use App\Http\Controllers\Api\User\AnnouncementController as UserAnnouncementController;
 use App\Http\Controllers\Api\User\MessageController;
 use App\Http\Controllers\Api\User\ProfileController as UserProfileController;
-use App\Http\Controllers\Teacher\Api\ClassMaterialController;
 use Illuminate\Support\Facades\Route;
 
 /*
