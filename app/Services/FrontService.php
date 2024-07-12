@@ -28,7 +28,7 @@ class FrontService
      */
     public function getTheme(string $subdomain)
     {
-		$subdomain = explode('.', $subdomain)[0];
+		$subdomain = explode('//', explode('.', $subdomain)[0])[1];
 		return ((!config('app.debug') && !str_contains($subdomain, 'localhost'))) ? Agency::where('website', $subdomain)->firstOrFail() : Agency::first();
 	}
 }
