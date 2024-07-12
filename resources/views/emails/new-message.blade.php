@@ -15,3 +15,7 @@
 @section('content')
     To view and respond to the full message, please click button bellow or visit your messages section on our platform.
 @endsection
+
+@section('subdomain')
+    {{ $subdomain }}
+@endsection

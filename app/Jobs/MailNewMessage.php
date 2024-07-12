@@ -43,6 +43,7 @@ class MailNewMessage implements ShouldQueue
             'New Message', 
             view('emails.new-message', [
                 'sender' => $this->m->sender->first_name . ' ' . $this->m->sender->last_name,
+                'subdomain' => $this->formSubdomain($this->m->sender->agency?->subdomain),
                 'receiver' => $this->m->recipientUser->first_name . ' ' . $this->m->recipientUser->last_name,
                 'message' => $this->m->message,
                 'messageTime' => Carbon::parse($this->m->created_at)->format('Y-m-d H:i:s')
@@ -62,5 +63,16 @@ class MailNewMessage implements ShouldQueue
                 ]
             ]
         );
+    }
+
+    function formSubdomain(string|null $subdomain) : string
+    {
+        $domain = config('app.url');
+
+        if ($subdomain) {
+            $domain = str_replace('://', '://' . $subdomain . '.', $domain);
+        }
+
+        return $domain;
     }
 }
