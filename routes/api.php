@@ -46,8 +46,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('email', function () {
     return view('emails.new-message', [
         'sender' => 'ArKa',
-        'subdomain' => (fn($subdomain) => 
-            $subdomain ? str_replace('://', '://' . $subdomain . '.', config('app.url')) : config('app.url'))(rand(0, 1) ? 'arka' : null),
+        'subdomain' => (fn($subdomain) => $subdomain ? str_replace('://', '://' . $subdomain . '.', env('FE_URL')) : env('FE_URL'))(rand(0, 1) ? 'arka' : null),
         'receiver' => 'Not Arka',
         'message' => 'Simple Message Mail Testing',
         'messageTime' => \Carbon\Carbon::parse(now())->format('Y-m-d H:i:s')
