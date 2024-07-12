@@ -29,6 +29,7 @@ use App\Http\Controllers\Api\User\AgendaController;
 use App\Http\Controllers\Api\User\AnnouncementController as UserAnnouncementController;
 use App\Http\Controllers\Api\User\MessageController;
 use App\Http\Controllers\Api\User\ProfileController as UserProfileController;
+use App\Http\Controllers\Teacher\Api\ClassMaterialController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -141,6 +142,8 @@ Route::middleware(['auth:api'])->group(function () {
             Route::get('/', [TeacherClassSessionController::class, 'index'])->name('class-sessions.index');
             Route::get('{class_session}', [TeacherClassSessionController::class, 'show'])->name('class-sessions.show');
             Route::post('{class_session}/end', [TeacherClassSessionController::class, 'end'])->name('class-sessions.end');
+
+            Route::ApiResource('{classSession}/materials', ClassMaterialController::class)->except('update');
         });
 
         Route::prefix('class-groups')->group(function () {

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property string $id
@@ -31,5 +32,15 @@ class ClassMaterial extends Model
     public function classSession()
     {
         return $this->belongsTo(ClassSession::class);
+    }
+
+    /**
+     * Get the detail that owns the ClassMaterial
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function detail(): BelongsTo
+    {
+        return $this->belongsTo(TeacherFile::class);
     }
 }

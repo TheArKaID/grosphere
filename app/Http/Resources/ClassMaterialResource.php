@@ -18,7 +18,17 @@ class ClassMaterialResource extends JsonResource
         parent::wrap('class_materials');
 
         return $this->resource ? [
-            
+            'id' => $this->id,
+            'class_session_id' => $this->class_session_id,
+            'teacher_file_id' => $this->teacher_file_id,
+            'class_session' => $this->whenLoaded('classSession', function () {
+                return $this->classSession->only(['id', 'name']);
+            }),
+            'name' => $this->detail->name,
+            'content' => $this->content,
+            'content_type' => $this->content_type,
+            'file_name' => $this->detail->file_name,
+            'file_size' => $this->detail->file_size,
         ] : [];
     }
 }
