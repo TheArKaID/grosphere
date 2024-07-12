@@ -258,10 +258,22 @@ class AttendanceService
         ]]);
 
         $students = [];
-        // TODO: Include LeaveRequest
+
         $classGroup->students->map(function ($student) use (&$students) {
             $temp = $student;
             $student = [];
+
+            $leaveRequest = $temp->leaveRequests->where('status', 'approved')->where('from_date', '<=', now())->where('to_date', '>=', now())->first();
+            if ($leaveRequest) {
+                $student['id'] = $temp->id;
+                $student['first_name'] = $temp->user->first_name;
+                $student['last_name'] = $temp->user->last_name;
+                $student['status'] = 'Leave Request';
+                $student['leave'] = $leaveRequest;
+                $students[] = $student;
+                return;
+            }
+
             $id = $temp->attendances->where('type', 'in')->first()?->id;
 
             $student = $id
@@ -271,7 +283,7 @@ class AttendanceService
             $student['id'] = $temp->id;
             $student['first_name'] = $temp->user->first_name;
             $student['last_name'] = $temp->user->last_name;
-            // TODO: Also Check LeaveRequest
+
             $student['status'] = $temp->attendances->count() > 0 ? 'Attend' : 'Absent';
             $students[] = $student;
         });
@@ -306,7 +318,17 @@ class AttendanceService
 
         unset($student->attendances);
 
-        // TODO: Include LeaveRequest
+        $student->first_name = $student->user->first_name;
+        $student->last_name = $student->user->last_name;
+
+        $leaveRequest = $student->leaveRequests->where('status', 'approved')->where('from_date', '<=', now())->where('to_date', '>=', now())->first();
+        if ($leaveRequest) {
+            $student->status = 'Leave Request';
+            $student->leave = $leaveRequest;
+            unset($student->leaveRequests);
+            return $student;
+        }
+
         $attendances = $attendances->map(function ($attendance) {
             $a = ($x = $this->find($attendance->id)) != [] ? (function ($y) {
                 unset($y['in']['student']);
@@ -318,8 +340,6 @@ class AttendanceService
         });
 
         $student->attendances = $attendances;
-        $student->first_name = $student->user->first_name;
-        $student->last_name = $student->user->last_name;
         unset($student->user);
         return $student;
     }

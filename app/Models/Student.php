@@ -121,6 +121,16 @@ class Student extends Model
     }
 
     /**
+     * Get all of the leaveRequests for the Student
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function leaveRequests(): HasMany
+    {
+        return $this->hasMany(LeaveRequest::class);
+    }
+
+    /**
      * Boot
      */
     protected static function boot()
