@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\Admin\CourseWorkController;
 use App\Http\Controllers\Api\Admin\CurriculumController;
 use App\Http\Controllers\Api\Admin\DashboardController;
 use App\Http\Controllers\Api\Admin\GuardianController;
+use App\Http\Controllers\Api\Admin\LeaveRequestController as AdminLeaveRequestController;
 use App\Http\Controllers\Api\Admin\PaymentController;
 use App\Http\Controllers\Api\Admin\StudentController;
 use App\Http\Controllers\Api\Admin\TeacherController;
@@ -139,6 +140,8 @@ Route::middleware(['auth:api'])->group(function () {
         });
 
         Route::apiResource('class-groups', ClassGroupController::class);
+        
+        Route::apiResource('leave-requests', AdminLeaveRequestController::class)->except(['store', 'destroy']);
     });
 
     Route::name('teacher.')->middleware(['role:teacher'])->prefix('teacher')->group(function () {

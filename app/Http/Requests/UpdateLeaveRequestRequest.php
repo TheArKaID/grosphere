@@ -11,7 +11,7 @@ class UpdateLeaveRequestRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->hasRole('guardian');
+        return $this->user()->hasRole('admin');
     }
 
     /**
@@ -22,7 +22,7 @@ class UpdateLeaveRequestRequest extends FormRequest
     public function rules(): array
     {
         return [
-            
+            'status' => 'required|in:approved,rejected'
         ];
     }
 }

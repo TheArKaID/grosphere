@@ -107,6 +107,22 @@ class LeaveRequestService
     }
 
     /**
+     * Update Leave Request
+     * 
+     * @param string $leaveRequestId
+     * @param string $status
+     * 
+     * @return LeaveRequest
+     */
+    public function updateStatus(string $leaveRequestId, string $status)
+    {
+        $leaveRequest = $this->model->findOrFail($leaveRequestId);
+        $leaveRequest->update(['status' => $status]);
+
+        return $leaveRequest;
+    }
+
+    /**
      * Delete Leave Request
      * 
      * @param LeaveRequest $leaveRequestId
