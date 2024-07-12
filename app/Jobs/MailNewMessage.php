@@ -67,7 +67,7 @@ class MailNewMessage implements ShouldQueue
 
     function formSubdomain(string|null $subdomain) : string
     {
-        $domain = config('app.url');
+        $domain = env('FE_URL');
 
         if ($subdomain) {
             $domain = str_replace('://', '://' . $subdomain . '.', $domain);
