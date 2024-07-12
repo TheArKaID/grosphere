@@ -106,7 +106,7 @@
                 @yield('send-by')
             </p>
             <div class="button-container" style="text-align: center;">
-                <a class="button" href="@yield('subdomain')"
+                <a class="button" href="{{ $subdomain }}"
                     style="display: inline-block; text-decoration: none; font-weight: 600;  margin: 0 0.5rem; height: 3rem; line-height: 3rem; padding: 0 1rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 600; color: #ffffff; background-color: #266ffa; text-align: center; cursor: pointer;">
                     Go to Grosphere</a>
             </div>
@@ -121,9 +121,9 @@
             <img width="27" height="24" src="cid:logo-down.png" alt="Grosphere">
 
             <div class="button-group" style="margin-top: 1rem">
-                <a href="@yield('subdomain')#home" style="text-decoration: none; color: #ffffff; font-weight: 600; margin: 0 0.5rem;">Home</a>
-                <a href="@yield('subdomain')#faq" style="text-decoration: none; color: #ffffff; font-weight: 600; margin: 0 0.5rem;">FAQ</a>
-                <a href="@yield('subdomain')/contact-us" style="text-decoration: none; color: #ffffff; font-weight: 600; margin: 0 0.5rem;">Contact Us</a>
+                <a href="{{ $subdomain }}#home" style="text-decoration: none; color: #ffffff; font-weight: 600; margin: 0 0.5rem;">Home</a>
+                <a href="{{ $subdomain }}#faq" style="text-decoration: none; color: #ffffff; font-weight: 600; margin: 0 0.5rem;">FAQ</a>
+                <a href="{{ $subdomain }}/contact-us" style="text-decoration: none; color: #ffffff; font-weight: 600; margin: 0 0.5rem;">Contact Us</a>
             </div>
             <p style="color: #ffffff; margin-bottom: 1rem; font-size: 0.75rem; font-weight: 600;">
                 2024 Copyright Grosphere. All rights reserved.

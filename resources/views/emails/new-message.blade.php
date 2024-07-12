@@ -1,4 +1,4 @@
-@extends('layouts.mail')
+@extends('layouts.mail', ['subdomain' => $subdomain])
 
 @section('title')
     You have a new message
@@ -14,8 +14,4 @@
 
 @section('content')
     To view and respond to the full message, please click button bellow or visit your messages section on our platform.
-@endsection
-
-@section('subdomain')
-    {{ $subdomain }}
 @endsection
