@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\LeaveRequest;
+use App\Models\LeaveRequestTag;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
@@ -140,5 +141,18 @@ class LeaveRequestService
         $leaveRequest->delete();
 
         DB::commit();
+    }
+
+    function getTag() {
+        $model = LeaveRequestTag::query();
+        if ($search = request()->get('search')) {
+            $model = $model->where('name', 'like', '%' . $search . '%');
+        }
+
+        if (request()->has('page') && request()->get('page') == 'all') {
+            return $model->get();
+        }
+
+        return $model->paginate(request('size', 10));
     }
 }

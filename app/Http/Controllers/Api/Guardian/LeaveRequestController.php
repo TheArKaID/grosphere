@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreLeaveRequestRequest;
 use App\Http\Requests\UpdateLeaveRequestRequest;
 use App\Http\Resources\LeaveRequestResource;
+use App\Http\Resources\LeaveRequestTagResource;
 use App\Models\LeaveRequest;
 use App\Services\LeaveRequestService;
 
@@ -73,6 +74,16 @@ class LeaveRequestController extends Controller
 
         return response()->json([
             'status' => 200
+        ], 200);
+    }
+
+    public function tags() {
+        $tag = $this->service->getTag();
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Data retrieved successfully.',
+            'data' => LeaveRequestTagResource::collection($tag)->response()->getData(true)
         ], 200);
     }
 }

@@ -182,7 +182,8 @@ Route::middleware(['auth:api'])->group(function () {
         Route::get('attendances', [GuardianAttendanceController::class, 'index'])->name('attendances.index');
         Route::get('attendances/{attendance}', [GuardianAttendanceController::class, 'show'])->name('attendances.index');
 
-        Route::resource('leave-request', LeaveRequestController::class);
+        Route::get('leave-requests/tags', [LeaveRequestController::class, 'tags'])->name('leave-request.tags');
+        Route::resource('leave-requests', LeaveRequestController::class);
     });
 
     Route::name('student.')->middleware(['role:student'])->prefix('student')->group(function () {
