@@ -144,10 +144,10 @@ class StudentController extends Controller
     {
         $validated = $request->validate([
             'guardian_ids' => 'required|array',
-            'guardian_ids.*' => 'integer|exists:guardians,id',
+            'guardian_ids.*' => 'exists:guardians,id',
         ], [
             'guardian_ids.required' => 'Guardians is required',
-            'guardian_ids.*.integer' => 'Guardians must be an integer',
+            'guardian_ids.*.string' => 'Guardians must be an string',
             'guardian_ids.*.exists' => 'Guardians not found'
         ]);
 

@@ -89,7 +89,7 @@ class ClassSessionController extends Controller
         $data = $request->validate([
             'summary' => 'required|string',
             'students' => 'required|array',
-            'students.*.id' => 'required|integer|exists:students,id',
+            'students.*.id' => 'required|exists:students,id',
             'students.*.rating' => 'required|in:1,2,3,4,5',
             'students.*.remark' => 'required|string'
         ]);

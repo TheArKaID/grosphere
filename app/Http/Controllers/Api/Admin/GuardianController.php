@@ -123,7 +123,7 @@ class GuardianController extends Controller
     {
         $validated = $request->validate([
             'students' => 'required|array',
-            'students.*' => 'required|integer|exists:students,id'
+            'students.*' => 'required|exists:students,id'
         ]);
 
         $this->guardianService->syncStudents($guardian, $validated['students']);
