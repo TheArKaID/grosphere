@@ -87,8 +87,8 @@ class UserService
 		$user = $this->user->findOrFail($id);
 		$user->first_name = $data['first_name'] ?? $user->first_name;
 		$user->last_name = $data['last_name'] ?? $user->last_name;
-		$user->email = $data['email'] ?? $user->email;
-		$user->username = $data['username'] ?? $user->username;
+		$user->email = $data['email'];
+		$user->username = $data['username'];
 		$user->phone = $data['phone'] ?? $user->phone;
 		$user->status = $data['status'] ?? $user->status;
 		
