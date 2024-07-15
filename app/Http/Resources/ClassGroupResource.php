@@ -21,7 +21,7 @@ class ClassGroupResource extends JsonResource
             'description' => $this->description,
             'total_students' => $this->students()->count(),
             'teachers' => $this->whenLoaded('teachers', function () {
-                return new TeacherResource($this->teachers);
+                return TeacherResource::collection($this->teachers);
             }),
             'students' => $this->whenLoaded('students', function () {
                 return StudentResource::collection($this->students);
