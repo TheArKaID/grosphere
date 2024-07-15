@@ -16,7 +16,7 @@ class LeaveRequestResource extends JsonResource
      */
     public function toArray($request)
     {
-        parent::wrap('leave-requests');
+        parent::wrap('leave_requests');
 
         return $this->resource ? [
             'id' => $this->id,
