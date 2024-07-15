@@ -21,11 +21,7 @@ class ClassGroupController extends Controller
      */
     public function index()
     {
-        $classGroups = ClassGroupResource::collection($this->service->getAll()->load(['teacher']));
-
-        if ($classGroups->count() == 0) {
-            // throw new ModelGetEmptyException('ClassGroups');
-        }
+        $classGroups = ClassGroupResource::collection($this->service->getAll()->load(['teachers']));
 
         return response()->json([
             'status' => 200,
@@ -44,7 +40,7 @@ class ClassGroupController extends Controller
         return response()->json([
             'status' => 201,
             'message' => 'Class Group created successfully',
-            'data' => new ClassGroupResource($classGroup->load(['teacher', 'students']))
+            'data' => new ClassGroupResource($classGroup->load(['teachers', 'students']))
         ], 201);
     }
 
@@ -56,7 +52,7 @@ class ClassGroupController extends Controller
         return response()->json([
             'status' => 200,
             'message' => 'Success',
-            'data' => new ClassGroupResource($classGroup->load(['teacher', 'students']))
+            'data' => new ClassGroupResource($classGroup->load(['teachers', 'students']))
         ], 200);
     }
 
@@ -73,7 +69,7 @@ class ClassGroupController extends Controller
         return response()->json([
             'status' => 200,
             'message' => 'Class Group updated successfully',
-            'data' => new ClassGroupResource($classGroup->load(['teacher', 'students']))
+            'data' => new ClassGroupResource($classGroup->load(['teachers', 'students']))
         ], 200);
     }
 
