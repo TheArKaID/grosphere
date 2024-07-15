@@ -26,7 +26,14 @@ class StoreClassGroupRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'description' => 'nullable|string|max:25500',
-            'teacher_id' => 'required|string|exists:teachers,id',
+            'teachers' => 'sometimes|array',
+            'teachers.*' => [
+                'sometimes', 'string', 'exists:teachers,id',
+                Rule::exists('teachers', 'id')->where(function (Builder $query) {
+                    return $query->leftJoinWhere('users', 'users.id', '=', 'teachers.user_id')
+                        ->leftJoinWhere('users', 'users.agency_id', '=', $this->user()->agency_id);
+                }),
+            ],
             'students' => 'sometimes|array',
             'students.*' => [
                 'sometimes', 'string', 'exists:students,id',

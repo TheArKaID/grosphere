@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\ClassGroup;
 use App\Models\Student;
+use App\Models\Teacher;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
@@ -88,6 +89,10 @@ class ClassGroupService
             $this->addStudents($classGroup, $students);
         }
 
+        if ($teachers = $data['teachers'] ?? false){
+            $this->addTeacher($classGroup, $teachers);
+        }
+
         DB::commit();
 
         return $classGroup;
@@ -108,6 +113,23 @@ class ClassGroupService
             throw ValidationException::withMessages(['students' => 'One or more students do not exist.']);
         }
         $classGroup->students()->attach($students);
+    }
+
+    /**
+     * Attach Teacher to Class Group
+     * 
+     * @param ClassGroup $classGroup
+     * @param array $teachers
+     * 
+     * @return void
+     */
+    public function addTeacher(ClassGroup $classGroup, array $teachers)
+    {
+        $checkTeacher = Teacher::whereIn('id', $teachers)->count();
+        if ($checkTeacher !== count($teachers)) {
+            throw ValidationException::withMessages(['teachers' => 'One or more teachers do not exist.']);
+        }
+        $classGroup->teachers()->attach($teachers);
     }
 
     /**
