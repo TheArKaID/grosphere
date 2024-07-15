@@ -29,7 +29,9 @@ class ClassGroupService
         }
 
         if ($teacher_id) {
-            $this->model = $this->model->where('teacher_id', $teacher_id);
+            $this->model = $this->model->whereHas('teachers', function ($query) use ($teacher_id) {
+                $query->where('teacher_id', $teacher_id);
+            });
         }
 
         if (request()->has('page') && request()->get('page') == 'all') {

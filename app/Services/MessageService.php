@@ -140,7 +140,6 @@ class MessageService
         $lastMessages = $classGroups?->map(function ($classGroup) use ($userId) {
             $message = $this->model->where('recipient_group_id', $classGroup->id)
                 ->orWhere('sender_id', $userId)
-                ->where('recipient_id', $classGroup->teacher_id)
                 ->orderBy('created_at', 'desc')
                 ->first();
 
