@@ -28,10 +28,10 @@ class LeaveRequestService
         }
 
         if (request()->has('page') && request()->get('page') == 'all') {
-            return $this->model->get();
+            return $this->model->with('tag')->get();
         }
 
-        return $this->model->paginate(request('size', 10));
+        return $this->model->with('tag')->paginate(request('size', 10));
     }
 
     /**
