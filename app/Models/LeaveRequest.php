@@ -69,6 +69,16 @@ class LeaveRequest extends Model
     }
 
     /**
+     * Get the tag associated with the LeaveRequest
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function tag(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(LeaveRequestTag::class, 'id', 'tag_id');
+    }
+
+    /**
      * Boot on delete
      * Delete S3 Storage
      * 
