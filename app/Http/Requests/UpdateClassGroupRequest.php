@@ -24,7 +24,8 @@ class UpdateClassGroupRequest extends FormRequest
         return [
             'name' => 'nullable|string|max:255',
             'description' => 'nullable|string|max:25500',
-            'teacher_id' => 'nullable|exists:teachers,id',
+            'teachers' => 'nullable|array',
+            'teachers.*' => 'exists:teachers,id',
             'students' => 'nullable|array',
             'students.*' => 'exists:students,id'
         ];

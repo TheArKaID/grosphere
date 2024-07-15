@@ -150,6 +150,8 @@ class ClassGroupService
         $classGroup->update($data);
 
         $classGroup->students()->sync($data['students']);
+        $classGroup->teachers()->sync($data['teachers']);
+
         DB::commit();
 
         return $classGroup;
