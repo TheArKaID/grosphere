@@ -14,7 +14,7 @@ class LeaveRequestTagResource extends JsonResource
      */
     public function toArray($request)
     {
-        parent::wrap('leave-request-tags');
+        parent::wrap('leave_request_tags');
 
         return $this->resource;
     }
