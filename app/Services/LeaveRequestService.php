@@ -73,7 +73,7 @@ class LeaveRequestService
         $leaveRequest = $this->model->create($data);
 
         if ($photo = $data['photo']) {
-            $fileName = 'leave-requests/' . $leaveRequest->id . '.' . explode('/', explode(':', substr($photo, 0, strpos($photo, ';')))[1])[1];
+            $fileName = 'leave-requests/' . $leaveRequest->id . '.png';
 
             // photo is image base64 encoded
             // Decode to image and store to s3

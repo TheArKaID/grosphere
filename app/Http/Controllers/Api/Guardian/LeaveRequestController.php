@@ -40,7 +40,8 @@ class LeaveRequestController extends Controller
         $this->service->create($data);
 
         return response()->json([
-            'status' => 201
+            'status' => 200,
+            'message' => 'Leave request created successfully.'
         ], 201);
     }
 
@@ -73,7 +74,8 @@ class LeaveRequestController extends Controller
         $this->service->delete($leaveRequest);
 
         return response()->json([
-            'status' => 200
+            'status' => 200,
+            'message' => 'Leave request deleted successfully.'
         ], 200);
     }
 
