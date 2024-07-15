@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('description')->nullable();
             $table->foreignUuid('agency_id')->constrained()->cascadeOnDelete();
-            $table->foreignUuid('teacher_id')->constrained()->cascadeOnDelete();
+            $table->foreignUuid('teacher_id')->nullable()->constrained()->nullOnDelete();
             $table->timestamps();
         });
     }

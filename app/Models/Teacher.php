@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
@@ -49,13 +50,13 @@ class Teacher extends Model
     }
 
     /**
-     * Get all of the classGroups for the Teacher
+     * Get classGroups that belong to the Teacher
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function classGroups(): HasMany
+    public function classGroups(): BelongsToMany
     {
-        return $this->hasMany(ClassGroup::class);
+        return $this->belongsToMany(ClassGroup::class)->using(ClassGroupTeacher::class)->withTimestamps();
     }
 
     /**

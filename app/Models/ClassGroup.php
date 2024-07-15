@@ -10,14 +10,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 /**
  * @property string $id
  * @property string $agency_id
- * @property string $teacher_id
  * @property string $name
  * @property string $description
  * @property string $created_at
  * @property string $updated_at
- * @property ClassGroupStudent[] $classGroupStudents
  * @property Agency $agency
- * @property Teacher $teacher
+ * @property Student[] $students
+ * @property Teacher[] $teachers
  */
 class ClassGroup extends Model
 {
@@ -40,7 +39,7 @@ class ClassGroup extends Model
     /**
      * @var array
      */
-    protected $fillable = ['agency_id', 'teacher_id', 'name', 'description', 'created_at', 'updated_at'];
+    protected $fillable = ['agency_id', 'name', 'description', 'created_at', 'updated_at'];
 
     /**
      * The students that belong to the ClassGroup
@@ -50,6 +49,16 @@ class ClassGroup extends Model
     public function students(): BelongsToMany
     {
         return $this->belongsToMany(Student::class)->using(ClassGroupStudent::class)->withTimestamps();
+    }
+
+    /**
+     * The teachers that belong to the ClassGroup
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function teachers(): BelongsToMany
+    {
+        return $this->belongsToMany(Teacher::class)->using(ClassGroupTeacher::class)->withTimestamps();
     }
 
     /**
