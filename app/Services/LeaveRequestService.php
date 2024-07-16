@@ -28,10 +28,10 @@ class LeaveRequestService
         }
 
         if (request()->has('page') && request()->get('page') == 'all') {
-            return $this->model->with('tag')->get();
+            return $this->model->with(['tag', 'student'])->get();
         }
 
-        return $this->model->with('tag')->paginate(request('size', 10));
+        return $this->model->with(['tag', 'student'])->paginate(request('size', 10));
     }
 
     /**
@@ -43,7 +43,7 @@ class LeaveRequestService
      */
     public function getOne(string $leaveRequestId)
     {
-        return $this->model->findOrFail($leaveRequestId);
+        return $this->model->findOrFail($leaveRequestId)?->load(['student', 'guardian']);
     }
 
     /**
