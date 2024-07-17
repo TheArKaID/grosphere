@@ -101,8 +101,8 @@ class UserService
 			$user->email = $this->isValidEmail($data['identifier']) ? $data['identifier'] : $data['email'];
 			$user->username = $this->isValidEmail($data['identifier']) ? null : $data['identifier'];
 		} else {
-			$user->email = $data['email'];
-			$user->username = $data['username'];
+			$user->email = $data['email'] ?? null;
+			$user->username = $data['username'] ?? null;
 		}
 
 		$user->phone = $data['phone'] ?? $user->phone;

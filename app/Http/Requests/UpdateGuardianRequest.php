@@ -28,25 +28,7 @@ class UpdateGuardianRequest extends FormRequest
             'first_name' => 'nullable|string|max:255',
             'last_name' => 'nullable|string|max:255',
             'email' => [
-                'nullable', 'email',
-                function ($attribute, $value, $fail) {
-                    if ($value && $this->username) {
-                        $fail('The username field must be null when email is provided.');
-                    }
-                },
-                'unique:users,email,' . $this->guardian->user_id
-            ],
-            'username' => [
-                'nullable',
-                function ($attribute, $value, $fail) {
-                    if (!$this->email && !$value) {
-                        $fail('The username field is required when email is not provided.');
-                    }
-                    if ($this->email && $value) {
-                        $fail('The username field must be null when email is provided.');
-                    }
-                },
-                'required_without:email', 'unique:users,username,' . $this->guardian->user_id
+                'nullable', 'email', 'unique:users,email,' . $this->guardian->user_id
             ],
             'phone' => 'nullable|string|min:8|max:50',
             'photo' => 'nullable|string',
