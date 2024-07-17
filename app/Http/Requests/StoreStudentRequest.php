@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\OnlyUniqueEmailOrUsername;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
@@ -35,27 +36,7 @@ class StoreStudentRequest extends FormRequest
         return [
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'email' => [
-                'nullable', 'email',
-                function ($attribute, $value, $fail) {
-                    if ($value && $this->username) {
-                        $fail('The username field must be null when email is provided.');
-                    }
-                },
-                'unique:users,email'
-            ],
-            'username' => [
-                'nullable',
-                function ($attribute, $value, $fail) {
-                    if (!$this->email && !$value) {
-                        $fail('The username field is required when email is not provided.');
-                    }
-                    if ($this->email && $value) {
-                        $fail('The username field must be null when email is provided.');
-                    }
-                },
-                'required_without:email', 'unique:users,username'
-            ],
+            'identifier' => ['required', 'string', 'max:255', 'min:4', new OnlyUniqueEmailOrUsername],
             'password' => ['required', 'confirmed', Password::min(8)],
             'phone' => 'nullable|string|min:8|max:50',
             'birth_date' => 'nullable|date_format:Y-m-d',
