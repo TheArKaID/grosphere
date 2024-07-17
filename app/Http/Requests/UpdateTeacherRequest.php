@@ -29,27 +29,7 @@ class UpdateTeacherRequest extends FormRequest
             'last_name' => 'nullable|string|max:255',
             'phone' => 'nullable|string|min:8|max:50',
             'photo' => 'nullable|string',
-            'email' => [
-                'nullable', 'email',
-                function ($attribute, $value, $fail) {
-                    if ($value && $this->username) {
-                        $fail('The username field must be null when email is provided.');
-                    }
-                },
-                'unique:users,email,' . $this->teacher->user_id
-            ],
-            'username' => [
-                'nullable',
-                function ($attribute, $value, $fail) {
-                    if (!$this->email && !$value) {
-                        $fail('The username field is required when email is not provided.');
-                    }
-                    if ($this->email && $value) {
-                        $fail('The username field must be null when email is provided.');
-                    }
-                },
-                'required_without:email', 'unique:users,username,' . $this->teacher->user_id
-            ],
+            'email' => ['required', 'email', 'unique:users,email,' . $this->teacher->user_id],
             'password' => ['nullable', 'confirmed', Password::min(8)]
         ];
     }
