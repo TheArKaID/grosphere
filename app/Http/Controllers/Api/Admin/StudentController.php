@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
-use App\Exceptions\ModelGetEmptyException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreStudentRequest;
 use App\Http\Requests\UpdatePasswordRequest;
 use App\Http\Requests\UpdateStudentRequest;
 use App\Http\Resources\StudentResource;
 use App\Models\Student;
+use App\Models\User;
 use App\Services\StudentService;
 use Illuminate\Http\Request;
 
@@ -29,10 +29,6 @@ class StudentController extends Controller
     public function index()
     {
         $students = StudentResource::collection($this->studentService->getAll());
-
-        if ($students->count() == 0) {
-            // throw new ModelGetEmptyException("Student");
-        }
 
         return response()->json([
             'status' => 200,
@@ -87,6 +83,17 @@ class StudentController extends Controller
     public function update(UpdateStudentRequest $request, Student $student)
     {
         $data = $request->validated();
+
+        $request->validate([
+            'identifier' => function ($attribute, $value, $fail) use ($student) {
+                if (User::withoutGlobalScope('agency')->where(function ($query) {
+                    $query->where('email', request()->identifier)->orWhere('username', request()->identifier);
+                })->where('id', '!=', $student->user_id)->exists()) {
+                    $fail("The $attribute has already been taken.");
+                }
+            }
+        ]);
+
         $student = new StudentResource($this->studentService->updateStudent($student->id, $data));
 
         return response()->json([

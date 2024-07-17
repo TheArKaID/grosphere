@@ -104,7 +104,6 @@ class UserService
 			$user->email = null;
 		}
 
-		$user->username = $data['username'];
 		$user->phone = $data['phone'] ?? $user->phone;
 		$user->status = $data['status'] ?? $user->status;
 		
