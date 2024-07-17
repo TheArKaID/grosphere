@@ -94,8 +94,8 @@ class UserService
 	public function updateUser($id, $data)
 	{
 		$user = $this->user->findOrFail($id);
-		$user->first_name = $data['first_name'] ?? $user->first_name;
-		$user->last_name = $data['last_name'] ?? $user->last_name;
+		$user->first_name = $data['first_name'];
+		$user->last_name = $data['last_name'];
 		
 		if (isset($data['identifier'])) {
 			$user->email = $this->isValidEmail($data['identifier']) ? $data['identifier'] : $data['email'];
@@ -105,7 +105,7 @@ class UserService
 			$user->username = $data['username'] ?? null;
 		}
 
-		$user->phone = $data['phone'] ?? $user->phone;
+		$user->phone = $data['phone'];
 		$user->status = $data['status'] ?? $user->status;
 		
 		if ($data['password'] ?? false)
