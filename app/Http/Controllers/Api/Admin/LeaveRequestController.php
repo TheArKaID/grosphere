@@ -41,9 +41,9 @@ class LeaveRequestController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(LeaveRequest $leaveRequest)
+    public function show(string $id)
     {
-        $leaveRequest = LeaveRequestResource::make($this->service->getOne($leaveRequest->id));
+        $leaveRequest = new LeaveRequestResource($this->service->getOne($id));
 
         return response()->json([
             'status' => 200,
