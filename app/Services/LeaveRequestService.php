@@ -43,7 +43,7 @@ class LeaveRequestService
      */
     public function getOne(string $leaveRequestId)
     {
-        return $this->model->findOrFail($leaveRequestId)?->load(['student', 'guardian']);
+        return $this->model->findOrFail($leaveRequestId)?->load(['student', 'guardian', 'tag']);
     }
 
     /**
