@@ -61,13 +61,14 @@ class UserService
 	 */
 	public function createUser($data)
 	{
-		if ($this->isValidEmail($data['identifier'])) {
-			$data['email'] = $data['identifier'];
-		} else {
-			$data['username'] = $data['identifier'];
+		if (isset($data['identifier'])) {
+			if ($this->isValidEmail($data['identifier'])) {
+				$data['email'] = $data['identifier'];
+			} else {
+				$data['username'] = $data['identifier'];
+			}
+			unset($data['identifier']);
 		}
-
-		unset($data['identifier']);
 
 		return $this->user->create($data);
 	}
@@ -96,12 +97,12 @@ class UserService
 		$user->first_name = $data['first_name'] ?? $user->first_name;
 		$user->last_name = $data['last_name'] ?? $user->last_name;
 		
-		if ($this->isValidEmail($data['identifier'])) {
-			$user->email = $data['identifier'];
-			$user->username = null;
+		if (isset($data['identifier'])) {
+			$user->email = $this->isValidEmail($data['identifier']) ? $data['identifier'] : $data['email'];
+			$user->username = $this->isValidEmail($data['identifier']) ? null : $data['identifier'];
 		} else {
-			$user->username = $data['identifier'];
-			$user->email = null;
+			$user->email = $data['email'];
+			$user->username = $data['username'];
 		}
 
 		$user->phone = $data['phone'] ?? $user->phone;

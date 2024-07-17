@@ -27,28 +27,7 @@ class StoreGuardianRequest extends FormRequest
         return [
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'email' => [
-                'nullable', 'email',
-                function ($attribute, $value, $fail) {
-                    if ($value && $this->username) {
-                        $fail('The username field must be null when email is provided.');
-                    }
-                },
-                'unique:users,email'
-            ],
-            'username' => [
-                'nullable',
-                function ($attribute, $value, $fail) {
-                    if (!$this->email && !$value) {
-                        $fail('The username field is required when email is not provided.');
-                    }
-                    if ($this->email && $value) {
-                        $fail('The username field must be null when email is provided.');
-                    }
-                },
-                'required_without:email', 'unique:users,username'
-            ],
-            'username' => 'required_without:email|nullable|max:255|unique:users,username',
+            'email' => ['required', 'email', 'max:255', 'min:4', 'unique:users,email'],
             'password' => ['required', 'confirmed', Password::min(8)],
             'phone' => 'nullable|string|min:8|max:50',
             'address' => 'nullable|string|max:255',

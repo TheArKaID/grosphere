@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
-use App\Exceptions\ModelGetEmptyException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreGuardianRequest;
 use App\Http\Requests\UpdateGuardianRequest;
@@ -29,10 +28,6 @@ class GuardianController extends Controller
     public function index()
     {
         $guardians = GuardianResource::collection($this->guardianService->getAll());
-
-        if ($guardians->count() == 0) {
-            // throw new ModelGetEmptyException("Guardian");
-        }
 
         return response()->json([
             'status' => 200,
