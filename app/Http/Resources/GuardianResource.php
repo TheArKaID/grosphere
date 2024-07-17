@@ -22,7 +22,6 @@ class GuardianResource extends JsonResource
             'first_name' => $this->user?->first_name,
             'last_name' => $this->user?->last_name,
             'email' => $this->user?->email,
-            'username' => $this->user?->username,
             'phone' => $this->user?->phone,
             'address' => $this->address,
             'status' => $this->user?->status,
