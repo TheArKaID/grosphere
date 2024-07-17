@@ -25,27 +25,7 @@ class StoreAdminRequest extends FormRequest
         return [
             'first_name' => 'required|string',
             'last_name' => 'required|string',
-            'email' => [
-                'nullable', 'email',
-                function ($attribute, $value, $fail) {
-                    if ($value && $this->username) {
-                        $fail('The username field must be null when email is provided.');
-                    }
-                },
-                'unique:users,email'
-            ],
-            'username' => [
-                'nullable',
-                function ($attribute, $value, $fail) {
-                    if (!$this->email && !$value) {
-                        $fail('The username field is required when email is not provided.');
-                    }
-                    if ($this->email && $value) {
-                        $fail('The username field must be null when email is provided.');
-                    }
-                },
-                'required_without:email', 'unique:users,username'
-            ],
+            'email' => ['required', 'email', 'unique:users,email'],
             'username' => 'required_without:email|nullable|max:255|unique:users,username',
             'password' => ['required', 'confirmed', 'string', Password::min(8)],
             'photo' => 'required|string',
