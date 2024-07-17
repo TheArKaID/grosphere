@@ -22,7 +22,7 @@ class StudentResource extends JsonResource
             'id_number' => $this->id_number,
             'first_name' => $this->user->first_name,
             'last_name' => $this->user->last_name,
-            'identifier' => $this->user?->email,
+            'identifier' => $this->user?->email ?? $this->user->username,
             'phone' => $this->user->phone,
             'gender' => $this->gender,
             'birth_date' => Carbon::parse($this->birth_date)->toDateString(),
