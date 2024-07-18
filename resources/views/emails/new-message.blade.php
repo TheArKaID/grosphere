@@ -5,7 +5,7 @@
 @endsection
 
 @section('subtitle')
-    You have a new message from <span>{{ $receiver }}</span>
+    You have a new message, <span>{{ $receiver }}</span>
 @endsection
 
 @section('send-by')

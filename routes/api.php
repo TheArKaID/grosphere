@@ -133,9 +133,9 @@ Route::middleware(['auth:api'])->group(function () {
             Route::get('', [AttendanceController::class, 'index'])->name('attendances.index');
             Route::get('groups', [AttendanceController::class, 'showGroup'])->name('attendances.group');
             Route::get('groups/{classGroup}', [AttendanceController::class, 'showGroupDetail'])->name('attendances.group.detail');
-            Route::get('groups/{classGroup}/{student}', [AttendanceController::class, 'showStudentDetail'])->name('attendances.group.detail');
+            Route::get('groups/{classGroup}/{student}', [AttendanceController::class, 'showStudentDetail'])->name('attendances.group.student');
 
-            Route::get('{attendance}', [AttendanceController::class, 'show'])->name('attendances.index');
+            Route::get('{attendance}', [AttendanceController::class, 'show'])->name('attendances.show');
             
         });
 
@@ -180,7 +180,7 @@ Route::middleware(['auth:api'])->group(function () {
         });
 
         Route::get('attendances', [GuardianAttendanceController::class, 'index'])->name('attendances.index');
-        Route::get('attendances/{attendance}', [GuardianAttendanceController::class, 'show'])->name('attendances.index');
+        Route::get('attendances/{attendance}', [GuardianAttendanceController::class, 'show'])->name('attendances.show');
 
         Route::get('leave-requests/tags', [LeaveRequestController::class, 'tags'])->name('leave-request.tags');
         Route::resource('leave-requests', LeaveRequestController::class);
