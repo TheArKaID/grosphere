@@ -29,6 +29,7 @@ use App\Http\Controllers\Api\Teacher\ClassSessionController as TeacherClassSessi
 use App\Http\Controllers\Api\Teacher\TeacherFileController;
 use App\Http\Controllers\Api\User\AgendaController;
 use App\Http\Controllers\Api\User\AnnouncementController as UserAnnouncementController;
+use App\Http\Controllers\Api\User\FeedController;
 use App\Http\Controllers\Api\User\MessageController;
 use App\Http\Controllers\Api\User\ProfileController as UserProfileController;
 use Illuminate\Support\Facades\Route;
@@ -223,6 +224,8 @@ Route::middleware(['auth:api'])->group(function () {
             Route::get('', [UserAnnouncementController::class, 'index'])->name('announcements.index');
             Route::get('{announcement_id}', [UserAnnouncementController::class, 'show'])->name('announcements.show');
         });
+
+        Route::apiResource('feeds', FeedController::class);
     });
 
     Route::post('auth/logout', [AuthController::class, 'logout']);
