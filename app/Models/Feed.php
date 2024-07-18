@@ -2,7 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Relations\Pivot;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property string $id
@@ -15,8 +16,10 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
  * @property FeedLike[] $feedLikes
  * @property User $user
  */
-class Feed extends Pivot
+class Feed extends Model
 {
+    use HasUuids;
+
     /**
      * The "type" of the auto-incrementing ID.
      * 
