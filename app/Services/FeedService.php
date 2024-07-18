@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Feed;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Storage;
 
 class FeedService
@@ -15,7 +16,62 @@ class FeedService
 
     public function get()
     {
-        return $this->feed->orderByDesc('created_at')->with(['images', 'user'])->paginate(10);
+        $feeds = $this->feed
+        ->where(function (Builder $query) {
+            $query->where('privacy', 'all')->orWhere('user_id', auth()->user()->id);
+        });
+
+        if(auth()->user()->roles->pluck('name')->toArray()[0] == 'teacher') {
+            $feeds = $feeds->orWhere(function (Builder $query) {
+                $query->where('privacy', 'group')
+                // Teacher could see students' feeds in the same class group
+                ->whereHas('user.student.classGroups.teachers', function (Builder $query) {
+                    $query->where('user_id', auth()->user()->id);
+                })
+                // Or their guardian's feeds
+                ->orWhereHas('user.guardian.students.classGroups.teachers', function (Builder $query) {
+                    $query->where('user_id', auth()->user()->id);
+                });
+            });
+        } else if(auth()->user()->roles->pluck('name')->toArray()[0] == 'student') {
+            $feeds = $feeds->orWhere(function (Builder $query) {
+                $query->where('privacy', 'group')
+                // Student could see their class group's feeds
+                ->whereHas('user.student.classGroups.students', function (Builder $query) {
+                    $query->where('user_id', auth()->user()->id);
+                })
+                // Or their guardian's feeds
+                ->orWhereHas('user.guardian.students.classGroups.students', function (Builder $query) {
+                    $query->where('user_id', auth()->user()->id);
+                })
+                // Or their teacher's feeds
+                ->orWhereHas('user.teacher.classGroups.students', function (Builder $query) {
+                    $query->where('user_id', auth()->user()->id);
+                });
+            });
+        } else if (auth()->user()->roles->pluck('name')->toArray()[0] == 'guardian') {
+            $feeds = $feeds->orWhere(function (Builder $query) {
+                $query->where('privacy', 'group')
+                // Guardian could see their children' feeds
+                ->whereHas('user.student.guardians', function (Builder $query) {
+                    $query->where('user_id', auth()->user()->id);
+                })
+                // Or their student's friends' feeds
+                ->orWhereHas('user.student.classGroups.students.guardians', function (Builder $query) {
+                    $query->where('user_id', auth()->user()->id);
+                })
+                // Or their student's friends' guardian's feeds
+                ->orWhereHas('user.guardian.students.classGroups.students.guardians', function (Builder $query) {
+                    $query->where('user_id', auth()->user()->id);
+                })
+                // Or their student's teacher's feeds
+                ->orWhereHas('user.teacher.classGroups.students.guardians', function (Builder $query) {
+                    $query->where('user_id', auth()->user()->id);
+                });
+            });
+        }
+
+        return $feeds->orderByDesc('created_at')->with(['images', 'user'])->paginate(10);
     }
 
     public function find($id): Feed
