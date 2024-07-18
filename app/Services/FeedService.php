@@ -13,14 +13,14 @@ class FeedService
         $this->feed = $feed;
     }
 
-    public function get(): \Illuminate\Database\Eloquent\Collection
+    public function get()
     {
-        return $this->feed->all();
+        return $this->feed->orderByDesc('created_at')->with(['images', 'user'])->paginate(10);
     }
 
     public function find($id): Feed
     {
-        return $this->feed->findOrFail($id);
+        return $this->feed->with(['images', 'user'])->findOrFail($id);
     }
 
     public function create(array $data): Feed
@@ -55,15 +55,25 @@ class FeedService
         );
     }
 
-    public function update(array $data): Feed
+    public function update(string $id, array $data): Feed
     {
-        $this->feed->update($data);
+        $feed = $this->find($id);
 
-        return $this->feed;
+        if ($feed->user_id !== auth()->user()->id) {
+            throw new \Exception('You are not authorized to delete this feed');
+        }
+
+        $feed->update($data);
+
+        return $feed;
     }
 
     public function delete($id): void
     {
-        $this->feed->destroy($id);
+        $feed = $this->find($id);
+        if ($feed->user_id !== auth()->user()->id) {
+            throw new \Exception('You are not authorized to delete this feed');
+        }
+        $feed->destroy($id);
     }
 }
