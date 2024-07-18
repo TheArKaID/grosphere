@@ -16,8 +16,11 @@ class FeedService
 
     public function get()
     {
-        $feeds = $this->feed
-        ->where(function (Builder $query) {
+        if (auth()->user()->roles->pluck('name')->toArray()[0] !== 'admin') {
+            return $this->feed->orderByDesc('created_at')->with(['images', 'user'])->paginate(10);
+        }
+
+        $feeds = $this->feed->where(function (Builder $query) {
             $query->where('privacy', 'all')->orWhere('user_id', auth()->user()->id);
         });
 
