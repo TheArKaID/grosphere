@@ -226,6 +226,9 @@ Route::middleware(['auth:api'])->group(function () {
         });
 
         Route::apiResource('feeds', FeedController::class);
+        Route::prefix('feeds')->group(function () {
+            Route::post('comment', [FeedController::class, 'comment'])->name('feeds.comment');
+        });
     });
 
     Route::post('auth/logout', [AuthController::class, 'logout']);

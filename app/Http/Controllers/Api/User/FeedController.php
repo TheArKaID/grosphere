@@ -7,6 +7,7 @@ use App\Http\Requests\StoreFeedRequest;
 use App\Http\Requests\UpdateFeedRequest;
 use App\Http\Resources\FeedResource;
 use App\Services\FeedService;
+use Illuminate\Http\Request;
 
 class FeedController extends Controller
 {
@@ -81,6 +82,22 @@ class FeedController extends Controller
         return response()->json([
             'status' => 200,
             'message' => 'Feed deleted successfully',
+        ], 200);
+    }
+
+    /**
+     * Comment on the feed.
+     */
+    public function comment(Request $request, string $id)
+    {
+        $request->validate([
+            'content' => 'required|string'
+        ]);
+        $this->service->comment($id, $request->content);
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Commented successfully'
         ], 200);
     }
 }

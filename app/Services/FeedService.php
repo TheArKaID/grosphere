@@ -20,7 +20,7 @@ class FeedService
 
     public function find($id): Feed
     {
-        return $this->feed->with(['images', 'user'])->findOrFail($id);
+        return $this->feed->with(['images', 'user', 'comments.user'])->findOrFail($id);
     }
 
     public function create(array $data): Feed
@@ -75,5 +75,14 @@ class FeedService
             throw new \Exception('You are not authorized to delete this feed');
         }
         $feed->destroy($id);
+    }
+
+    public function comment(string $id, string $content): void
+    {
+        $feed = $this->find($id);
+        $feed->comments()->create([
+            'user_id' => auth()->user()->id,
+            'content' => $content
+        ]);
     }
 }

@@ -3,10 +3,8 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Storage;
 
-class FeedResource extends JsonResource
+class FeedCommentResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,15 +14,12 @@ class FeedResource extends JsonResource
      */
     public function toArray($request)
     {
-        parent::wrap('feeds');
+        parent::wrap('feed_images');
 
         return $this->resource ? [
             'id' => $this->id,
             'content' => $this->content,
-            'privacy' => $this->privacy,
             'user' => new UserResource($this->whenLoaded('user')),
-            'images' => FeedImageResource::collection($this->whenLoaded('images')),
-            'comments' => FeedCommentResource::collection($this->whenLoaded('comments')),
             'created_at' => $this->created_at
         ] : [];
     }
