@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -15,6 +16,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class ClassGroupRecipientGroup extends Model
 {
+    use HasUuids;
+
     /**
      * The table associated with the model.
      * 
@@ -46,7 +49,7 @@ class ClassGroupRecipientGroup extends Model
      */
     public function recipientGroup()
     {
-        return $this->belongsTo('App\Models\RecipientGroup');
+        return $this->belongsTo(RecipientGroup::class);
     }
 
     /**
@@ -54,6 +57,6 @@ class ClassGroupRecipientGroup extends Model
      */
     public function user()
     {
-        return $this->belongsTo('App\Models\User');
+        return $this->belongsTo(User::class);
     }
 }
