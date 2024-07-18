@@ -20,7 +20,7 @@ class FeedService
 
     public function find($id): Feed
     {
-        return $this->feed->with(['images', 'user', 'comments.user'])->findOrFail($id);
+        return $this->feed->with(['images', 'user', 'comments.user', 'likes'])->findOrFail($id);
     }
 
     public function create(array $data): Feed
@@ -84,5 +84,11 @@ class FeedService
             'user_id' => auth()->user()->id,
             'content' => $content
         ]);
+    }
+
+    public function likeUnlike(string $id): void
+    {
+        $feed = $this->find($id);
+        $feed->likes()->toggle(auth()->user()->id);
     }
 }

@@ -100,4 +100,17 @@ class FeedController extends Controller
             'message' => 'Commented successfully'
         ], 200);
     }
+
+    /**
+     * Like or unlike the feed.
+     */
+    public function likeUnlike(string $id)
+    {
+        $this->service->likeUnlike($id);
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Success'
+        ], 200);
+    }
 }

@@ -22,6 +22,10 @@ class FeedResource extends JsonResource
             'id' => $this->id,
             'content' => $this->content,
             'privacy' => $this->privacy,
+            'likes' => [
+                'count' => $this->likes->count(),
+                'data' => UserResource::collection($this->whenLoaded('likes'))
+            ],
             'user' => new UserResource($this->whenLoaded('user')),
             'images' => FeedImageResource::collection($this->whenLoaded('images')),
             'comments' => FeedCommentResource::collection($this->whenLoaded('comments')),

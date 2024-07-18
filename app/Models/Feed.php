@@ -52,7 +52,7 @@ class Feed extends Model
      */
     public function likes()
     {
-        return $this->belongsToMany(User::class)->using(FeedLike::class);
+        return $this->belongsToMany(User::class, 'feed_likes')->using(FeedLike::class);
     }
 
     /**

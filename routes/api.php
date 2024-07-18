@@ -226,8 +226,9 @@ Route::middleware(['auth:api'])->group(function () {
         });
 
         Route::apiResource('feeds', FeedController::class);
-        Route::prefix('feeds')->group(function () {
+        Route::prefix('feeds/{id}')->group(function () {
             Route::post('comment', [FeedController::class, 'comment'])->name('feeds.comment');
+            Route::post('like', [FeedController::class, 'likeUnlike'])->name('feeds.like');
         });
     });
 
