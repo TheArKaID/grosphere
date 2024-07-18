@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * @property string $id
@@ -47,5 +48,19 @@ class FeedImage extends Model
     public function feed()
     {
         return $this->belongsTo(Feed::class);
+    }
+
+    /**
+     * Boot the model.
+     * 
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function (FeedImage $feedImage) {
+            Storage::disk('s3')->delete($feedImage->file_path);
+        });
     }
 }

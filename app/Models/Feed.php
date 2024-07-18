@@ -72,4 +72,26 @@ class Feed extends Model
     {
         return $this->hasMany(FeedImage::class);
     }
+
+    /**
+     * Boot the model.
+     * 
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($feed) {
+            $feed->images->each->delete();
+        });
+
+        if (auth()->check() && !auth()->user()->hasRole('superadmin')) {
+            static::addGlobalScope('agency', function ($builder) {
+                $builder->whereHas('user', function ($query) {
+                    $query->where('agency_id', auth()->user()->agency_id);
+                });
+            });
+        }
+    }
 }
