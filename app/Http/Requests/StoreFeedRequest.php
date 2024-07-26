@@ -25,7 +25,7 @@ class StoreFeedRequest extends FormRequest
             'content' => ['required', 'string'],
             'privacy' => ['required', 'string', 'in:all,group,me'],
             'images' => ['nullable', 'array'],
-            'images.*' => ['required', 'image', 'mimes:jpeg,png,jpg', 'max:10240'],
+            'images.*' => ['required', 'string'],
         ];
     }
 }

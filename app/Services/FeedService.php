@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Feed;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class FeedService
 {
@@ -17,7 +18,7 @@ class FeedService
     public function get()
     {
         if (auth()->user()->roles->pluck('name')->toArray()[0] !== 'admin') {
-            return $this->feed->orderByDesc('created_at')->with(['images', 'user'])->paginate(10);
+            return $this->feed->orderByDesc('created_at')->with(['images', 'user'])->paginate(request('size', 10));
         }
 
         $feeds = $this->feed->where(function (Builder $query) {
@@ -74,7 +75,7 @@ class FeedService
             });
         }
 
-        return $feeds->orderByDesc('created_at')->with(['images', 'user'])->paginate(10);
+        return $feeds->orderByDesc('created_at')->with(['images', 'user'])->paginate(request('size', 10));
     }
 
     public function find($id): Feed
@@ -101,14 +102,18 @@ class FeedService
     {
         $feed->images()->createMany(
             collect($images)->map(function ($image) use ($feed) {
-                $filePath = $image->store('feeds/' . $feed->id, 's3');
+                // Put base64 image to temporary storage
+                $imagebase64 = base64_decode(substr($image, strpos($image, ",") + 1));
+                $filePath = 'feeds/' . $feed->id . '/' . Str::uuid() . '.png';
+                Storage::disk('s3')->put($filePath, $imagebase64);
+
                 return [
                     'url' => Storage::disk('s3')->url($filePath),
-                    'content_type' => $image->getMimeType(),
+                    'content_type' => 'image/png',
                     'file_path' => $filePath,
-                    'file_name' => $image->getClientOriginalName(),
-                    'file_extension' => $image->getClientOriginalExtension(),
-                    'file_size' => $image->getSize(),
+                    'file_name' => '',
+                    'file_extension' => '',
+                    'file_size' => '',
                 ];
             })->toArray()
         );
