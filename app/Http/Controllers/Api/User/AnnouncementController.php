@@ -21,7 +21,7 @@ class AnnouncementController extends Controller
      */
     public function index()
     {
-        $announcements = AnnouncementResource::collection($this->service->getAll());
+        $announcements = AnnouncementResource::collection($this->service->getAll(true));
 
         return response()->json([
             'status' => 200,

@@ -15,9 +15,13 @@ class AnnouncementService
      * 
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getAll()
+    public function getAll($status = 'all')
     {
         $model = $this->model;
+
+        if ($status !== 'all') {
+            $model = $model->where('status', $status);
+        }
         if ($search = request()->get('search')) {
             $model = $this->search($search);
         }
